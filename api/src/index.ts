@@ -20,8 +20,8 @@ passport.use(
       clientID: process.env.GCLIENT_ID as string,
       clientSecret: process.env.GCLIENT_SECRET as string,
       callbackURL: !process.env.PROD
-        ? 'http://localhost:3000/auth/google/redirect'
-        : 'https://apis.sambitsahoo.com/donkey/v1/auth/google/redirect',
+        ? 'http://localhost:3000/furikaeru/auth/google/redirect'
+        : 'https://apis.sambitsahoo.com/furikaeru/auth/google/redirect',
       passReqToCallback: true,
     },
     async (
@@ -53,6 +53,7 @@ passport.use(
     },
   ),
 );
+
 passport.serializeUser((user, cb) => {
   cb(null, (user as any).id);
 });
@@ -69,15 +70,16 @@ async function main() {
   app.use(express.json() as RequestHandler);
   app.use(express.urlencoded({ extended: true }) as RequestHandler);
   app.use(passport.initialize());
-  app.use('/auth', authRouter);
+  app.use('/furikaeru/auth', authRouter);
 
   const server = createServer(app);
   const io = new SocketServer(server, {
     cors: {
       origin: ['http://localhost:4000'],
     },
-    path: '/ws',
+    path: '/furikaeru/ws',
   });
+
   await createConnection({
     database: join(__dirname, '../db.sqlite'),
     type: 'better-sqlite3',
