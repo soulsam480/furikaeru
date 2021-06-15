@@ -1,5 +1,7 @@
 import { createApp } from 'vue';
 import App from './App.vue';
+import 'virtual:windi.css';
+
 import { io } from 'socket.io-client';
 
 const Sock = io(import.meta.env.VITE_WSS, {
