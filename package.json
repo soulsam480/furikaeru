@@ -2,18 +2,27 @@
   "name": "furikaeru",
   "version": "0.0.0",
   "description": "A small retro app",
-  "workspaces": [
-    "app",
-    "api"
-  ],
   "author": "soulsam480",
+  "repository": "git@github.com-soulsam480:soulsam480/furikaeru.git",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "dev:api": "yarn workspace api dev",
+    "dev:app": "yarn workspace app dev",
+    "dev": "concurrently --kill-others-on-fail \"yarn dev:api\"  \"yarn dev:app\"",
+    "build:api": "yarn workspace api build",
+    "build:app": "yarn workspace app build",
+    "build": "concurrently --kill-others-on-fail \"yarn build:api\"  \"yarn build:app\""
+  },
   "devDependencies": {
     "concurrently": "^6.2.0",
     "husky": "^6.0.0",
     "lint-staged": "^11.0.0"
   },
+  "workspaces": [
+    "app",
+    "api"
+  ],
   "lint-staged": {},
   "husky": {
     "hooks": {
