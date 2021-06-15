@@ -1,0 +1,23 @@
+{
+  "name": "furikaeru",
+  "version": "0.0.0",
+  "description": "A small retro app",
+  "workspaces": [
+    "app",
+    "api"
+  ],
+  "author": "soulsam480",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "concurrently": "^6.2.0",
+    "husky": "^6.0.0",
+    "lint-staged": "^11.0.0"
+  },
+  "lint-staged": {},
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  }
+}
