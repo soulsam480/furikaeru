@@ -75,9 +75,10 @@ async function main() {
   const server = createServer(app);
   const io = new SocketServer(server, {
     cors: {
-      origin: ['http://localhost:4000'],
+      origin: '*',
     },
     path: '/furikaeru/ws',
+    allowUpgrades: true,
   });
 
   await createConnection({
@@ -92,13 +93,16 @@ async function main() {
     await conn.query('PRAGMA foreign_keys=OFF;');
     await conn.runMigrations();
     await conn.query('PRAGMA foreign_keys=ON;');
+
     useSocketServer(io, {
-      controllers: [__dirname + '/controllers/**/*{.ts,.js}'],
+      controllers: [__dirname + '/controllers/*{.ts,.js}'],
       //   middlewares: [__dirname + '/middlewares/**/*.js'],
     });
+
     server.listen(PORT, () =>
       console.log(`Listening on http://localhost:${PORT}`),
     );
   });
 }
+
 main();
