@@ -1,6 +1,5 @@
-import { App } from '@vue/runtime-core';
+import { App } from 'vue';
 import { io as Io, Socket } from 'socket.io-client';
-
 let io: Socket;
 
 export function createWs(app: App) {
@@ -9,8 +8,7 @@ export function createWs(app: App) {
   });
 
   io.on('connect', () => {
-    console.log('connected!');
-    io.emit('ping');
+    console.log('Socket connected!');
   });
 
   io.on('pong', () => {
@@ -28,7 +26,7 @@ export function createWs(app: App) {
 export function useIo() {
   return {
     io,
-    emit: io.emit,
-    on: io.on,
+    emit: (ev: string, ...args: any[]) => io.emit(ev, ...args),
+    on: (ev: string, listener: (...args: any[]) => void) => io.on(ev, listener),
   };
 }

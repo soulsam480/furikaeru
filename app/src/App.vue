@@ -1,6 +1,4 @@
-<script setup lang="ts">
-import { ref } from 'vue';
-</script>
+<script setup lang="ts"></script>
 <template>
   <div>
     <button class="p-2 bg-gray-600 text-white border rounded-md">
@@ -8,4 +6,3 @@ import { ref } from 'vue';
     </button>
   </div>
 </template>
-<style lang="scss" scoped></style>
