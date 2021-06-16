@@ -1,6 +1,7 @@
 import { createApp } from 'vue';
-import App from './App.vue';
+import App from 'src/App.vue';
 import 'virtual:windi.css';
+import '@purge-icons/generated';
 
 import { io } from 'socket.io-client';
 

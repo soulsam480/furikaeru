@@ -1,20 +1,26 @@
 {
   "name": "app",
   "version": "0.0.0",
+  "author": "soulsam480 <soulsam480@hotmail.com>",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "serve": "vite preview"
   },
   "dependencies": {
+    "@iconify/iconify": "^2.0.1",
     "socket.io-client": "^4.1.2",
     "vue": "^3.0.5"
   },
   "devDependencies": {
+    "@iconify/json": "^1.1.357",
     "@vitejs/plugin-vue": "^1.2.3",
     "@vue/compiler-sfc": "^3.0.5",
     "typescript": "^4.3.2",
     "vite": "^2.3.7",
+    "vite-plugin-purge-icons": "^0.7.0",
+    "vite-plugin-pwa": "^0.8.1",
     "vite-plugin-windicss": "^1.0.4",
     "vue-tsc": "^0.0.24",
     "windicss": "^3.1.3"
