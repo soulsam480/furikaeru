@@ -9,3 +9,5 @@ export const ERROR_MESSAGES = {
   iss: 'Something went wrong !',
   user_exists_with_credentials: 'User with same email or username exists !',
 };
+
+export const CORS_ORIGINS = ['http://localhost:4000', 'http://localhost:5000'];

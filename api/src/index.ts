@@ -3,7 +3,7 @@ import { join } from 'path';
 import dotenv from 'dotenv';
 dotenv.config({ path: join(__dirname, '../.env') });
 const PORT = process.env.PORT || 3000;
-import express, { RequestHandler } from 'express';
+import express from 'express';
 import { createServer } from 'http';
 import { Server as SocketServer } from 'socket.io';
 import { createConnection, getRepository } from 'typeorm';
@@ -13,6 +13,8 @@ import passport from 'passport';
 import { Strategy } from 'passport-google-oauth2';
 import { User } from 'src/entities/user';
 import { authRouter } from 'src/auth';
+import cors from 'cors';
+import { CORS_ORIGINS } from 'src/utils/constants';
 
 passport.use(
   new Strategy(
@@ -67,18 +69,27 @@ passport.deserializeUser(async (id: string, cb) => {
 async function main() {
   const app = express();
 
-  app.use(express.json() as RequestHandler);
-  app.use(express.urlencoded({ extended: true }) as RequestHandler);
+  app.use(
+    cors({
+      origin: [...CORS_ORIGINS],
+      credentials: true,
+      preflightContinue: true,
+    }),
+  );
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
   app.use(passport.initialize());
   app.use('/furikaeru/auth', authRouter);
 
   const server = createServer(app);
   const io = new SocketServer(server, {
-    cors: {
-      origin: '*',
-    },
-    path: '/furikaeru/ws',
+    path: '/furikaeru/ws/',
     allowUpgrades: true,
+    cors: {
+      preflightContinue: true,
+      credentials: true,
+      origin: [...CORS_ORIGINS],
+    },
   });
 
   await createConnection({
@@ -96,7 +107,7 @@ async function main() {
 
     useSocketServer(io, {
       controllers: [__dirname + '/controllers/*{.ts,.js}'],
-      //   middlewares: [__dirname + '/middlewares/**/*.js'],
+      middlewares: [__dirname + '/middlewares/*{.ts,.js}'],
     });
 
     server.listen(PORT, () =>

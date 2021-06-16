@@ -1,4 +1,3 @@
-import { Socket } from 'dgram';
 import {
   OnConnect,
   SocketController,
@@ -7,8 +6,9 @@ import {
   MessageBody,
   OnMessage,
 } from 'socket-controllers';
+import { Socket } from 'socket.io';
 
-@SocketController('/furikaeru/ws')
+@SocketController()
 export class connectedController {
   @OnConnect()
   connection(@ConnectedSocket() socket: Socket) {
