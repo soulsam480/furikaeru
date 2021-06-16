@@ -14,7 +14,7 @@ function setNav() {
 <template>
   <nav class="bg-cyan-200 sticky top-0 z-20">
     <div class="max-w-7xl mx-auto px-2">
-      <div class="relative flex items-center justify-between h-16">
+      <div class="relative flex items-center justify-between h-14">
         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
           <button
             type="button"

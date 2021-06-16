@@ -16,6 +16,7 @@ export function createWs(app: App) {
   });
 
   setInterval(() => {
+    console.log('ping');
     io.emit('ping');
   }, 10000);
 
