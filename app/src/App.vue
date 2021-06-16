@@ -1,8 +1,11 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Navbar from 'src/components/App/Navbar.vue';
+</script>
 <template>
   <div>
-    <button class="p-2 bg-gray-600 text-white border rounded-md">
-      Something
-    </button>
+    <Navbar />
+    <div class="max-w-7xl mx-auto p-2">
+      <router-view />
+    </div>
   </div>
 </template>
