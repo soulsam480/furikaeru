@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import Navbar from 'src/components/App/Navbar.vue';
+import { registerToken } from 'src/utils/helpers';
+
+registerToken();
 </script>
 <template>
   <div>
