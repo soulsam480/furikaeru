@@ -1,7 +1,12 @@
 <script setup lang="ts">
-import Icon from 'src/components/App/Icon.vue';
-import { useRoute } from 'vue-router';
+import { onMounted } from '@vue/runtime-core';
 import Axios from 'axios';
+import { useRoute } from 'vue-router';
+import Icon from 'src/components/App/Icon.vue';
+import { useUser } from 'src/store/user';
+import type { UserResponse } from 'src/store/user';
+
+const { setLogin, isLoggedIn } = useUser();
 
 const url = import.meta.env.VITE_API;
 const { query } = useRoute();
@@ -13,11 +18,27 @@ function login() {
   });
 }
 
-function catchRedirect() {
+async function catchRedirect() {
   if (!Object.keys(query)) return;
   if (!query.auth_success) return;
   const { auth_success } = query;
+  try {
+    const { data }: { data: UserResponse } = await Axios({
+      baseURL: import.meta.env.VITE_API,
+      url: '/auth/user',
+      headers: {
+        Authorization: `Bearer ${auth_success}`,
+      },
+    });
+    setLogin({ ...data });
+  } catch (error) {
+    console.log(error);
+  }
 }
+
+onMounted(async () => {
+  await catchRedirect();
+});
 </script>
 <template>
   <div class="mt-24 flex flex-row justify-center">
@@ -55,6 +76,7 @@ function catchRedirect() {
             </a>
           </div>
           <div class="text-sm text-gray-500">To prevent spamming, only Google login is available.</div>
+          <span>{{ isLoggedIn }}</span>
         </div>
       </div>
     </div>

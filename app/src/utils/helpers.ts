@@ -11,7 +11,9 @@ export function registerToken() {
   watch(
     () => $state._token,
     (val) => {
-      furiApi.defaults.headers['Authorization'] = val;
+      console.log(val);
+
+      furiApi.defaults.headers['Authorization'] = `Bearer ${val}`;
     },
     { immediate: true },
   );

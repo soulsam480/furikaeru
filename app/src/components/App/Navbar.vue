@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import Icon from 'src/components/App/Icon.vue';
 import { useUser } from 'src/store/user';
 
-const { user, isLoggedin } = useUser();
+const { isLoggedIn, getUser } = useUser();
 
 const isNav = ref(false);
 
@@ -43,14 +43,15 @@ function setNav() {
               <button
                 type="button"
                 class="flex items-center rounded-md hover:bg-cyan-300 px-3 py-2 focus:outline-none"
-                v-if="!isLoggedin"
+                v-if="!isLoggedIn"
               >
                 Login with &nbsp;
                 <Icon icon="ion:logo-google" />
               </button>
 
-              <button v-else type="button" class="flex text-sm rounded-full focus:outline-none">
-                <Icon icon="ion:ellipse-outline" />
+              <button v-else type="button" class="flex text-sm items-center rounded-full focus:outline-none">
+                <Icon icon="ion:person-outline" />
+                &nbsp; {{ getUser.name }}
               </button>
             </div>
 
