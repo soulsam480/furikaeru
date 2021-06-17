@@ -1,4 +1,5 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Board } from './board';
 
 @Entity('user')
 export class User extends BaseEntity {
@@ -16,6 +17,9 @@ export class User extends BaseEntity {
 
   @Column({ type: 'text', nullable: true, unique: true })
   ga_id: string;
+
+  @OneToMany(() => Board, (board) => board.user)
+  boards: Board[];
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
