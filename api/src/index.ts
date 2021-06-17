@@ -14,7 +14,9 @@ import { Strategy } from 'passport-google-oauth2';
 import { User } from 'src/entities/user';
 import { authRouter } from 'src/auth';
 import cors from 'cors';
-import { CORS_ORIGINS } from 'src/utils/constants';
+import { CORS_ORIGINS, ERROR_MESSAGES } from 'src/utils/constants';
+import { verify } from 'jsonwebtoken';
+import { SocketWithUser } from './utils/types';
 
 passport.use(
   new Strategy(
@@ -85,9 +87,33 @@ async function main() {
     },
   });
 
+  const boardNamespace = io.of('/board');
+
+  boardNamespace.use(async (sock: SocketWithUser, next) => {
+    const {
+      handshake: {
+        auth: { Authorization },
+      },
+    } = sock;
+
+    const token = Authorization.split('Bearer ')[1];
+
+    if (!token) return next({ name: ERROR_MESSAGES.unauthorized, message: ERROR_MESSAGES.unauthorized });
+    try {
+      const data = <{ userId: string }>verify(token, process.env.ACCESS_TOKEN_SECRET as string);
+      const user = await User.findOne({ id: data.userId });
+
+      if (!user) return next({ name: ERROR_MESSAGES.user_not_found, message: ERROR_MESSAGES.user_not_found });
+      sock.user = user;
+      return next();
+    } catch (error) {
+      console.log(error);
+
+      return next({ name: ERROR_MESSAGES.unauthorized, message: ERROR_MESSAGES.unauthorized });
+    }
+  });
+
   await createConnection({
-    // database: join(__dirname, '../db.sqlite'),
-    // type: 'better-sqlite3',
     type: 'postgres',
     database: process.env.PGRES_DB,
     username: process.env.PGRES_USER,
@@ -101,10 +127,9 @@ async function main() {
     synchronize: false,
   })
     .then(async (conn) => {
-      //todo these are sqlite specific // await conn.query('PRAGMA foreign_keys=OFF;');
       await conn.runMigrations();
-      //todo these are sqlite specific // await conn.query('PRAGMA foreign_keys=ON;');
 
+      //todo remove socket controllers
       useSocketServer(io, {
         controllers: [__dirname + '/controllers/*{.ts,.js}'],
         middlewares: [__dirname + '/middlewares/*{.ts,.js}'],

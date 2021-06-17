@@ -30,9 +30,9 @@ export const useUser = defineStore({
         return;
       }
       localStorage.setItem('__token', user.refreshToken as string);
-      this.setToken(user.refreshToken as string);
+      this.setToken(user.accessToken as string);
       delete user.refreshToken;
-      delete user.refreshToken;
+      delete user.accessToken;
       this.user = { ...user };
       this.isLoggedin = true;
     },

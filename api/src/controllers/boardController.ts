@@ -1,4 +1,4 @@
-import { SocketController, ConnectedSocket, MessageBody, OnMessage } from 'socket-controllers';
+import { SocketController, ConnectedSocket, MessageBody, OnMessage, OnConnect } from 'socket-controllers';
 import { Board } from 'src/entities/board';
 import { BoardColumn, SocketWithUser } from 'src/utils/types';
 import { getRepository } from 'typeorm';
@@ -6,6 +6,11 @@ import { getRepository } from 'typeorm';
 @SocketController('/board')
 export class boardController {
   private readonly boardRepo = getRepository(Board);
+
+  @OnMessage('ping')
+  onPing(@ConnectedSocket() sock: SocketWithUser) {
+    console.log(sock);
+  }
 
   @OnMessage('create:board')
   async createBoard(
