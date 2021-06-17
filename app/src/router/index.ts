@@ -9,6 +9,11 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/:id',
+    name: 'PublicBoard',
+    component: () => import('src/pages/Board.vue'),
+  },
+  {
+    path: '/board',
     name: 'Board',
     component: () => import('src/pages/Board.vue'),
   },
@@ -27,7 +32,6 @@ const Router = createRouter({
 Router.beforeEach((to, from, next) => {
   const { isLoggedIn } = useUser();
   if (to.path === '/') {
-    console.log(isLoggedIn.value);
     if (isLoggedIn.value) {
       return next('/user');
     }

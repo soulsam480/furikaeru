@@ -18,7 +18,7 @@ export function createWs(app: App) {
   setInterval(() => {
     console.log('ping');
     io.emit('ping');
-  }, 10000);
+  }, 60000);
 
   app.config.globalProperties.$io = io;
   return io;
