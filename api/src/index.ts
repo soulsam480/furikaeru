@@ -26,13 +26,7 @@ passport.use(
         : 'https://apis.sambitsahoo.com/furikaeru/auth/google/redirect',
       passReqToCallback: true,
     },
-    async (
-      request: any,
-      accessToken: any,
-      refreshToken: any,
-      profile: any,
-      done: any,
-    ) => {
+    async (request: any, accessToken: any, refreshToken: any, profile: any, done: any) => {
       const userRepo = getRepository(User);
       const user = await userRepo.findOne({
         where: [{ ga_id: profile.id }, { email: profile.email }],
@@ -49,8 +43,7 @@ passport.use(
           .then((user) => done(null, user));
         return;
       }
-      if (!user.ga_id)
-        await userRepo.update({ email: user.email }, { ga_id: profile.id });
+      if (!user.ga_id) await userRepo.update({ email: user.email }, { ga_id: profile.id });
       done(null, user);
     },
   ),
@@ -93,27 +86,35 @@ async function main() {
   });
 
   await createConnection({
-    database: join(__dirname, '../db.sqlite'),
-    type: 'better-sqlite3',
+    // database: join(__dirname, '../db.sqlite'),
+    // type: 'better-sqlite3',
+    type: 'postgres',
+    database: process.env.PGRES_DB,
+    username: process.env.PGRES_USER,
+    password: process.env.PGRES_PASS,
+    host: process.env.PGRES_HOST,
+    port: 5432,
     entities: [join(__dirname, './entities/*')],
     migrations: [join(__dirname, './migrations/*')],
     logger: /*process.env.PROD ? undefined : */ 'advanced-console',
     logging: /*process.env.PROD ? false :*/ true,
     synchronize: false,
-  }).then(async (conn) => {
-    await conn.query('PRAGMA foreign_keys=OFF;');
-    await conn.runMigrations();
-    await conn.query('PRAGMA foreign_keys=ON;');
+  })
+    .then(async (conn) => {
+      //todo these are sqlite specific // await conn.query('PRAGMA foreign_keys=OFF;');
+      await conn.runMigrations();
+      //todo these are sqlite specific // await conn.query('PRAGMA foreign_keys=ON;');
 
-    useSocketServer(io, {
-      controllers: [__dirname + '/controllers/*{.ts,.js}'],
-      middlewares: [__dirname + '/middlewares/*{.ts,.js}'],
+      useSocketServer(io, {
+        controllers: [__dirname + '/controllers/*{.ts,.js}'],
+        middlewares: [__dirname + '/middlewares/*{.ts,.js}'],
+      });
+
+      server.listen(PORT, () => console.log(`Listening on http://localhost:${PORT}`));
+    })
+    .catch((err) => {
+      console.log(err);
     });
-
-    server.listen(PORT, () =>
-      console.log(`Listening on http://localhost:${PORT}`),
-    );
-  });
 }
 
 main();

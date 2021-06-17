@@ -1,10 +1,4 @@
-import {
-  BaseEntity,
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('user')
 export class User extends BaseEntity {
@@ -23,6 +17,6 @@ export class User extends BaseEntity {
   @Column({ type: 'text', nullable: true, unique: true })
   ga_id: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 }
