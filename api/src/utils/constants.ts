@@ -11,3 +11,8 @@ export const ERROR_MESSAGES = {
 };
 
 export const CORS_ORIGINS = ['http://localhost:4000', 'http://localhost:5000'];
+
+export enum NAMESPACES {
+  root = '/',
+  board = '/board',
+}

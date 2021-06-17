@@ -1,5 +1,6 @@
 import { User } from 'src/entities/user';
 import { Request } from 'express';
+import { Socket } from 'socket.io';
 export interface loginDto {
   name: string;
   email: string;
@@ -31,4 +32,8 @@ export interface BoardColumn {
   updated_at: number;
   owner_id: string;
   data: Card[];
+}
+
+export interface SocketWithUser extends Socket {
+  user?: User;
 }

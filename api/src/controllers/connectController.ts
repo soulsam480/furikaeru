@@ -1,11 +1,4 @@
-import {
-  OnConnect,
-  SocketController,
-  ConnectedSocket,
-  OnDisconnect,
-  MessageBody,
-  OnMessage,
-} from 'socket-controllers';
+import { OnConnect, SocketController, ConnectedSocket, OnDisconnect, MessageBody, OnMessage } from 'socket-controllers';
 import { Socket } from 'socket.io';
 
 @SocketController()
