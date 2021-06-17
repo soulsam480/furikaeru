@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from '@vue/runtime-core';
 import Axios from 'axios';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import Icon from 'src/components/App/Icon.vue';
 import { useUser } from 'src/store/user';
 import type { UserResponse } from 'src/store/user';
@@ -10,7 +10,7 @@ const { setLogin, isLoggedIn } = useUser();
 
 const url = import.meta.env.VITE_API;
 const { query } = useRoute();
-
+const { push } = useRouter();
 function login() {
   Axios({
     baseURL: import.meta.env.VITE_API,
@@ -31,6 +31,7 @@ async function catchRedirect() {
       },
     });
     setLogin({ ...data });
+    push('/user');
   } catch (error) {
     console.log(error);
   }

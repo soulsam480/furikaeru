@@ -1,11 +1,13 @@
 import axios from 'axios';
-import { UserModel, UserResponse, useUser } from 'src/store/user';
+import { UserResponse, useUser } from 'src/store/user';
+import { useRouter } from 'vue-router';
 
 export async function authState() {
   const __token = localStorage.getItem('__token');
 
   if (!!__token) {
     const { setLogin, setToken } = useUser();
+    const { push } = useRouter();
     try {
       const {
         data: { accessToken },
@@ -27,6 +29,7 @@ export async function authState() {
         if (!data) return setLogin(null), localStorage.removeItem('__token');
         localStorage.setItem('__token', data.refreshToken);
         setLogin(data);
+        push('/user');
       }
     } catch (error) {
       console.log(error);

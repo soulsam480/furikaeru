@@ -27,13 +27,14 @@ const Router = createRouter({
 Router.beforeEach((to, from, next) => {
   const { isLoggedIn } = useUser();
   if (to.path === '/') {
-    if (isLoggedIn) {
+    console.log(isLoggedIn.value);
+    if (isLoggedIn.value) {
       return next('/user');
     }
     return next();
   }
 
-  if (!isLoggedIn) {
+  if (!isLoggedIn.value) {
     return next('/');
   }
 
