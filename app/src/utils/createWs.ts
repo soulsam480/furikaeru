@@ -1,16 +1,11 @@
 import { App } from 'vue';
-import { io as Io, Manager, Socket } from 'socket.io-client';
-import { useUser } from 'src/store/user';
+import { io as Io, Socket } from 'socket.io-client';
 let io: Socket;
-let baordIo: Socket;
-let manager: Manager;
 
 export function createWs(app: App) {
-  manager = new Manager(import.meta.env.VITE_WSS, {
+  io = Io(import.meta.env.VITE_WSS, {
     path: '/furikaeru/ws',
   });
-
-  io = manager.socket('/');
 
   io.on('connect', () => {
     console.log('Socket connected!');
@@ -27,16 +22,6 @@ export function createWs(app: App) {
 
   app.config.globalProperties.$io = io;
   return io;
-}
-
-export function createAuthWs() {
-  const { getToken } = useUser();
-  baordIo = manager.socket('/board', {
-    auth: {
-      Authorization: `Bearer ${getToken.value}`,
-    },
-  });
-  return baordIo;
 }
 
 export function useIo() {

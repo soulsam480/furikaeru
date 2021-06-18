@@ -8,15 +8,13 @@ import { createServer } from 'http';
 import { Server as SocketServer } from 'socket.io';
 import { createConnection, getRepository } from 'typeorm';
 import 'reflect-metadata';
-import { useSocketServer } from 'socket-controllers';
 import passport from 'passport';
 import { Strategy } from 'passport-google-oauth2';
 import { User } from 'src/entities/user';
 import { authRouter } from 'src/auth';
 import cors from 'cors';
-import { CORS_ORIGINS, ERROR_MESSAGES } from 'src/utils/constants';
-import { verify } from 'jsonwebtoken';
-import { SocketWithUser } from './utils/types';
+import { CORS_ORIGINS } from 'src/utils/constants';
+import { createHomeSocket } from 'src/sockets';
 
 passport.use(
   new Strategy(
@@ -81,36 +79,9 @@ async function main() {
     path: '/furikaeru/ws/',
     allowUpgrades: true,
     cors: {
-      preflightContinue: true,
       credentials: true,
       origin: [...CORS_ORIGINS],
     },
-  });
-
-  const boardNamespace = io.of('/board');
-
-  boardNamespace.use(async (sock: SocketWithUser, next) => {
-    const {
-      handshake: {
-        auth: { Authorization },
-      },
-    } = sock;
-
-    const token = Authorization.split('Bearer ')[1];
-
-    if (!token) return next({ name: ERROR_MESSAGES.unauthorized, message: ERROR_MESSAGES.unauthorized });
-    try {
-      const data = <{ userId: string }>verify(token, process.env.ACCESS_TOKEN_SECRET as string);
-      const user = await User.findOne({ id: data.userId });
-
-      if (!user) return next({ name: ERROR_MESSAGES.user_not_found, message: ERROR_MESSAGES.user_not_found });
-      sock.user = user;
-      return next();
-    } catch (error) {
-      console.log(error);
-
-      return next({ name: ERROR_MESSAGES.unauthorized, message: ERROR_MESSAGES.unauthorized });
-    }
   });
 
   await createConnection({
@@ -129,12 +100,7 @@ async function main() {
     .then(async (conn) => {
       await conn.runMigrations();
 
-      //todo remove socket controllers
-      useSocketServer(io, {
-        controllers: [__dirname + '/controllers/*{.ts,.js}'],
-        middlewares: [__dirname + '/middlewares/*{.ts,.js}'],
-      });
-
+      createHomeSocket(io);
       server.listen(PORT, () => console.log(`Listening on http://localhost:${PORT}`));
     })
     .catch((err) => {

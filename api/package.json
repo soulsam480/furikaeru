@@ -34,7 +34,6 @@
     "passport-google-oauth2": "^0.2.0",
     "pg": "^8.6.0",
     "reflect-metadata": "^0.1.13",
-    "socket-controllers": "^0.0.5",
     "socket.io": "^4.1.2",
     "typeorm": "^0.2.34"
   }
