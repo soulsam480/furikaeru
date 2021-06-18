@@ -3,7 +3,6 @@ import { verify } from 'jsonwebtoken';
 import { RequestWithUser } from 'src/utils/types';
 
 export function authMiddleware(req: RequestWithUser, res: Response, next: NextFunction) {
-  console.log(req.headers);
   const accessToken = req.headers['access-token'] as string;
 
   if (typeof accessToken !== 'string') return res.sendStatus(401);
