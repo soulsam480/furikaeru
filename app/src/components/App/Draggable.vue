@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps } from '@vue/runtime-core';
+import { defineProps } from 'vue';
 import type { PropType } from 'vue';
 import draggable from 'vuedraggable';
 defineProps({

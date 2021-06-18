@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from '@vue/runtime-core';
+import { onMounted } from 'vue';
 import Axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
 import Icon from 'src/components/App/Icon.vue';

@@ -1,4 +1,4 @@
-import { computed } from '@vue/runtime-core';
+import { computed } from 'vue';
 import { defineStore } from 'pinia';
 
 export interface UserModel {

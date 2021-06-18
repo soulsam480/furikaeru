@@ -1,28 +1,5 @@
-<template>
-  <div class="board">
-    <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 board-grid">
-      <div>
-        <div class="text-lg">List 1</div>
-        <Draggable :list="list" :enabled="enabled" group="perople" v-bind="$attrs" />
-      </div>
-      <div>
-        <div class="text-lg">List 2</div>
-        <Draggable :list="list2" :enabled="enabled" group="perople" v-bind="$attrs" />
-      </div>
-      <div>
-        <div class="text-lg">List 3</div>
-        <Draggable :list="list3" :enabled="enabled" group="perople" v-bind="$attrs" />
-      </div>
-      <div>
-        <div class="text-lg">List 4</div>
-        <Draggable :list="list4" :enabled="enabled" group="perople" v-bind="$attrs" />
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { ref } from '@vue/reactivity';
+import { ref } from 'vue';
 import Draggable from 'src/components/App/Draggable.vue';
 let id = 1;
 const list = ref([
@@ -47,6 +24,28 @@ const list4 = ref([
 ]);
 const enabled = ref(true);
 </script>
+<template>
+  <div class="board">
+    <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 board-grid">
+      <div>
+        <div class="text-lg">List 1</div>
+        <Draggable :list="list" :enabled="enabled" group="perople" v-bind="$attrs" />
+      </div>
+      <div>
+        <div class="text-lg">List 2</div>
+        <Draggable :list="list2" :enabled="enabled" group="perople" v-bind="$attrs" />
+      </div>
+      <div>
+        <div class="text-lg">List 3</div>
+        <Draggable :list="list3" :enabled="enabled" group="perople" v-bind="$attrs" />
+      </div>
+      <div>
+        <div class="text-lg">List 4</div>
+        <Draggable :list="list4" :enabled="enabled" group="perople" v-bind="$attrs" />
+      </div>
+    </div>
+  </div>
+</template>
 <style scoped lang="scss">
 .buttons {
   margin-top: 35px;
