@@ -9,9 +9,9 @@ export const furiApi = Axios.create({
 export function registerToken() {
   const { $state } = useUser();
   watch(
-    () => $state._token,
+    () => $state.user,
     (val) => {
-      furiApi.defaults.headers['Authorization'] = `Bearer ${val}`;
+      furiApi.defaults.headers['Authorization'] = `Bearer ${val.accessToken}`;
     },
     { immediate: true },
   );

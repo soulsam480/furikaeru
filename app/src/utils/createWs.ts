@@ -1,8 +1,7 @@
-import { App } from 'vue';
 import { io as Io, Socket } from 'socket.io-client';
 let io: Socket;
 
-export function createWs(app: App) {
+export function createWs() {
   io = Io(import.meta.env.VITE_WSS, {
     path: '/furikaeru/ws',
   });
@@ -20,7 +19,6 @@ export function createWs(app: App) {
     io.emit('ping');
   }, 60000);
 
-  app.config.globalProperties.$io = io;
   return io;
 }
 

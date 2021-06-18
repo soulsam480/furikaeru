@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import Navbar from 'src/components/App/Navbar.vue';
-import { registerToken } from 'src/utils/helpers';
 import { authState } from 'src/utils/authState';
+import { registerToken } from 'src/utils/helpers';
 
-registerToken();
 authState();
+registerToken();
 </script>
 <template>
   <div>

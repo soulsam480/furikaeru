@@ -6,7 +6,7 @@ export async function authState() {
   const __token = localStorage.getItem('__token');
 
   if (!!__token) {
-    const { setLogin, setToken } = useUser();
+    const { setLogin, getUser } = useUser();
     const { push } = useRouter();
     try {
       const {
@@ -18,6 +18,7 @@ export async function authState() {
           'refresh-token': `Bearer ${__token}`,
         },
       });
+
       if (accessToken) {
         const { data }: { data: UserResponse } = await axios({
           baseURL: import.meta.env.VITE_API,
@@ -27,7 +28,6 @@ export async function authState() {
           },
         });
         if (!data) return setLogin(null), localStorage.removeItem('__token');
-        localStorage.setItem('__token', data.refreshToken);
         setLogin(data);
         push('/user');
       }
@@ -36,6 +36,7 @@ export async function authState() {
 
       setLogin(null);
       localStorage.removeItem('__token');
+      push('/');
     }
 
     setInterval(async () => {
@@ -49,13 +50,15 @@ export async function authState() {
             'refresh-token': `Bearer ${__token}`,
           },
         });
-        setToken(accessToken);
         localStorage.setItem('__token', refreshToken);
+        setLogin({ ...getUser.value, accessToken, refreshToken });
       } catch (error) {
         console.log(error);
+
         setLogin(null);
         localStorage.removeItem('__token');
+        push('/');
       }
-    }, 840000);
+    }, 846000);
   }
 }

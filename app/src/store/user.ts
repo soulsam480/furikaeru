@@ -8,6 +8,8 @@ export interface UserModel {
   ga_id: string;
   username: string;
   createdAt: string;
+  accessToken: string;
+  refreshToken: string;
 }
 export interface UserResponse extends UserModel {
   accessToken: string;
@@ -16,33 +18,24 @@ export interface UserResponse extends UserModel {
 interface userState {
   user: Partial<UserModel>;
   isLoggedin: boolean;
-  _token: string;
 }
 export const useUser = defineStore({
   id: 'user',
-  state: (): userState => ({ user: {}, isLoggedin: false, _token: '' }),
+  state: (): userState => ({ user: {}, isLoggedin: false }),
   actions: {
     setLogin(user: Partial<UserResponse> | null) {
       if (!user) {
         this.user = {};
         this.isLoggedin = false;
-        this.setToken('');
         return;
       }
       localStorage.setItem('__token', user.refreshToken as string);
-      this.setToken(user.accessToken as string);
-      delete user.refreshToken;
-      delete user.accessToken;
       this.user = { ...user };
       this.isLoggedin = true;
-    },
-    setToken(token: string) {
-      this._token = token;
     },
   },
   getters: {
     isLoggedIn: (state) => computed(() => state.isLoggedin),
     getUser: (state) => computed(() => state.user),
-    getToken: (state) => computed(() => state._token),
   },
 });
