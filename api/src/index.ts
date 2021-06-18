@@ -15,6 +15,7 @@ import { authRouter } from 'src/express';
 import cors from 'cors';
 import { CORS_ORIGINS } from 'src/utils/constants';
 import { createHomeSocket } from 'src/sockets';
+import { boardRouter } from 'src/express/board';
 
 passport.use(
   new Strategy(
@@ -73,6 +74,7 @@ async function main() {
   app.use(express.urlencoded({ extended: true }));
   app.use(passport.initialize());
   app.use('/furikaeru/auth', authRouter);
+  app.use('/furikaeru/board', boardRouter);
 
   const server = createServer(app);
   const io = new SocketServer(server, {

@@ -12,3 +12,4 @@ boardRouter.post('/', async (req: RequestWithUser, res) => {
   const createdBoard = await Board.create({ user: { id: userId }, data: body.data, is_public: body.is_public }).save();
   res.send(createdBoard);
 });
+export { boardRouter };
