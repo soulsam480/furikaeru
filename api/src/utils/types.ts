@@ -9,7 +9,7 @@ export interface loginDto {
   username: string;
 }
 export interface RequestWithUser extends Request {
-  user?: Partial<User>;
+  userId?: string;
 }
 
 export type Vote = {

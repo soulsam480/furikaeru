@@ -11,7 +11,7 @@ import 'reflect-metadata';
 import passport from 'passport';
 import { Strategy } from 'passport-google-oauth2';
 import { User } from 'src/entities/user';
-import { authRouter } from 'src/auth';
+import { authRouter } from 'src/express';
 import cors from 'cors';
 import { CORS_ORIGINS } from 'src/utils/constants';
 import { createHomeSocket } from 'src/sockets';
