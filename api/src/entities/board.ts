@@ -18,6 +18,9 @@ export class Board extends BaseEntity {
   @ManyToOne(() => User, (user) => user.boards, { nullable: true })
   user: User;
 
+  @Column({ type: 'text', nullable: false })
+  title: string;
+
   @Column({
     type: 'jsonb',
     array: false,
