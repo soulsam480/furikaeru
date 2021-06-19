@@ -5,7 +5,6 @@ export interface Card {
   id: string;
   title: string;
   votes: Vote;
-  owner_id: string;
   user_id: string;
   created_date: number;
   updated_date: number;

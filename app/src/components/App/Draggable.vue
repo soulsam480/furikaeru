@@ -16,6 +16,7 @@ const isEdit = ref<string | null>(null);
 const emits = defineEmit(['upvote', 'change', 'move', 'end']);
 
 function calcVotes(votes: Record<string, any>) {
+  if (Object.keys(votes).length === 0) return 0;
   return Object.values(votes).reduce((acc, val) => acc + val);
 }
 
@@ -30,6 +31,14 @@ function handleTitleChange(card: Card) {
     (props.list as Card[])[cardIndex].updated_date = new Date().valueOf();
   }
   (isEdit.value = null), emits('end');
+}
+
+function handleRemoveCard(id: string) {
+  const cardIndex = (props.list as Card[]).findIndex((el) => el.id === id);
+  if (cardIndex !== -1) {
+    (props.list as Card[]).splice(cardIndex, 1);
+  }
+  emits('end');
 }
 </script>
 <template>
@@ -55,16 +64,17 @@ function handleTitleChange(card: Card) {
           hover:bg-cyan-200
           transition-all
           ease-in-out
-          duration-200
+          duration-400
           cursor-move
           my-1
           rounded-md
+          shadow-md shadow-gray-500
         "
         :class="{ 'not-draggable': !enabled }"
       >
         <div class="pb-2">
           <div class="flex" v-if="isEdit !== element.id">
-            <div class="text-lg flex-grow">{{ element.title }}</div>
+            <div class="text-lg flex-grow break-all">{{ element.title }}</div>
             <div class="flex-none">
               <button
                 class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md"
@@ -72,6 +82,13 @@ function handleTitleChange(card: Card) {
                 @click="isEdit = element.id"
               >
                 <Icon icon="ion:pencil" class="cursor-pointer" size="15px" />
+              </button>
+              <button
+                class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md"
+                title="Remove card"
+                @click="handleRemoveCard(element.id)"
+              >
+                <Icon icon="ion:trash-outline" class="cursor-pointer" size="15px" />
               </button>
             </div>
           </div>

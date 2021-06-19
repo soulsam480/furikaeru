@@ -19,25 +19,28 @@ const board = ref<BoardModel>();
 const enabled = ref(true);
 const isEditColumnName = ref<string | null>(null);
 const isEditBoardName = ref<string | null>(null);
+const newCardName = ref('');
+const isNewCard = ref<string | null>(null);
 const getUserId = computed(() => {
   if (isLoggedIn.value) return getUser.value.id;
   const uid = localStorage.getItem('__uuid');
   return uid ?? v4();
 });
 
-function blockUserVotes() {
-  let maxVotes: string | number | null = localStorage.getItem('__mv');
-  if (!maxVotes) {
-    localStorage.setItem('__mv', '0');
-    return true;
-  }
-  if (parseInt(maxVotes) === 5) return false;
+//TODO: THis will be changed
+// function blockUserVotes() {
+//   let maxVotes: string | number | null = localStorage.getItem('__mv');
+//   if (!maxVotes) {
+//     localStorage.setItem('__mv', '0');
+//     return true;
+//   }
+//   if (parseInt(maxVotes) === 5) return false;
 
-  maxVotes = parseInt(maxVotes);
-  maxVotes++;
-  localStorage.setItem('__mv', `${maxVotes}`);
-  return true;
-}
+//   maxVotes = parseInt(maxVotes);
+//   maxVotes++;
+//   localStorage.setItem('__mv', `${maxVotes}`);
+//   return true;
+// }
 
 function vote(card: Card, uid: string): Card {
   const { votes } = card;
@@ -99,6 +102,26 @@ function handleBoardNameChange() {
   updateBoardEmit(bid as string, board.value as BoardModel);
 }
 
+function handleCardAddition(id: string) {
+  const card: Card = {
+    id: v4(),
+    title: newCardName.value,
+    votes: {},
+    user_id: getUserId.value as string,
+    created_date: new Date().valueOf(),
+    updated_date: new Date().valueOf(),
+  };
+
+  const idx = board.value?.data.findIndex((el) => el.id === id);
+  if (idx !== -1) {
+    board.value?.data[idx as number].data.push({ ...card });
+  }
+  updateBoardEmit(bid as string, board.value as BoardModel);
+
+  newCardName.value = '';
+  isNewCard.value = null;
+}
+
 onMounted(() => {
   emit('get:board', { id: bid });
 });
@@ -117,7 +140,7 @@ onBeforeUnmount(() => {
   <div class="board">
     <div class="mb-4">
       <div class="flex" v-if="isEditBoardName !== board?.id">
-        <div class="text-2xl font-semibold flex-grow sm:mr-1 sm:flex-none">{{ board?.title }}</div>
+        <div class="text-2xl font-semibold flex-grow sm:mr-1 sm:flex-none break-all">{{ board?.title }}</div>
         <div class="flex-none">
           <button
             class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md"
@@ -157,7 +180,7 @@ onBeforeUnmount(() => {
       <div v-for="column in board?.data" :key="column.id">
         <div class="pb-2">
           <div class="flex" v-if="isEditColumnName !== column.id">
-            <div class="text-lg flex-grow">{{ column.name }}</div>
+            <div class="text-lg flex-grow break-all">{{ column.name }}</div>
             <div class="flex-none">
               <button
                 class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md"
@@ -192,6 +215,40 @@ onBeforeUnmount(() => {
             </button>
           </div>
         </div>
+
+        <button
+          class="bg-cyan-100 rounded-md text-xs w-full flex hover:bg-cyan-200 py-1 items-center justify-center"
+          @click="isNewCard = column.id"
+        >
+          <Icon icon="ion:add" size="15px" />
+          Add
+        </button>
+        <div class="w-full flex py-1" v-if="isNewCard === column.id">
+          <input
+            type="text"
+            class="rounded-md border-none bg-cyan-100 flex-grow py-1 mr-1 focus:shadow-none"
+            v-model="newCardName"
+            placeholder="New card title"
+            @keyup.enter="handleCardAddition(column.id)"
+          />
+          <div class="flex-none">
+            <button
+              class="px-2 py-1 bg-cyan-100 mr-1 hover:bg-cyan-200 focus:outline-none rounded-md"
+              @click="handleCardAddition(column.id)"
+              title="Save"
+            >
+              <Icon icon="ion:checkmark" class="cursor-pointer" size="15px" />
+            </button>
+
+            <button
+              class="px-2 py-1 bg-cyan-100 hover:bg-cyan-200 focus:outline-none rounded-md"
+              @click="isNewCard = null"
+              title="Cancel"
+            >
+              <Icon icon="ion:close" class="cursor-pointer" size="15px" />
+            </button>
+          </div>
+        </div>
         <Draggable
           :list="column.data"
           :enabled="enabled"
@@ -205,15 +262,6 @@ onBeforeUnmount(() => {
   </div>
 </template>
 <style scoped lang="scss">
-.buttons {
-  margin-top: 35px;
-}
-
-.ghost {
-  opacity: 0.5;
-  background: #c8ebfb;
-}
-
 .not-draggable {
   cursor: no-drop;
 }

@@ -6,6 +6,7 @@ import { furiApi } from 'src/utils/helpers';
 import UserCards from 'src/components/UserCards.vue';
 import Icon from 'src/components/App/Icon.vue';
 import { useRouter } from 'vue-router';
+
 const { getUser } = useUser();
 const { push } = useRouter();
 
@@ -13,20 +14,19 @@ async function createBoard() {
   const votes: { [x: string]: number } = {};
   votes[getUser.value.id as string] = 1;
   const data: { title: string; data: BoardColumn[]; is_public: boolean } = {
-    title: 'Some board',
+    title: 'Example board',
     data: [
       {
         id: uuid(),
-        name: 'Something',
+        name: 'This is a column',
         created_at: new Date().valueOf(),
         updated_at: new Date().valueOf(),
         owner_id: getUser.value.id as string,
         data: [
           {
             id: uuid(),
-            title: 'something',
+            title: 'a card',
             votes: { ...votes },
-            owner_id: getUser.value.id as string,
             user_id: getUser.value.id as string,
             created_date: new Date().valueOf(),
             updated_date: new Date().valueOf(),
@@ -35,16 +35,15 @@ async function createBoard() {
       },
       {
         id: uuid(),
-        name: 'Something',
+        name: 'This is another column',
         created_at: new Date().valueOf(),
         updated_at: new Date().valueOf(),
         owner_id: getUser.value.id as string,
         data: [
           {
             id: uuid(),
-            title: 'something',
+            title: 'another card',
             votes: { ...votes },
-            owner_id: getUser.value.id as string,
             user_id: getUser.value.id as string,
             created_date: new Date().valueOf(),
             updated_date: new Date().valueOf(),
@@ -53,16 +52,15 @@ async function createBoard() {
       },
       {
         id: uuid(),
-        name: 'Something',
+        name: 'This is another column',
         created_at: new Date().valueOf(),
         updated_at: new Date().valueOf(),
         owner_id: getUser.value.id as string,
         data: [
           {
             id: uuid(),
-            title: 'something',
+            title: 'another one',
             votes: { ...votes },
-            owner_id: getUser.value.id as string,
             user_id: getUser.value.id as string,
             created_date: new Date().valueOf(),
             updated_date: new Date().valueOf(),
@@ -85,13 +83,13 @@ async function createBoard() {
 }
 </script>
 <template>
-  <div class="flex justify-end">
+  <div class="flex justify-between">
+    <div class="text-3xl font-semibold">My boards</div>
     <button class="px-3 py-2 bg-cyan-200 flex items-center rounded-sm" type="button" @click="createBoard">
       <Icon icon="ion:add-outline" />
-      &nbsp; Create
+      &nbsp; Add new
     </button>
   </div>
-  <div class="text-3xl font-semibold">My boards</div>
 
   <UserCards />
 </template>

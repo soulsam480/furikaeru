@@ -4,7 +4,7 @@ import App from 'src/App.vue';
 import 'virtual:windi.css';
 import '@purge-icons/generated';
 import { Router } from 'src/router';
-import 'src/styles/index.css';
+import 'src/styles/index.scss';
 import { createWs } from 'src/utils/createWs';
 
 const app = createApp(App);

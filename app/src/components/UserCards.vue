@@ -27,7 +27,7 @@ onMounted(async () => {
 </script>
 <template>
   <div>
-    <div class="grid grid-cols-4 gap-2 py-3">
+    <div class="grid sm:grid-cols-4 grid-cols-1 gap-2 py-3">
       <div
         v-for="board in boards"
         :key="board.id"
