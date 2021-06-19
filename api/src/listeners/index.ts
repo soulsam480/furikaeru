@@ -26,7 +26,7 @@ export function createListeners(io: Server) {
       sock.on('update:board', async (d: { id: string; b: Partial<Board> }) => {
         const { id, b } = d;
 
-        await Board.update(id, { data: b.data });
+        await Board.update(id, { data: b.data, title: b.title });
         const nb = await Board.findOne({ id });
 
         io.sockets.in(roomId).emit('send:board', { d: nb });

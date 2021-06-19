@@ -16,3 +16,9 @@ export function registerToken() {
     { immediate: true },
   );
 }
+
+export function getDDMMYY(time: number) {
+  const date = new Date();
+
+  return `${date.toLocaleDateString()}, ${date.toLocaleTimeString()}`;
+}

@@ -5,7 +5,7 @@ import draggable from 'vuedraggable';
 import Icon from './Icon.vue';
 import type { Card } from 'src/utils/types';
 
-defineProps({
+const props = defineProps({
   enabled: Boolean,
   list: Array as PropType<Card[]>,
   group: [String, Function],
@@ -23,7 +23,12 @@ function emitMove() {
   emits('move');
 }
 
-function handleTitleChange() {
+function handleTitleChange(card: Card) {
+  const { id } = card;
+  const cardIndex = (props.list as Card[]).findIndex((el) => el.id === id);
+  if (cardIndex !== -1) {
+    (props.list as Card[])[cardIndex].updated_date = new Date().valueOf();
+  }
   (isEdit.value = null), emits('end');
 }
 </script>
@@ -75,11 +80,11 @@ function handleTitleChange() {
               type="text"
               class="rounded-md border-none bg-cyan-50 flex-grow py-1 focus:shadow-none mr-1"
               v-model="element.title"
-              @keyup.enter="handleTitleChange"
+              @keyup.enter="handleTitleChange(element)"
             />
             <button
               class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md"
-              @click="handleTitleChange"
+              @click="handleTitleChange(element)"
               title="Save"
             >
               <Icon icon="ion:checkmark" class="cursor-pointer" size="15px" />
@@ -94,15 +99,18 @@ function handleTitleChange() {
             </button>
           </div>
         </div>
+
         <div class="flex justify-end items-center">
-          <button
-            class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md mr-1"
-            title="Up vote"
-            @click="$emit('upvote', { cid: element.id })"
-          >
-            <icon icon="ion:rocket-outline" size="15px" />
-          </button>
-          {{ calcVotes(element.votes) }}
+          <div>
+            <button
+              class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md mr-1"
+              title="Up vote"
+              @click="$emit('upvote', { cid: element.id })"
+            >
+              <icon icon="ion:rocket-outline" size="15px" />
+            </button>
+            {{ calcVotes(element.votes) }}
+          </div>
         </div>
       </div>
     </template>
