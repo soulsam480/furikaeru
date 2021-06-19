@@ -21,9 +21,24 @@ const getUserId = computed(() => {
   return uid ?? v4();
 });
 
+function blockUserVotes() {
+  let maxVotes: string | number | null = localStorage.getItem('__mv');
+  if (!maxVotes) {
+    localStorage.setItem('__mv', '0');
+    return true;
+  }
+  if (parseInt(maxVotes) === 5) return false;
+
+  maxVotes = parseInt(maxVotes);
+  maxVotes++;
+  localStorage.setItem('__mv', `${maxVotes}`);
+  return true;
+}
+
 function vote(card: any, uid: string): any {
   const { votes } = card;
   const userVoted = Object.keys(votes).includes(uid);
+
   if (!userVoted) {
     votes[uid] = 1;
   } else {
@@ -33,6 +48,7 @@ function vote(card: any, uid: string): any {
 }
 
 function upVote(e: { cid: string; coid: string }) {
+  if (!blockUserVotes()) return;
   const { cid, coid } = e;
 
   const column = board.value?.data.filter((el) => el.id === coid)[0];
@@ -60,7 +76,11 @@ function upVote(e: { cid: string; coid: string }) {
     { ...column },
   );
 
-  emit('update:board', { id: bid, b: board.value });
+  updateBoardEmit(bid as string, board.value as BoardModel);
+}
+
+function updateBoardEmit(id: string, board: BoardModel) {
+  emit('update:board', { id, b: board });
 }
 
 onMounted(() => {
@@ -88,6 +108,7 @@ onBeforeUnmount(() => {
           group="board"
           v-bind="$attrs"
           @upvote="upVote({ cid: $event.cid, coid: column.id })"
+          @end="updateBoardEmit(board?.id, board)"
         />
       </div>
     </div>
