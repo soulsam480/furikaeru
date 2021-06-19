@@ -7,7 +7,6 @@ import { useRoute } from 'vue-router';
 import { useUser } from 'src/store/user';
 import { v4 } from 'uuid';
 import Icon from 'src/components/App/Icon.vue';
-import { getDDMMYY } from 'src/utils/helpers';
 
 const { on, emit, io } = useIo();
 const {
@@ -128,7 +127,6 @@ onMounted(() => {
 
 on('send:board', ({ d }: { d: BoardModel }) => {
   board.value = { ...d };
-  console.log(board.value);
 });
 
 onBeforeUnmount(() => {

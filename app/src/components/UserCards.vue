@@ -3,6 +3,8 @@ import { furiApi } from 'src/utils/helpers';
 import type { BoardModel } from 'src/utils/types';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import Icon from 'src/components/App/Icon.vue';
+import { getDDMMYY } from 'src/utils/helpers';
 
 const { push } = useRouter();
 const boards = ref<BoardModel[]>([]);
@@ -16,11 +18,20 @@ async function getBoards() {
   try {
     const { data }: { data: BoardModel[] } = await furiApi.get('/board');
     boards.value = [...data];
-    console.log(boards.value);
   } catch (error) {
     console.log(error);
   }
 }
+
+async function handleBoardRemove(id: string) {
+  try {
+    await furiApi.delete(`/board/${id}/`);
+    await getBoards();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 onMounted(async () => {
   await getBoards();
 });
@@ -39,15 +50,33 @@ onMounted(async () => {
           py-3
           hover:bg-cyan-200
           px-2
-          rounded-sm
+          rounded-md
           shadow-md shadow-gray-500
           duration-500
-          cursor-pointer
         "
-        @click="viewBoard(board.id, board.is_public)"
       >
-        <div class="text-lg">{{ board.title }}</div>
-        <span class="font-semibold text-xs" v-if="board.is_public">Public</span>
+        <div class="text-lg break-all">{{ board.title }}</div>
+        <div class="font-semibold text-xs pt-1" v-if="board.is_public">Public</div>
+        <div class="text-gray-500 text-xs pt-1">Updated: {{ getDDMMYY(board.updated_at) }}</div>
+
+        <div class="flex items-center pt-1">
+          <button
+            class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md flex items-center"
+            title="Remove board"
+            @click.prevent="handleBoardRemove(board.id)"
+          >
+            <!-- <Icon icon="ion:ellipsis-vertical" size="14px" /> -->
+            <Icon icon="ion:trash-outline" size="17px" />
+          </button>
+          <button
+            class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md flex items-center"
+            title="View board"
+            @click="viewBoard(board.id, board.is_public)"
+          >
+            <!-- <Icon icon="ion:ellipsis-vertical" size="14px" /> -->
+            <Icon icon="ion:eye-outline" size="17px" />
+          </button>
+        </div>
       </div>
     </div>
   </div>
