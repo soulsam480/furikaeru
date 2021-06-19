@@ -7,8 +7,9 @@ import { useRouter } from 'vue-router';
 const { push } = useRouter();
 const boards = ref<BoardModel[]>([]);
 
-function viewBoard(id: string) {
-  push(`/board/${id}`);
+function viewBoard(id: string, is_public: boolean) {
+  if (is_public) return push(`/${id}/`);
+  return push(`/board/${id}/`);
 }
 
 async function getBoards() {
@@ -43,9 +44,9 @@ onMounted(async () => {
           duration-500
           cursor-pointer
         "
-        @click="viewBoard(board.id)"
+        @click="viewBoard(board.id, board.is_public)"
       >
-        <!-- <div class="text-lg"> {{board.title}} </div> -->
+        <div class="text-lg">{{ board.title }}</div>
         <span class="font-semibold text-xs" v-if="board.is_public">Public</span>
       </div>
     </div>

@@ -4,47 +4,93 @@ import { v4 as uuid } from 'uuid';
 import type { BoardColumn } from 'src/utils/types';
 import { furiApi } from 'src/utils/helpers';
 import UserCards from 'src/components/UserCards.vue';
-const { isLoggedIn, getUser } = useUser();
+import Icon from 'src/components/App/Icon.vue';
+import { useRouter } from 'vue-router';
+const { getUser } = useUser();
+const { push } = useRouter();
 
 async function createBoard() {
   const votes: { [x: string]: number } = {};
   votes[getUser.value.id as string] = 1;
-  const data: BoardColumn[] = [
-    {
-      id: uuid(),
-      name: 'Something',
-      created_at: new Date().valueOf(),
-      updated_at: new Date().valueOf(),
-      owner_id: getUser.value.id as string,
-      data: [
-        {
-          id: uuid(),
-          title: 'something',
-          votes: { ...votes },
-          owner_id: getUser.value.id as string,
-          user_id: getUser.value.id as string,
-          created_date: new Date().valueOf(),
-          updated_date: new Date().valueOf(),
-        },
-      ],
-    },
-  ];
+  const data: { title: string; data: BoardColumn[]; is_public: boolean } = {
+    title: 'Some board',
+    data: [
+      {
+        id: uuid(),
+        name: 'Something',
+        created_at: new Date().valueOf(),
+        updated_at: new Date().valueOf(),
+        owner_id: getUser.value.id as string,
+        data: [
+          {
+            id: uuid(),
+            title: 'something',
+            votes: { ...votes },
+            owner_id: getUser.value.id as string,
+            user_id: getUser.value.id as string,
+            created_date: new Date().valueOf(),
+            updated_date: new Date().valueOf(),
+          },
+        ],
+      },
+      {
+        id: uuid(),
+        name: 'Something',
+        created_at: new Date().valueOf(),
+        updated_at: new Date().valueOf(),
+        owner_id: getUser.value.id as string,
+        data: [
+          {
+            id: uuid(),
+            title: 'something',
+            votes: { ...votes },
+            owner_id: getUser.value.id as string,
+            user_id: getUser.value.id as string,
+            created_date: new Date().valueOf(),
+            updated_date: new Date().valueOf(),
+          },
+        ],
+      },
+      {
+        id: uuid(),
+        name: 'Something',
+        created_at: new Date().valueOf(),
+        updated_at: new Date().valueOf(),
+        owner_id: getUser.value.id as string,
+        data: [
+          {
+            id: uuid(),
+            title: 'something',
+            votes: { ...votes },
+            owner_id: getUser.value.id as string,
+            user_id: getUser.value.id as string,
+            created_date: new Date().valueOf(),
+            updated_date: new Date().valueOf(),
+          },
+        ],
+      },
+    ],
+    is_public: true,
+  };
 
   try {
     const { data: result } = await furiApi.post('/board', {
-      data,
-      is_public: true,
+      ...data,
     });
     console.log(result);
+    push(`/board/${result.id}/`);
   } catch (error) {
     console.log(JSON.parse(JSON.stringify(error)));
   }
 }
 </script>
 <template>
-  <!-- <div>user is {{ isLoggedIn }}.</div>
-  <button class="px-3 py-2 bg-cyan-200" @click="createBoard">Create</button>
-  <div>wefj</div> -->
+  <div class="flex justify-end">
+    <button class="px-3 py-2 bg-cyan-200 flex items-center rounded-sm" type="button" @click="createBoard">
+      <Icon icon="ion:add-outline" />
+      &nbsp; Create
+    </button>
+  </div>
   <div class="text-3xl font-semibold">My boards</div>
 
   <UserCards />

@@ -1,12 +1,13 @@
 import axios from 'axios';
 import { UserResponse, useUser } from 'src/store/user';
+import { v4 } from 'uuid';
 import { useRouter } from 'vue-router';
 
 export async function authState() {
+  const { setLogin, getUser, isLoggedIn } = useUser();
   const __token = localStorage.getItem('__token');
 
   if (!!__token) {
-    const { setLogin, getUser } = useUser();
     const { push } = useRouter();
     try {
       const {
@@ -60,5 +61,12 @@ export async function authState() {
         push('/');
       }
     }, 846000);
+  }
+
+  if (!isLoggedIn.value) {
+    const uuid = localStorage.getItem('__uuid');
+    if (!uuid) {
+      localStorage.setItem('__uuid', v4());
+    }
   }
 }

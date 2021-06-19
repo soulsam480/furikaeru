@@ -23,6 +23,7 @@ export interface BoardColumn {
 type BoardUser = { id: string };
 export interface BoardModel {
   id: string;
+  title: string;
   user: BoardUser;
   data: BoardColumn[];
   is_public: boolean;

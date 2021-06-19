@@ -13,6 +13,7 @@ boardRouter.post('/', authMiddleware, async (req: RequestWithUser, res) => {
       user: { id: userId },
       data: body.data,
       is_public: body.is_public,
+      title: body.title,
     }).save();
 
     res.send(createdBoard);

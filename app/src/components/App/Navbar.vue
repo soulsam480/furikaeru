@@ -31,8 +31,8 @@ function setNav() {
         <div class="flex-1 flex items-center ml-10 sm:ml-0 sm:items-stretch justify-start">
           <div class="flex-shrink-0 flex items-center text-2xl font-semibold">Furikaeru</div>
           <div class="hidden sm:block sm:ml-6">
-            <div class="flex space-x-4 items-center">
-              <a href="#" class="px-3 py-2 hover:bg-cyan-300 rounded-md font-medium">Dashboard</a>
+            <div class="flex space-x-4 items-center" v-if="isLoggedIn">
+              <router-link to="/user" class="px-3 py-2 hover:bg-cyan-300 rounded-md font-medium">Home</router-link>
             </div>
           </div>
         </div>
@@ -116,10 +116,14 @@ function setNav() {
 
     <!-- Mobile menu, show/hide based on menu state. -->
     <div :class="isNav ? 'sm:hidden' : 'hidden'" class="transition-all ease-in-out" id="mobile-menu">
-      <div class="px-2 pt-2 pb-3 space-y-1">
-        <a href="#" class="hover:bg-cyan-300 block px-3 py-2 rounded-md text-base font-medium" aria-current="page">
-          Dashboard
-        </a>
+      <div class="px-2 pt-2 pb-3 space-y-1" v-if="isLoggedIn">
+        <router-link
+          to="/"
+          class="hover:bg-cyan-300 block px-3 py-2 rounded-md text-base font-medium"
+          aria-current="page"
+        >
+          Home
+        </router-link>
       </div>
     </div>
   </nav>

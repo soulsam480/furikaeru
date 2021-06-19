@@ -2,11 +2,11 @@ import { BoardColumn, Card } from 'src/utils/types';
 
 export function upVote(card: Card, uid: string): Card {
   const { votes } = card;
-  const userVoted = !!votes.uid;
+  const userVoted = Object.keys(votes).includes(uid);
   if (!userVoted) {
     votes[uid] = 1;
   } else {
-    votes.uid += 1;
+    votes[uid] = votes[uid] + 1;
   }
   return { ...card, updated_date: new Date().valueOf(), votes };
 }
