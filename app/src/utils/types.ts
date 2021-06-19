@@ -19,3 +19,13 @@ export interface BoardColumn {
   owner_id: string;
   data: Card[];
 }
+
+type BoardUser = { id: string };
+export interface BoardModel {
+  id: string;
+  user: BoardUser;
+  data: BoardColumn[];
+  is_public: boolean;
+  created_at: number;
+  updated_at: number;
+}

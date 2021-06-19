@@ -3,6 +3,7 @@ import { useUser } from 'src/store/user';
 import { v4 as uuid } from 'uuid';
 import type { BoardColumn } from 'src/utils/types';
 import { furiApi } from 'src/utils/helpers';
+import UserCards from 'src/components/UserCards.vue';
 const { isLoggedIn, getUser } = useUser();
 
 async function createBoard() {
@@ -41,7 +42,10 @@ async function createBoard() {
 }
 </script>
 <template>
-  <div>user is {{ isLoggedIn }}.</div>
+  <!-- <div>user is {{ isLoggedIn }}.</div>
   <button class="px-3 py-2 bg-cyan-200" @click="createBoard">Create</button>
-  <div>wefj</div>
+  <div>wefj</div> -->
+  <div class="text-3xl font-semibold">My boards</div>
+
+  <UserCards />
 </template>
