@@ -63,7 +63,7 @@ onMounted(async () => {
           <button
             class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md flex items-center"
             title="Remove board"
-            @click.prevent="handleBoardRemove(board.id)"
+            @click="handleBoardRemove(board.id)"
           >
             <!-- <Icon icon="ion:ellipsis-vertical" size="14px" /> -->
             <Icon icon="ion:trash-outline" size="17px" />

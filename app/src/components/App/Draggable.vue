@@ -9,6 +9,7 @@ const props = defineProps({
   enabled: Boolean,
   list: Array as PropType<Card[]>,
   group: [String, Function],
+  userId: String,
 });
 
 const isEdit = ref<string | null>(null);
@@ -66,7 +67,7 @@ function handleRemoveCard(id: string) {
           ease-in-out
           duration-400
           cursor-move
-          my-1
+          my-2
           rounded-md
           shadow-md shadow-gray-500
         "
@@ -74,12 +75,13 @@ function handleRemoveCard(id: string) {
       >
         <div class="pb-2">
           <div class="flex" v-if="isEdit !== element.id">
-            <div class="text-lg flex-grow break-all">{{ element.title }}</div>
-            <div class="flex-none">
+            <div class="text-lg py-1 flex-grow break-all board-grid__column__item__title">{{ element.title }}</div>
+            <div class="flex-none board-grid__column__item__edit">
               <button
                 class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md"
                 title="Edit card title"
                 @click="isEdit = element.id"
+                v-if="element.user_id === userId"
               >
                 <Icon icon="ion:pencil" class="cursor-pointer" size="15px" />
               </button>
@@ -87,6 +89,7 @@ function handleRemoveCard(id: string) {
                 class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md"
                 title="Remove card"
                 @click="handleRemoveCard(element.id)"
+                v-if="element.user_id === userId"
               >
                 <Icon icon="ion:trash-outline" class="cursor-pointer" size="15px" />
               </button>

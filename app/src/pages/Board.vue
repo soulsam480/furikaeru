@@ -254,23 +254,31 @@ onBeforeUnmount(() => {
           v-bind="$attrs"
           @upvote="upVote({ cid: $event.cid, coid: column.id })"
           @end="updateBoardEmit(board?.id, board)"
+          :user-id="getUserId"
         />
       </div>
     </div>
   </div>
 </template>
-<style scoped lang="scss">
+<style lang="scss">
 .not-draggable {
   cursor: no-drop;
 }
-// .board-grid {
-//   &__column {
-//     &__item {
-//       &:first-child {
-//         border-top-left-radius: inherit;
-//         border-top-right-radius: inherit;
-//       }
-//     }
-//   }
-// }
+.board-grid {
+  &__column {
+    &__item {
+      :hover > & {
+        &__edit {
+          display: block;
+          transition-property: display;
+          transition-timing-function: ease-in-out;
+          transition-delay: 400ms;
+        }
+      }
+      &__edit {
+        display: none;
+      }
+    }
+  }
+}
 </style>
