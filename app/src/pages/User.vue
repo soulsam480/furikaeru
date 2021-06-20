@@ -19,8 +19,7 @@ async function createBoard() {
       {
         id: uuid(),
         name: 'This is a column',
-        created_at: new Date().valueOf(),
-        updated_at: new Date().valueOf(),
+
         owner_id: getUser.value.id as string,
         data: [
           {
@@ -28,16 +27,12 @@ async function createBoard() {
             title: 'a card',
             votes: { ...votes },
             user_id: getUser.value.id as string,
-            created_date: new Date().valueOf(),
-            updated_date: new Date().valueOf(),
           },
         ],
       },
       {
         id: uuid(),
         name: 'This is another column',
-        created_at: new Date().valueOf(),
-        updated_at: new Date().valueOf(),
         owner_id: getUser.value.id as string,
         data: [
           {
@@ -45,16 +40,12 @@ async function createBoard() {
             title: 'another card',
             votes: { ...votes },
             user_id: getUser.value.id as string,
-            created_date: new Date().valueOf(),
-            updated_date: new Date().valueOf(),
           },
         ],
       },
       {
         id: uuid(),
         name: 'This is another column',
-        created_at: new Date().valueOf(),
-        updated_at: new Date().valueOf(),
         owner_id: getUser.value.id as string,
         data: [
           {
@@ -62,8 +53,6 @@ async function createBoard() {
             title: 'another one',
             votes: { ...votes },
             user_id: getUser.value.id as string,
-            created_date: new Date().valueOf(),
-            updated_date: new Date().valueOf(),
           },
         ],
       },
