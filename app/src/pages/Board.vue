@@ -107,8 +107,7 @@ function handleCardAddition(id: string) {
     title: newCardName.value,
     votes: {},
     user_id: getUserId.value as string,
-    created_date: new Date().valueOf(),
-    updated_date: new Date().valueOf(),
+    comments: {},
   };
 
   const idx = board.value?.data.findIndex((el) => el.id === id);
