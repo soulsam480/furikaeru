@@ -29,7 +29,10 @@ function setNav() {
           </button>
         </div>
         <div class="flex-1 flex items-center ml-10 sm:ml-0 sm:items-stretch justify-start">
-          <div class="flex-shrink-0 flex items-center text-2xl font-semibold">Furikaeru</div>
+          <div class="flex-shrink-0 flex items-center text-2xl font-semibold">
+            <img src="/icon-48.png" alt="Furikaeru logo" style="width: 40px" />
+            Furikaeru
+          </div>
           <div class="hidden sm:block sm:ml-6">
             <div class="flex space-x-4 items-center" v-if="isLoggedIn">
               <router-link to="/user" class="px-3 py-2 hover:bg-cyan-300 rounded-md font-medium">Home</router-link>

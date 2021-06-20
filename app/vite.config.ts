@@ -32,13 +32,38 @@ export default defineConfig({
         orientation: 'portrait',
         background_color: '#e2f3f5',
         theme_color: '#22d1ee',
-        // icons: [
-        //   {
-        //     src: '/icon.png',
-        //     sizes: '96x96',
-        //     type: 'image/png',
-        //   },
-        // ],
+        icons: [
+          {
+            src: '/icon-48.png',
+            sizes: '48x48',
+            type: 'image/png',
+          },
+          {
+            src: '/icon-72.png',
+            sizes: '72x72',
+            type: 'image/png',
+          },
+          {
+            src: '/icon-96.png',
+            sizes: '96x96',
+            type: 'image/png',
+          },
+          {
+            src: '/icon-144.png',
+            sizes: '144x144',
+            type: 'image/png',
+          },
+          {
+            src: '/icon-192.png',
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: '/icon-512.png',
+            sizes: '512x512',
+            type: 'image/png',
+          },
+        ],
       },
     }),
   ],
