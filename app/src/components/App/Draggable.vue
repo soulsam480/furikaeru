@@ -225,7 +225,7 @@ function handleRemoveComment(id: string, coid: string) {
                     class="px-1 py-0 mr-1 hover:bg-cyan-100 focus:outline-none rounded-md"
                     title="Remove comment"
                     @click="handleRemoveComment(element.id, comment[0])"
-                    v-if="comment[0].split('--')[0] === userId.split('-')[4]"
+                    v-if="comment[0].split('--')[0] === userId?.split('-')[4]"
                   >
                     <Icon icon="ion:trash-outline" class="cursor-pointer" size="12px" />
                   </button>
@@ -240,9 +240,9 @@ function handleRemoveComment(id: string, coid: string) {
                   <icon
                     icon="ion:rocket-outline"
                     size="10px"
-                    v-if="comment[0].split('--')[0] === userId.split('-')[4]"
+                    v-if="comment[0].split('--')[0] === userId?.split('-')[4]"
                   />
-                  <span v-if="comment[0].split('--')[0] === userId.split('-')[4]">&nbsp;</span>
+                  <span v-if="comment[0].split('--')[0] === userId?.split('-')[4]">&nbsp;</span>
                   <span class="text-xs">{{ comment[1].likes }}</span>
                 </div>
               </div>

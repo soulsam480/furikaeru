@@ -12,7 +12,8 @@
     "dev": "concurrently --kill-others-on-fail \"yarn dev:api\"  \"yarn dev:app\"",
     "build:api": "yarn workspace api build",
     "build:app": "yarn workspace app build",
-    "build": "concurrently --kill-others-on-fail \"yarn build:api\"  \"yarn build:app\""
+    "build": "concurrently --kill-others-on-fail \"yarn build:api\"  \"yarn build:app\"",
+    "start:app": "yarn workspace app serve"
   },
   "devDependencies": {
     "concurrently": "^6.2.0",

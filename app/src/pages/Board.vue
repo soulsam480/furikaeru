@@ -50,7 +50,7 @@ function vote(card: Card, uid: string): Card {
   } else {
     votes[uid] = votes[uid] + 1;
   }
-  return { ...card, updated_date: new Date().valueOf(), votes };
+  return { ...card, votes };
 }
 
 function upVote(e: { cid: string; coid: string }) {
