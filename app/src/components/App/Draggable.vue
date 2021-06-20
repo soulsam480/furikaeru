@@ -3,7 +3,7 @@ import { defineEmit, defineProps, ref } from 'vue';
 import type { PropType } from 'vue';
 import draggable from 'vuedraggable';
 import Icon from './Icon.vue';
-import type { Card } from 'src/utils/types';
+import type { Card, Comment } from 'src/utils/types';
 
 const props = defineProps({
   enabled: Boolean,
@@ -13,7 +13,8 @@ const props = defineProps({
 });
 
 const isEdit = ref<string | null>(null);
-
+const isComments = ref<string | null>(null);
+const newComment = ref('');
 const emits = defineEmit(['upvote', 'change', 'move', 'end']);
 
 function calcVotes(votes: Record<string, any>) {
@@ -21,16 +22,16 @@ function calcVotes(votes: Record<string, any>) {
   return Object.values(votes).reduce((acc, val) => acc + val);
 }
 
+function parseComments(comments: Comment) {
+  if (Object.keys(comments).length === 0) return [];
+  return Object.entries(comments);
+}
+
 function emitMove() {
   emits('move');
 }
 
-function handleTitleChange(card: Card) {
-  const { id } = card;
-  const cardIndex = (props.list as Card[]).findIndex((el) => el.id === id);
-  if (cardIndex !== -1) {
-    (props.list as Card[])[cardIndex].updated_date = new Date().valueOf();
-  }
+function handleTitleChange() {
   (isEdit.value = null), emits('end');
 }
 
@@ -39,6 +40,16 @@ function handleRemoveCard(id: string) {
   if (cardIndex !== -1) {
     (props.list as Card[]).splice(cardIndex, 1);
   }
+  emits('end');
+}
+
+function handleAddComment(id: string) {
+  const cardIndex = (props.list as Card[]).findIndex((el) => el.id === id);
+  const createIndex = `${props.userId?.split('-')[4]}--${new Date().valueOf()}`;
+  if (cardIndex !== -1) {
+    (props.list as Card[])[cardIndex].comments[createIndex] = newComment.value;
+  }
+  newComment.value = '';
   emits('end');
 }
 </script>
@@ -95,33 +106,45 @@ function handleRemoveCard(id: string) {
               </button>
             </div>
           </div>
-          <div v-else class="flex items-center">
-            <input
-              type="text"
-              class="rounded-md border-none bg-cyan-50 flex-grow py-1 focus:shadow-none mr-1"
-              v-model="element.title"
-              @keyup.enter="handleTitleChange(element)"
-            />
-            <button
-              class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md"
-              @click="handleTitleChange(element)"
-              title="Save"
-            >
-              <Icon icon="ion:checkmark" class="cursor-pointer" size="15px" />
-            </button>
+          <div v-else class="flex items-center w-full">
+            <div class="flex-grow mr-1">
+              <input
+                type="text"
+                class="rounded-md border-none bg-cyan-50 py-1 w-full focus:shadow-none"
+                v-model="element.title"
+                @keyup.enter="handleTitleChange"
+              />
+            </div>
+            <div class="flex-none">
+              <button
+                class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md"
+                @click="handleTitleChange"
+                title="Save"
+              >
+                <Icon icon="ion:checkmark" class="cursor-pointer" size="15px" />
+              </button>
 
-            <button
-              class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md"
-              @click="isEdit = null"
-              title="Cancel"
-            >
-              <Icon icon="ion:close" class="cursor-pointer" size="15px" />
-            </button>
+              <button
+                class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md"
+                @click="isEdit = null"
+                title="Cancel"
+              >
+                <Icon icon="ion:close" class="cursor-pointer" size="15px" />
+              </button>
+            </div>
           </div>
         </div>
 
         <div class="flex justify-end items-center">
           <div>
+            <button
+              class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md mr-1"
+              title="Comment"
+              @click="isComments === element.id ? (isComments = null) : (isComments = element.id)"
+            >
+              <icon icon="ion:chatbox-ellipses-outline" size="15px" />
+            </button>
+
             <button
               class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md mr-1"
               title="Up vote"
@@ -130,6 +153,47 @@ function handleRemoveCard(id: string) {
               <icon icon="ion:rocket-outline" size="15px" />
             </button>
             {{ calcVotes(element.votes) }}
+          </div>
+        </div>
+        <div
+          class="
+            flex flex-col
+            relative
+            overflow-hidden
+            transition-all
+            max-h-0
+            duration-400
+            board-grid__column__item__comments
+          "
+          :ref="`c--${element.id}`"
+          :style="isComments === element.id ? 'max-height: ' + $refs[`c--${element.id}`].scrollHeight + 'px' : ''"
+          :class="{ 'pt-2': isComments === element.id }"
+        >
+          <div class="flex items-center">
+            <div class="flex-grow mr-1">
+              <input
+                type="text"
+                class="rounded-md border-none w-full bg-cyan-50 py-1 focus:shadow-none"
+                v-model="newComment"
+                @keyup.enter="handleAddComment(element.id)"
+                placeholder="Add a comment"
+              />
+            </div>
+            <div class="flex-none">
+              <button
+                class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md"
+                @click="handleAddComment(element.id)"
+                title="Save"
+              >
+                <Icon icon="ion:checkmark" class="cursor-pointer" size="15px" />
+              </button>
+            </div>
+          </div>
+
+          <div class="py-1">
+            <div class="py-1 break-all" v-for="comment in parseComments(element.comments)">
+              {{ comment[1] }}
+            </div>
           </div>
         </div>
       </div>

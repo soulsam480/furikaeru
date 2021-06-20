@@ -278,6 +278,12 @@ onBeforeUnmount(() => {
       &__edit {
         display: none;
       }
+      // &__comments {
+      //   height: 0;
+      //   &--active {
+      //     height: auto;
+      //   }
+      // }
     }
   }
 }
