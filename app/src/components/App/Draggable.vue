@@ -22,6 +22,10 @@ function calcVotes(votes: Record<string, any>) {
   return Object.values(votes).reduce((acc, val) => acc + val);
 }
 
+function calcComments(comments: Comment) {
+  return Object.keys(comments).length;
+}
+
 function parseComments(comments: Comment) {
   if (Object.keys(comments).length === 0) return [];
   return Object.entries(comments);
@@ -47,9 +51,27 @@ function handleAddComment(id: string) {
   const cardIndex = (props.list as Card[]).findIndex((el) => el.id === id);
   const createIndex = `${props.userId?.split('-')[4]}--${new Date().valueOf()}`;
   if (cardIndex !== -1) {
-    (props.list as Card[])[cardIndex].comments[createIndex] = newComment.value;
+    (props.list as Card[])[cardIndex].comments[createIndex] = {
+      text: newComment.value,
+      likes: 0,
+    };
   }
   newComment.value = '';
+  emits('end');
+}
+
+function handleCommentUpVote(id: string, coid: string) {
+  const cardIndex = (props.list as Card[]).findIndex((el) => el.id === id);
+  if (cardIndex !== -1) {
+    (props.list as Card[])[cardIndex].comments[coid].likes += 1;
+  }
+  emits('end');
+}
+function handleRemoveComment(id: string, coid: string) {
+  const cardIndex = (props.list as Card[]).findIndex((el) => el.id === id);
+  if (cardIndex !== -1) {
+    delete (props.list as Card[])[cardIndex].comments[coid];
+  }
   emits('end');
 }
 </script>
@@ -135,7 +157,7 @@ function handleAddComment(id: string) {
           </div>
         </div>
 
-        <div class="flex justify-end items-center">
+        <div class="flex justify-end items-center pb-1">
           <div>
             <button
               class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md mr-1"
@@ -144,15 +166,15 @@ function handleAddComment(id: string) {
             >
               <icon icon="ion:chatbox-ellipses-outline" size="15px" />
             </button>
-
+            <span class="text-xs mr-1">{{ calcComments(element.comments) }}</span>
             <button
-              class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md mr-1"
+              class="px-2 py-1 mr-1 hover:bg-cyan-100 focus:outline-none rounded-md mr-1"
               title="Up vote"
               @click="$emit('upvote', { cid: element.id })"
             >
               <icon icon="ion:rocket-outline" size="15px" />
             </button>
-            {{ calcVotes(element.votes) }}
+            <span class="text-xs">{{ calcVotes(element.votes) }}</span>
           </div>
         </div>
         <div
@@ -164,12 +186,14 @@ function handleAddComment(id: string) {
             max-h-0
             duration-400
             board-grid__column__item__comments
+            bg-cyan-300
+            rounded-md
           "
           :ref="`c--${element.id}`"
           :style="isComments === element.id ? 'max-height: ' + $refs[`c--${element.id}`].scrollHeight + 'px' : ''"
-          :class="{ 'pt-2': isComments === element.id }"
+          :class="{ 'px-1': isComments === element.id }"
         >
-          <div class="flex items-center">
+          <div class="flex items-center pt-2">
             <div class="flex-grow mr-1">
               <input
                 type="text"
@@ -190,9 +214,38 @@ function handleAddComment(id: string) {
             </div>
           </div>
 
-          <div class="py-1">
-            <div class="py-1 break-all" v-for="comment in parseComments(element.comments)">
-              {{ comment[1] }}
+          <div class="pt-2">
+            <div class="py-1 px-2" v-for="comment in parseComments(element.comments)" :key="comment[0]">
+              <div class="flex items-center">
+                <div class="flex-grow text-xs break-all">
+                  {{ comment[1].text }}
+                </div>
+                <div class="flex-none">
+                  <button
+                    class="px-1 py-0 mr-1 hover:bg-cyan-100 focus:outline-none rounded-md"
+                    title="Remove comment"
+                    @click="handleRemoveComment(element.id, comment[0])"
+                    v-if="comment[0].split('--')[0] === userId.split('-')[4]"
+                  >
+                    <Icon icon="ion:trash-outline" class="cursor-pointer" size="12px" />
+                  </button>
+                  <button
+                    v-else
+                    class="px-1 py-0 hover:bg-cyan-100 focus:outline-none rounded-md mr-1"
+                    title="Up vote"
+                    @click="handleCommentUpVote(element.id, comment[0])"
+                  >
+                    <icon icon="ion:rocket-outline" size="12px" />
+                  </button>
+                  <icon
+                    icon="ion:rocket-outline"
+                    size="10px"
+                    v-if="comment[0].split('--')[0] === userId.split('-')[4]"
+                  />
+                  <span v-if="comment[0].split('--')[0] === userId.split('-')[4]">&nbsp;</span>
+                  <span class="text-xs">{{ comment[1].likes }}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -2,8 +2,13 @@ export type Vote = {
   [x: string]: number;
 };
 
+export type UserComment = {
+  text: string;
+  likes: number;
+};
+
 export type Comment = {
-  [x: string]: string;
+  [x: string]: UserComment;
 };
 export interface Card {
   id: string;
