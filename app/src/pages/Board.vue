@@ -6,7 +6,8 @@ import { useIo } from 'src/utils/createWs';
 import { useRoute } from 'vue-router';
 import { useUser } from 'src/store/user';
 import { v4 } from 'uuid';
-import Icon from 'src/components/App/Icon.vue';
+import Button from 'src/components/lib/Button.vue';
+import EditContent from 'src/components/App/EditContent.vue';
 
 const { on, emit, io } = useIo();
 const {
@@ -91,17 +92,23 @@ function updateBoardEmit(id: string, board: BoardModel) {
   emit('update:board', { id, b: board });
 }
 
-function handleColumnNameChange() {
+function handleColumnNameChange(e: string, id: string) {
+  const column = board.value?.data.filter((el) => el.id === id)[0];
+  if (!column) return;
+  column.name = e;
+
   isEditColumnName.value = null;
   updateBoardEmit(bid as string, board.value as BoardModel);
 }
 
-function handleBoardNameChange() {
+function handleBoardNameChange(e: string) {
   isEditBoardName.value = null;
+  (board.value as BoardModel).title = e;
   updateBoardEmit(bid as string, board.value as BoardModel);
 }
 
 function handleCardAddition(id: string) {
+  if (!newCardName.value) return;
   const card: Card = {
     id: v4(),
     title: newCardName.value,
@@ -139,37 +146,11 @@ onBeforeUnmount(() => {
       <div class="flex" v-if="isEditBoardName !== board?.id">
         <div class="text-2xl font-semibold flex-grow sm:mr-1 sm:flex-none break-all">{{ board?.title }}</div>
         <div class="flex-none">
-          <button
-            class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md"
-            title="Edit board title"
-            @click="isEditBoardName = board.id"
-          >
-            <Icon icon="ion:pencil" class="cursor-pointer" size="15px" />
-          </button>
+          <Button title="Edit board title" flat @click="isEditBoardName = board.id" sm icon="ion:pencil" size="15px" />
         </div>
       </div>
       <div v-else class="flex items-center">
-        <input
-          type="text"
-          class="rounded-md border-none bg-cyan-50 flex-grow py-1 focus:shadow-none mr-1"
-          v-model="board.title"
-          @keyup.enter="handleBoardNameChange"
-        />
-        <button
-          class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md"
-          @click="handleBoardNameChange"
-          title="Save"
-        >
-          <Icon icon="ion:checkmark" class="cursor-pointer" size="15px" />
-        </button>
-
-        <button
-          class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md"
-          @click="isEditBoardName = null"
-          title="Cancel"
-        >
-          <Icon icon="ion:close" class="cursor-pointer" size="15px" />
-        </button>
+        <EditContent :content="board.title" @save="handleBoardNameChange" @cancel="isEditBoardName = null" />
       </div>
     </div>
 
@@ -179,47 +160,29 @@ onBeforeUnmount(() => {
           <div class="flex" v-if="isEditColumnName !== column.id">
             <div class="text-lg flex-grow break-all">{{ column.name }}</div>
             <div class="flex-none">
-              <button
-                class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md"
-                title="Edit column title"
-                @click="isEditColumnName = column.id"
-              >
-                <Icon icon="ion:pencil" class="cursor-pointer" size="15px" />
-              </button>
+              <Button title="Edit column title" @click="isEditColumnName = column.id" flat icon="ion:pencil" sm />
             </div>
           </div>
           <div v-else class="flex items-center">
-            <input
-              type="text"
-              class="rounded-md border-none bg-cyan-50 flex-grow py-1 focus:shadow-none mr-1"
-              v-model="column.name"
-              @keyup.enter="handleColumnNameChange"
+            <EditContent
+              :content="column.name"
+              @save="handleColumnNameChange($event, column.id)"
+              @cancel="isEditColumnName = null"
             />
-            <button
-              class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md"
-              @click="handleColumnNameChange"
-              title="Save"
-            >
-              <Icon icon="ion:checkmark" class="cursor-pointer" size="15px" />
-            </button>
-
-            <button
-              class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md"
-              @click="isEditColumnName = null"
-              title="Cancel"
-            >
-              <Icon icon="ion:close" class="cursor-pointer" size="15px" />
-            </button>
           </div>
         </div>
 
-        <button
-          class="bg-cyan-100 rounded-md text-xs w-full flex hover:bg-cyan-200 py-1 items-center justify-center"
+        <Button
           @click="isNewCard = column.id"
-        >
-          <Icon icon="ion:add" size="15px" />
-          Add
-        </button>
+          block
+          icon="ion:add"
+          class="text-xs"
+          title="Add a new card"
+          center
+          label="Add"
+          sm
+        />
+
         <div class="w-full flex py-1" v-if="isNewCard === column.id">
           <input
             type="text"
@@ -228,22 +191,16 @@ onBeforeUnmount(() => {
             placeholder="New card title"
             @keyup.enter="handleCardAddition(column.id)"
           />
-          <div class="flex-none">
-            <button
-              class="px-2 py-1 bg-cyan-100 mr-1 hover:bg-cyan-200 focus:outline-none rounded-md"
+          <div class="flex-none flex">
+            <Button
               @click="handleCardAddition(column.id)"
+              :disables="!newCardName"
               title="Save"
-            >
-              <Icon icon="ion:checkmark" class="cursor-pointer" size="15px" />
-            </button>
-
-            <button
-              class="px-2 py-1 bg-cyan-100 hover:bg-cyan-200 focus:outline-none rounded-md"
-              @click="isNewCard = null"
-              title="Cancel"
-            >
-              <Icon icon="ion:close" class="cursor-pointer" size="15px" />
-            </button>
+              flat
+              icon="ion:checkmark"
+              sm
+            />
+            <Button @click="(isNewCard = null), (newCardName = '')" title="Cancel" flat icon="ion:close" sm />
           </div>
         </div>
         <Draggable
@@ -268,21 +225,15 @@ onBeforeUnmount(() => {
     &__item {
       :hover > & {
         &__edit {
-          display: block;
+          visibility: visible;
           transition-property: display;
           transition-timing-function: ease-in-out;
           transition-delay: 400ms;
         }
       }
       &__edit {
-        display: none;
+        visibility: hidden;
       }
-      // &__comments {
-      //   height: 0;
-      //   &--active {
-      //     height: auto;
-      //   }
-      // }
     }
   }
 }

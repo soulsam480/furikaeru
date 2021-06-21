@@ -4,6 +4,8 @@ import type { PropType } from 'vue';
 import draggable from 'vuedraggable';
 import Icon from './Icon.vue';
 import type { Card, Comment } from 'src/utils/types';
+import EditContent from './EditContent.vue';
+import Button from '../lib/Button.vue';
 
 const props = defineProps({
   enabled: Boolean,
@@ -48,6 +50,7 @@ function handleRemoveCard(id: string) {
 }
 
 function handleAddComment(id: string) {
+  if (!newComment) return;
   const cardIndex = (props.list as Card[]).findIndex((el) => el.id === id);
   const createIndex = `${props.userId?.split('-')[4]}--${new Date().valueOf()}`;
   if (cardIndex !== -1) {
@@ -67,6 +70,7 @@ function handleCommentUpVote(id: string, coid: string) {
   }
   emits('end');
 }
+
 function handleRemoveComment(id: string, coid: string) {
   const cardIndex = (props.list as Card[]).findIndex((el) => el.id === id);
   if (cardIndex !== -1) {
@@ -94,88 +98,69 @@ function handleRemoveComment(id: string, coid: string) {
           block
           px-3
           py-2
-          bg-cyan-100
-          hover:bg-cyan-200
+          bg-cyan-400
+          hover:(shadow-lg
+          shadow-gray-700)
           transition-all
           ease-in-out
           duration-400
           cursor-move
           my-2
           rounded-md
-          shadow-md shadow-gray-500
         "
         :class="{ 'not-draggable': !enabled }"
       >
         <div class="pb-2">
           <div class="flex" v-if="isEdit !== element.id">
             <div class="text-lg py-1 flex-grow break-all board-grid__column__item__title">{{ element.title }}</div>
-            <div class="flex-none board-grid__column__item__edit">
-              <button
-                class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md"
+            <div class="flex-none flex board-grid__column__item__edit transition-all ease-in-out">
+              <Button
+                icon="ion:pencil"
                 title="Edit card title"
                 @click="isEdit = element.id"
                 v-if="element.user_id === userId"
-              >
-                <Icon icon="ion:pencil" class="cursor-pointer" size="15px" />
-              </button>
-              <button
-                class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md"
+                sm
+                flat
+              />
+              <Button
+                icon="ion:trash-outline"
                 title="Remove card"
                 @click="handleRemoveCard(element.id)"
                 v-if="element.user_id === userId"
-              >
-                <Icon icon="ion:trash-outline" class="cursor-pointer" size="15px" />
-              </button>
+                sm
+                flat
+              />
             </div>
           </div>
           <div v-else class="flex items-center w-full">
-            <div class="flex-grow mr-1">
-              <input
-                type="text"
-                class="rounded-md border-none bg-cyan-50 py-1 w-full focus:shadow-none"
-                v-model="element.title"
-                @keyup.enter="handleTitleChange"
-              />
-            </div>
-            <div class="flex-none">
-              <button
-                class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md"
-                @click="handleTitleChange"
-                title="Save"
-              >
-                <Icon icon="ion:checkmark" class="cursor-pointer" size="15px" />
-              </button>
-
-              <button
-                class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md"
-                @click="isEdit = null"
-                title="Cancel"
-              >
-                <Icon icon="ion:close" class="cursor-pointer" size="15px" />
-              </button>
-            </div>
+            <EditContent
+              :content="element.title"
+              @save="(element.title = $event), handleTitleChange()"
+              @cancel="isEdit = null"
+            />
           </div>
         </div>
 
         <div class="flex justify-end items-center pb-1">
-          <div>
-            <button
-              class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md mr-1"
-              title="Comment"
-              @click="isComments === element.id ? (isComments = null) : (isComments = element.id)"
-            >
-              <icon icon="ion:chatbox-ellipses-outline" size="15px" />
-            </button>
-            <span class="text-xs mr-1">{{ calcComments(element.comments) }}</span>
-            <button
-              class="px-2 py-1 mr-1 hover:bg-cyan-100 focus:outline-none rounded-md mr-1"
-              title="Up vote"
-              @click="$emit('upvote', { cid: element.id })"
-            >
-              <icon icon="ion:rocket-outline" size="15px" />
-            </button>
-            <span class="text-xs">{{ calcVotes(element.votes) }}</span>
-          </div>
+          <Button
+            title="Comment"
+            @click="isComments === element.id ? (isComments = null) : (isComments = element.id)"
+            icon="ion:chatbox-ellipses-outline"
+            sm
+            flat
+            class="mr-1"
+          />
+          <span class="text-xs mr-1">{{ calcComments(element.comments) }}</span>
+          <Button
+            title="Up vote"
+            @click="$emit('upvote', { cid: element.id })"
+            icon="ion:rocket-outline"
+            sm
+            flat
+            class="mr-1"
+          />
+
+          <span class="text-xs">{{ calcVotes(element.votes) }}</span>
         </div>
         <div
           class="
@@ -204,13 +189,13 @@ function handleRemoveComment(id: string, coid: string) {
               />
             </div>
             <div class="flex-none">
-              <button
-                class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md"
+              <Button
+                icon="ion:checkmark"
+                :disabled="!newComment"
+                sm
                 @click="handleAddComment(element.id)"
                 title="Save"
-              >
-                <Icon icon="ion:checkmark" class="cursor-pointer" size="15px" />
-              </button>
+              />
             </div>
           </div>
 
@@ -220,29 +205,29 @@ function handleRemoveComment(id: string, coid: string) {
                 <div class="flex-grow text-xs break-all">
                   {{ comment[1].text }}
                 </div>
-                <div class="flex-none">
-                  <button
-                    class="px-1 py-0 mr-1 hover:bg-cyan-100 focus:outline-none rounded-md"
+                <div class="flex-none flex items-center justify-end">
+                  <Button
                     title="Remove comment"
                     @click="handleRemoveComment(element.id, comment[0])"
                     v-if="comment[0].split('--')[0] === userId?.split('-')[4]"
-                  >
-                    <Icon icon="ion:trash-outline" class="cursor-pointer" size="12px" />
-                  </button>
-                  <button
+                    icon="ion:trash-outline"
+                    sm
+                    class="px-1 py-0 mr-1"
+                    size="12px"
+                  />
+                  <Buttton
                     v-else
-                    class="px-1 py-0 hover:bg-cyan-100 focus:outline-none rounded-md mr-1"
                     title="Up vote"
                     @click="handleCommentUpVote(element.id, comment[0])"
-                  >
-                    <icon icon="ion:rocket-outline" size="12px" />
-                  </button>
-                  <icon
+                    class="px-1 py-0 mr-1"
                     icon="ion:rocket-outline"
-                    size="10px"
-                    v-if="comment[0].split('--')[0] === userId?.split('-')[4]"
+                    size="12px"
+                    sm
                   />
-                  <span v-if="comment[0].split('--')[0] === userId?.split('-')[4]">&nbsp;</span>
+                  <template v-if="comment[0].split('--')[0] === userId?.split('-')[4]">
+                    <icon icon="ion:rocket-outline" size="10px" />
+                    <span>&nbsp;</span>
+                  </template>
                   <span class="text-xs">{{ comment[1].likes }}</span>
                 </div>
               </div>

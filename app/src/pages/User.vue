@@ -4,8 +4,8 @@ import { v4 as uuid } from 'uuid';
 import type { BoardColumn, Comment } from 'src/utils/types';
 import { furiApi } from 'src/utils/helpers';
 import UserCards from 'src/components/UserCards.vue';
-import Icon from 'src/components/App/Icon.vue';
 import { useRouter } from 'vue-router';
+import Button from 'src/components/lib/Button.vue';
 
 const { getUser } = useUser();
 const { push } = useRouter();
@@ -75,10 +75,7 @@ async function createBoard() {
 <template>
   <div class="flex justify-between">
     <div class="text-3xl font-semibold">My boards</div>
-    <button class="px-3 py-2 bg-cyan-200 flex items-center rounded-md" type="button" @click="createBoard">
-      <Icon icon="ion:add-outline" />
-      &nbsp; Add new
-    </button>
+    <Button label="Add new" icon="ion:add-outline" @click="createBoard" />
   </div>
 
   <UserCards />

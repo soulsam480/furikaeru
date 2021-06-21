@@ -3,8 +3,8 @@ import { furiApi } from 'src/utils/helpers';
 import type { BoardModel } from 'src/utils/types';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import Icon from 'src/components/App/Icon.vue';
 import { getDDMMYY } from 'src/utils/helpers';
+import Button1 from 'src/components/lib/Button.vue';
 
 const { push } = useRouter();
 const boards = ref<BoardModel[]>([]);
@@ -43,39 +43,39 @@ onMounted(async () => {
         v-for="board in boards"
         :key="board.id"
         class="
-          bg-cyan-100
+          bg-cyan-200
           transition-colors
           ease-in-out
           filter
           py-3
-          hover:bg-cyan-200
           px-2
           rounded-md
-          shadow-md shadow-gray-500
           duration-500
+          hover:(shadow-md
+          shadow-gray-500
+          )
         "
       >
         <div class="text-lg break-all">{{ board.title }}</div>
         <div class="font-semibold text-xs pt-1" v-if="board.is_public">Public</div>
         <div class="text-gray-500 text-xs pt-1">Updated: {{ getDDMMYY(board.updated_at) }}</div>
 
-        <div class="flex items-center pt-1">
-          <button
-            class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md flex items-center"
+        <div class="flex items-center pt-2">
+          <Button1
             title="Remove board"
             @click="handleBoardRemove(board.id)"
-          >
-            <!-- <Icon icon="ion:ellipsis-vertical" size="14px" /> -->
-            <Icon icon="ion:trash-outline" size="17px" />
-          </button>
-          <button
-            class="px-2 py-1 hover:bg-cyan-100 focus:outline-none rounded-md flex items-center"
+            icon="ion:trash-outline"
+            size="17px"
+            class="mr-1"
+            sm
+          />
+          <Button1
             title="View board"
             @click="viewBoard(board.id, board.is_public)"
-          >
-            <!-- <Icon icon="ion:ellipsis-vertical" size="14px" /> -->
-            <Icon icon="ion:eye-outline" size="17px" />
-          </button>
+            icon="ion:eye-outline"
+            size="17px"
+            sm
+          />
         </div>
       </div>
     </div>

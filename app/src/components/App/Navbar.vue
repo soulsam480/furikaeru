@@ -12,13 +12,13 @@ function setNav() {
 }
 </script>
 <template>
-  <nav class="bg-cyan-200 sticky top-0 z-20">
+  <nav class="bg-cyan-300 sticky top-0 z-20">
     <div class="max-w-7xl mx-auto px-2">
       <div class="relative flex items-center justify-between h-14">
         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
           <button
             type="button"
-            class="inline-flex items-center justify-center p-2 rounded-md hover:bg-cyan-300 focus:outline-none"
+            class="inline-flex items-center justify-center p-2 rounded-md hover:bg-cyan-200 focus:outline-none"
             aria-controls="mobile-menu"
             :aria-expanded="isNav"
             @click="setNav"
@@ -35,7 +35,7 @@ function setNav() {
           </div>
           <div class="hidden sm:block sm:ml-6">
             <div class="flex space-x-4 items-center" v-if="isLoggedIn">
-              <router-link to="/user" class="px-3 py-2 hover:bg-cyan-300 rounded-md font-medium">Home</router-link>
+              <router-link to="/user" class="px-3 py-2 hover:bg-cyan-200 rounded-md font-medium">Home</router-link>
             </div>
           </div>
         </div>
@@ -45,7 +45,7 @@ function setNav() {
             <div>
               <button
                 type="button"
-                class="flex items-center rounded-md hover:bg-cyan-300 px-3 py-2 focus:outline-none"
+                class="flex items-center rounded-md hover:bg-cyan-200 px-3 py-2 focus:outline-none"
                 v-if="!isLoggedIn"
               >
                 Login with &nbsp;
@@ -122,7 +122,7 @@ function setNav() {
       <div class="px-2 pt-2 pb-3 space-y-1" v-if="isLoggedIn">
         <router-link
           to="/"
-          class="hover:bg-cyan-300 block px-3 py-2 rounded-md text-base font-medium"
+          class="hover:bg-cyan-200 block px-3 py-2 rounded-md text-base font-medium"
           aria-current="page"
         >
           Home
