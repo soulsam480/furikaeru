@@ -24,8 +24,7 @@ function setNav() {
             @click="setNav"
           >
             <span class="sr-only">Open main menu</span>
-            <Icon icon="ion:menu-outline" size="24px" v-if="!isNav" />
-            <Icon icon="ion:close-outline" size="24px" v-else />
+            <Icon icon="ion:menu-outline" size="24px" />
           </button>
         </div>
         <div class="flex-1 flex items-center ml-10 sm:ml-0 sm:items-stretch justify-start">
@@ -118,7 +117,13 @@ function setNav() {
     </div>
 
     <!-- Mobile menu, show/hide based on menu state. -->
-    <div :class="isNav ? 'sm:hidden' : 'hidden'" class="transition-all ease-in-out" id="mobile-menu">
+    <!-- :class="isNav ? 'sm:hidden h-auto' : 'hidden h-0'" -->
+    <div
+      class="overflow-hidden transition-all ease-in-out max-h-0 duration-300 sm:h-0"
+      id="mobile-menu"
+      ref="mNav"
+      :style="isNav ? 'max-height: ' + $refs['mNav'].scrollHeight + 'px' : ''"
+    >
       <div class="px-2 pt-2 pb-3 space-y-1" v-if="isLoggedIn">
         <router-link
           to="/"

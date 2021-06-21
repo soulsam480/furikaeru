@@ -4,8 +4,8 @@ import type { PropType } from 'vue';
 import draggable from 'vuedraggable';
 import Icon from './Icon.vue';
 import type { Card, Comment } from 'src/utils/types';
-import EditContent from './EditContent.vue';
-import Button from '../lib/Button.vue';
+import EditContent from 'src/components/App/EditContent.vue';
+import Button from 'src/components/lib/Button.vue';
 
 const props = defineProps({
   enabled: Boolean,
@@ -14,10 +14,11 @@ const props = defineProps({
   userId: String,
 });
 
+const emits = defineEmit(['upvote', 'change', 'move', 'end']);
+
 const isEdit = ref<string | null>(null);
 const isComments = ref<string | null>(null);
 const newComment = ref('');
-const emits = defineEmit(['upvote', 'change', 'move', 'end']);
 
 function calcVotes(votes: Record<string, any>) {
   if (Object.keys(votes).length === 0) return 0;
@@ -112,8 +113,8 @@ function handleRemoveComment(id: string, coid: string) {
       >
         <div class="pb-2">
           <div class="flex" v-if="isEdit !== element.id">
-            <div class="text-lg py-1 flex-grow break-all board-grid__column__item__title">{{ element.title }}</div>
-            <div class="flex-none flex board-grid__column__item__edit transition-all ease-in-out">
+            <div class="text-lg flex-grow break-all board-grid__column__item__title">{{ element.title }}</div>
+            <div class="flex board-grid__column__item__edit transition-all ease-in-out">
               <Button
                 icon="ion:pencil"
                 title="Edit card title"
@@ -215,7 +216,7 @@ function handleRemoveComment(id: string, coid: string) {
                     class="px-1 py-0 mr-1"
                     size="12px"
                   />
-                  <Buttton
+                  <Button
                     v-else
                     title="Up vote"
                     @click="handleCommentUpVote(element.id, comment[0])"
