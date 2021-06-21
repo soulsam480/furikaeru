@@ -1,4 +1,7 @@
-### Furikaeru
+<p align="center">
+ <img src="https://raw.githubusercontent.com/soulsam480/furikaeru/master/app/public/icon-144.png" alt="Furi logo" />
+</p>
+<h1 align="center"> Furikaeru </h1>
 
 > Look back on
 
