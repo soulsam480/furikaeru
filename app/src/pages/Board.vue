@@ -144,9 +144,19 @@ onBeforeUnmount(() => {
   <div class="board">
     <div class="mb-4">
       <div class="flex" v-if="isEditBoardName !== board?.id">
-        <div class="text-2xl font-semibold flex-grow sm:mr-1 sm:flex-none break-all">{{ board?.title }}</div>
+        <div class="text-2xl font-semibold flex-grow sm:mr-1 sm:flex-none break-all dark:text-white">
+          {{ board?.title }}
+        </div>
         <div class="flex-none">
-          <Button title="Edit board title" flat @click="isEditBoardName = board.id" sm icon="ion:pencil" size="15px" />
+          <Button
+            title="Edit board title"
+            flat
+            @click="isEditBoardName = board.id"
+            sm
+            icon="ion:pencil"
+            class="dark:text-white dark:hover:text-black"
+            size="15px"
+          />
         </div>
       </div>
       <div v-else class="flex items-center">
@@ -158,9 +168,16 @@ onBeforeUnmount(() => {
       <div v-for="column in board?.data" :key="column.id">
         <div class="pb-2">
           <div class="flex" v-if="isEditColumnName !== column.id">
-            <div class="text-lg flex-grow break-all">{{ column.name }}</div>
+            <div class="text-lg flex-grow break-all dark:text-white">{{ column.name }}</div>
             <div class="flex-none">
-              <Button title="Edit column title" @click="isEditColumnName = column.id" flat icon="ion:pencil" sm />
+              <Button
+                title="Edit column title"
+                @click="isEditColumnName = column.id"
+                flat
+                icon="ion:pencil"
+                class="dark:text-white dark:hover:text-black"
+                sm
+              />
             </div>
           </div>
           <div v-else class="flex items-center">
@@ -194,11 +211,12 @@ onBeforeUnmount(() => {
           <div class="flex-none flex">
             <Button
               @click="handleCardAddition(column.id)"
-              :disables="!newCardName"
+              :disabled="!newCardName"
               title="Save"
               flat
               icon="ion:checkmark"
               sm
+              class="dark:text-white dark:hover:text-black"
             />
             <Button @click="(isNewCard = null), (newCardName = '')" title="Cancel" flat icon="ion:close" sm />
           </div>

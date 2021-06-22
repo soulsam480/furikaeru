@@ -74,7 +74,7 @@ async function createBoard() {
 </script>
 <template>
   <div class="flex justify-between">
-    <div class="text-3xl font-semibold">My boards</div>
+    <div class="text-3xl font-semibold dark:text-white">My boards</div>
     <Button label="Add new" icon="ion:add-outline" @click="createBoard" />
   </div>
 

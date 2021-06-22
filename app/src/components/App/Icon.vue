@@ -8,6 +8,11 @@ defineProps({
 </script>
 <template>
   <span v-bind="$attrs">
-    <i :style="{ fontSize: size || '20px' }" className="iconify" :data-icon="icon" :data-inline="true" />
+    <i
+      :style="{ fontSize: size || '20px', verticalAlign: '-0.2em' }"
+      class="iconify"
+      :data-icon="icon"
+      :data-inline="true"
+    />
   </span>
 </template>

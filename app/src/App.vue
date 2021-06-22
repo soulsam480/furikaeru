@@ -5,6 +5,21 @@ import { registerToken } from 'src/utils/helpers';
 
 authState();
 registerToken();
+function checkDarkMode() {
+  const root = document.querySelector(':root');
+  if (!localStorage.theme) localStorage.theme = 'light';
+  if (localStorage.theme && localStorage.theme === 'dark') {
+    document.documentElement.classList.add('dark');
+    //@ts-ignore
+    root.style.setProperty('--f-bg', '#1F2937');
+  } else {
+    document.documentElement.classList.remove('dark');
+    //@ts-ignore
+    root.style.setProperty('--f-bg', '#ffffff');
+  }
+}
+
+checkDarkMode();
 </script>
 <template>
   <div>

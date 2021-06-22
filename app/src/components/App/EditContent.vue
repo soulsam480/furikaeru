@@ -23,6 +23,21 @@ function handleSave() {
     v-model="newVal"
     @keyup.enter="handleSave"
   />
-  <Button @click="handleSave" :disabled="newVal === content" title="Save" flat icon="ion:checkmark" sm />
-  <Button @click="$emit('cancel')" title="Cancel" flat icon="ion:close" sm />
+  <Button
+    @click="handleSave"
+    :disabled="newVal === content"
+    title="Save"
+    class="dark:text-white dark:hover:text-black"
+    flat
+    icon="ion:checkmark"
+    sm
+  />
+  <Button
+    @click="$emit('cancel')"
+    title="Cancel"
+    flat
+    icon="ion:close"
+    class="dark:text-white dark:hover:text-black"
+    sm
+  />
 </template>

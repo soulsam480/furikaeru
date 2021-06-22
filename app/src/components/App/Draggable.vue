@@ -89,6 +89,7 @@ function handleRemoveComment(id: string, coid: string) {
     :group="group"
     :move="emitMove"
     @end="$emit('end')"
+    ghost-class="ghost"
   >
     <template #item="{ element }">
       <div
@@ -239,3 +240,8 @@ function handleRemoveComment(id: string, coid: string) {
     </template>
   </draggable>
 </template>
+<style>
+.ghost {
+  @apply bg-cyan-200;
+}
+</style>

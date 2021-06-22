@@ -2,13 +2,34 @@
 import { ref } from 'vue';
 import Icon from 'src/components/App/Icon.vue';
 import { useUser } from 'src/store/user';
+import Button from 'src/components/lib/Button.vue';
 
 const { isLoggedIn, getUser } = useUser();
 
 const isNav = ref(false);
 
+const isDark = ref(localStorage.getItem('theme'));
+
 function setNav() {
   isNav.value = !isNav.value;
+}
+
+function handleDarkMode() {
+  const root = document.querySelector(':root');
+
+  if (localStorage.theme === 'light') {
+    //@ts-ignore
+    root.style.setProperty('--f-bg', '#1F2937');
+    isDark.value = 'dark';
+    localStorage.theme = 'dark';
+    document.documentElement.classList.add('dark');
+  } else {
+    //@ts-ignore
+    root.style.setProperty('--f-bg', '#ffffff');
+    isDark.value = 'light';
+    localStorage.theme = 'light';
+    document.documentElement.classList.remove('dark');
+  }
 }
 </script>
 <template>
@@ -29,7 +50,7 @@ function setNav() {
         </div>
         <div class="flex-1 flex items-center ml-10 sm:ml-0 sm:items-stretch justify-start">
           <div class="flex-shrink-0 flex items-center text-2xl font-semibold">
-            <img src="/icon-48.png" alt="Furikaeru logo" style="width: 40px" />
+            <img src="/icon-48.png" alt="Furikaeru logo" class="sm:block hidden" style="width: 40px" />
             Furikaeru
           </div>
           <div class="hidden sm:block sm:ml-6">
@@ -41,20 +62,26 @@ function setNav() {
         <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
           <!-- Profile dropdown -->
           <div class="ml-3 relative">
-            <div>
+            <div class="flex items-center">
               <button
                 type="button"
-                class="flex items-center rounded-md hover:bg-cyan-200 px-3 py-2 focus:outline-none"
+                class="flex items-center rounded-md hover:bg-cyan-200 px-3 py-2 mr-2 focus:outline-none"
                 v-if="!isLoggedIn"
               >
                 Login with &nbsp;
                 <Icon icon="ion:logo-google" />
               </button>
 
-              <button v-else type="button" class="flex text-sm items-center rounded-full focus:outline-none">
+              <button v-else type="button" class="flex text-sm items-center rounded-full mr-2 focus:outline-none">
                 <Icon icon="ion:person-outline" />
                 &nbsp; {{ getUser.name }}
               </button>
+              <Button sm @click="handleDarkMode">
+                <template #icon>
+                  <Icon v-show="isDark === 'dark'" icon="ion:contrast-outline" size="17px" />
+                  <Icon v-show="isDark === 'light'" icon="ion:sunny-outline" size="17px" />
+                </template>
+              </Button>
             </div>
 
             <!--
@@ -122,7 +149,7 @@ function setNav() {
       class="overflow-hidden transition-all ease-in-out max-h-0 duration-300 sm:h-0"
       id="mobile-menu"
       ref="mNav"
-      :style="isNav ? 'max-height: ' + $refs['mNav'].scrollHeight + 'px' : ''"
+      :style="isNav ? 'max-height: ' + $refs.mNav.scrollHeight + 'px' : ''"
     >
       <div class="px-2 pt-2 pb-3 space-y-1" v-if="isLoggedIn">
         <router-link

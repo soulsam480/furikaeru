@@ -6,3 +6,10 @@ button {
     outline: none;
   }
 }
+
+:root {
+  background-color: var(--f-bg);
+  transition-property: background-color;
+  transition-duration: 400ms;
+  transition-timing-function: ease-in-out;
+}
