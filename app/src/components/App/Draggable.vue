@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineEmit, defineProps, ref } from 'vue';
+import { defineEmit, defineProps, nextTick, ref } from 'vue';
 import type { PropType } from 'vue';
 import draggable from 'vuedraggable';
 import Icon from './Icon.vue';
@@ -19,6 +19,7 @@ const emits = defineEmit(['upvote', 'change', 'move', 'end']);
 const isEdit = ref<string | null>(null);
 const isComments = ref<string | null>(null);
 const newComment = ref('');
+const isChoosed = ref(false);
 
 function calcVotes(votes: Record<string, any>) {
   if (Object.keys(votes).length === 0) return 0;
@@ -79,6 +80,11 @@ function handleRemoveComment(id: string, coid: string) {
   }
   emits('end');
 }
+
+async function handleUnchoose(e: any) {
+  await nextTick();
+  isChoosed.value = false;
+}
 </script>
 <template>
   <draggable
@@ -90,6 +96,8 @@ function handleRemoveComment(id: string, coid: string) {
     :move="emitMove"
     @end="$emit('end')"
     ghost-class="ghost"
+    @choose="isChoosed = true"
+    @unchoose="handleUnchoose"
   >
     <template #item="{ element }">
       <div
@@ -177,7 +185,10 @@ function handleRemoveComment(id: string, coid: string) {
             rounded-md
           "
           :ref="`c--${element.id}`"
-          :style="isComments === element.id ? 'max-height: ' + $refs[`c--${element.id}`].scrollHeight + 'px' : ''"
+          :style="[
+            isComments === element.id ? 'max-height: ' + $refs[`c--${element.id}`].scrollHeight + 'px' : '',
+            isChoosed ? 'display:none;' : '',
+          ]"
           :class="{ 'px-1': isComments === element.id }"
         >
           <div class="flex items-center pt-2">
