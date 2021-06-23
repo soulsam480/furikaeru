@@ -76,10 +76,10 @@ function handleDarkMode() {
                 <Icon icon="ion:person-outline" />
                 &nbsp; {{ getUser.name }}
               </button>
-              <Button sm @click="handleDarkMode">
+              <Button sm @click="handleDarkMode" title="Toggle dark mode">
                 <template #icon>
-                  <Icon v-show="isDark === 'dark'" icon="ion:contrast-outline" size="17px" />
-                  <Icon v-show="isDark === 'light'" icon="ion:sunny-outline" size="17px" />
+                  <Icon v-show="isDark === 'light'" icon="ion:contrast-outline" size="17px" />
+                  <Icon v-show="isDark === 'dark'" icon="ion:sunny-outline" size="17px" />
                 </template>
               </Button>
             </div>

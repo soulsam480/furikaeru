@@ -218,7 +218,14 @@ onBeforeUnmount(() => {
               sm
               class="dark:text-white dark:hover:text-black"
             />
-            <Button @click="(isNewCard = null), (newCardName = '')" title="Cancel" flat icon="ion:close" sm />
+            <Button
+              @click="(isNewCard = null), (newCardName = '')"
+              title="Cancel"
+              class="dark:text-white dark:hover:text-black"
+              flat
+              icon="ion:close"
+              sm
+            />
           </div>
         </div>
         <Draggable

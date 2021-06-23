@@ -2,7 +2,7 @@
 import { defineEmit, defineProps, nextTick, ref } from 'vue';
 import type { PropType } from 'vue';
 import draggable from 'vuedraggable';
-import Icon from './Icon.vue';
+import Icon from 'src/components/App/Icon.vue';
 import type { Card, Comment } from 'src/utils/types';
 import EditContent from 'src/components/App/EditContent.vue';
 import Button from 'src/components/lib/Button.vue';
@@ -80,11 +80,6 @@ function handleRemoveComment(id: string, coid: string) {
   }
   emits('end');
 }
-
-async function handleUnchoose(e: any) {
-  await nextTick();
-  isChoosed.value = false;
-}
 </script>
 <template>
   <draggable
@@ -96,15 +91,12 @@ async function handleUnchoose(e: any) {
     :move="emitMove"
     @end="$emit('end')"
     ghost-class="ghost"
-    @choose="isChoosed = true"
-    @unchoose="handleUnchoose"
   >
     <template #item="{ element }">
       <div
         v-bind="$attrs"
         class="
           board-grid__column__item
-          relative
           block
           px-3
           py-2
@@ -151,45 +143,31 @@ async function handleUnchoose(e: any) {
           </div>
         </div>
 
-        <div class="flex justify-end items-center pb-1">
+        <div class="flex space-x-2 justify-end items-center pb-1">
           <Button
             title="Comment"
             @click="isComments === element.id ? (isComments = null) : (isComments = element.id)"
             icon="ion:chatbox-ellipses-outline"
             sm
             flat
-            class="mr-1"
+            id="comment"
           />
-          <span class="text-xs mr-1">{{ calcComments(element.comments) }}</span>
-          <Button
-            title="Up vote"
-            @click="$emit('upvote', { cid: element.id })"
-            icon="ion:rocket-outline"
-            sm
-            flat
-            class="mr-1"
-          />
+          <span class="text-xs">{{ calcComments(element.comments) }}</span>
+          <Button title="Up vote" @click="$emit('upvote', { cid: element.id })" icon="ion:rocket-outline" sm flat />
 
           <span class="text-xs">{{ calcVotes(element.votes) }}</span>
         </div>
         <div
           class="
-            flex flex-col
+            flex-col
             relative
-            overflow-hidden
             transition-all
-            max-h-0
             duration-400
             board-grid__column__item__comments
             bg-cyan-300
             rounded-md
           "
-          :ref="`c--${element.id}`"
-          :style="[
-            isComments === element.id ? 'max-height: ' + $refs[`c--${element.id}`].scrollHeight + 'px' : '',
-            isChoosed ? 'display:none;' : '',
-          ]"
-          :class="{ 'px-1': isComments === element.id }"
+          :class="[isComments === element.id ? 'px-1 flex' : 'hidden']"
         >
           <div class="flex items-center pt-2">
             <div class="flex-grow mr-1">
