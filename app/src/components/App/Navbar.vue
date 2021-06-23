@@ -3,15 +3,24 @@ import { ref } from 'vue';
 import Icon from 'src/components/App/Icon.vue';
 import { useUser } from 'src/store/user';
 import Button from 'src/components/lib/Button.vue';
+import { useRouter } from 'vue-router';
 
-const { isLoggedIn, getUser } = useUser();
-
+const { isLoggedIn, getUser, setLogin } = useUser();
+const { push } = useRouter();
 const isNav = ref(false);
 
 const isDark = ref(localStorage.getItem('theme'));
+const isContext = ref(false);
 
 function setNav() {
   isNav.value = !isNav.value;
+}
+
+function logout() {
+  isContext.value = false;
+  setLogin(null);
+  localStorage.removeItem('__token');
+  push('/');
 }
 
 function handleDarkMode() {
@@ -55,7 +64,14 @@ function handleDarkMode() {
           </div>
           <div class="hidden sm:block sm:ml-6">
             <div class="flex space-x-4 items-center" v-if="isLoggedIn">
-              <router-link to="/user" class="px-3 py-2 hover:bg-cyan-200 rounded-md font-medium">Home</router-link>
+              <a
+                role="button"
+                type="button"
+                class="hover:bg-cyan-400 text-black px-3 py-2 rounded-md font-medium"
+                href="https://github.com/soulsam480/furikaeru"
+              >
+                <Icon icon="ion:logo-github" size="20px" />
+              </a>
             </div>
           </div>
         </div>
@@ -63,19 +79,15 @@ function handleDarkMode() {
           <!-- Profile dropdown -->
           <div class="ml-3 relative">
             <div class="flex items-center">
-              <button
-                type="button"
-                class="flex items-center rounded-md hover:bg-cyan-200 px-3 py-2 mr-2 focus:outline-none"
-                v-if="!isLoggedIn"
-              >
+              <Button v-if="!isLoggedIn">
                 Login with &nbsp;
                 <Icon icon="ion:logo-google" />
-              </button>
+              </Button>
 
-              <button v-else type="button" class="flex text-sm items-center rounded-full mr-2 focus:outline-none">
+              <Button v-else @click="isContext = !isContext" class="focus:bg-cyan-400">
                 <Icon icon="ion:person-outline" />
                 &nbsp; {{ getUser.name }}
-              </button>
+              </Button>
               <Button sm @click="handleDarkMode" title="Toggle dark mode">
                 <template #icon>
                   <Icon v-show="isDark === 'light'" icon="ion:contrast-outline" size="17px" />
@@ -83,68 +95,58 @@ function handleDarkMode() {
                 </template>
               </Button>
             </div>
-
-            <!--
-            Dropdown menu, show/hide based on menu state.
-
-            Entering: "transition ease-out duration-100"
-              From: "transform opacity-0 scale-95"
-              To: "transform opacity-100 scale-100"
-            Leaving: "transition ease-in duration-75"
-              From: "transform opacity-100 scale-100"
-              To: "transform opacity-0 scale-95"
-          -->
-            <!-- <div
-              class="
-                origin-top-right
-                absolute
-                right-0
-                mt-2
-                w-48
-                rounded-md
-                shadow-lg
-                py-1
-                bg-white
-                ring-1 ring-black ring-opacity-5
-                focus:outline-none
-              "
-              role="menu"
-              aria-orientation="vertical"
-              aria-labelledby="user-menu-button"
-              tabindex="-1"
+            <transition
+              enter-active-class="transition ease-out duration-100"
+              enter-from-class="transform opacity-0 scale-95"
+              enter-to-class="transform opacity-100 scale-100"
+              leave-active-class="transition ease-in duration-75"
+              leave-from-class="transform opacity-100 scale-100"
+              leave-to-class="transform opacity-0 scale-95"
             >
-              <a
-                href="#"
-                class="block px-4 py-2 text-sm text-gray-700"
-                role="menuitem"
+              <div
+                class="
+                  origin-top-right
+                  absolute
+                  right-0
+                  mt-2
+                  w-48
+                  rounded-md
+                  shadow-lg
+                  py-1
+                  bg-cyan-300
+                  ring-1 ring-black ring-opacity-5
+                  focus:outline-none
+                "
+                role="menu"
+                aria-orientation="vertical"
+                aria-labelledby="user-menu-button"
                 tabindex="-1"
-                id="user-menu-item-0"
-                >Your Profile</a
+                v-show="isContext"
               >
-              <a
-                href="#"
-                class="block px-4 py-2 text-sm text-gray-700"
-                role="menuitem"
-                tabindex="-1"
-                id="user-menu-item-1"
-                >Settings</a
-              >
-              <a
-                href="#"
-                class="block px-4 py-2 text-sm text-gray-700"
-                role="menuitem"
-                tabindex="-1"
-                id="user-menu-item-2"
-                >Sign out</a
-              >
-            </div> -->
+                <router-link
+                  @click="isContext = false"
+                  to="/user"
+                  class="block px-4 py-2 hover:bg-cyan-400 text-sm text-gray-700"
+                  role="menuitem"
+                  tabindex="-1"
+                >
+                  Home
+                </router-link>
+                <a
+                  @click="logout"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-cyan-400 cursor-pointer"
+                  role="menuitem"
+                  tabindex="-1"
+                >
+                  Sign out
+                </a>
+              </div>
+            </transition>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Mobile menu, show/hide based on menu state. -->
-    <!-- :class="isNav ? 'sm:hidden h-auto' : 'hidden h-0'" -->
     <div
       class="overflow-hidden transition-all ease-in-out max-h-0 duration-300 sm:h-0"
       id="mobile-menu"
@@ -152,13 +154,15 @@ function handleDarkMode() {
       :style="isNav ? 'max-height: ' + $refs.mNav.scrollHeight + 'px' : ''"
     >
       <div class="px-2 pt-2 pb-3 space-y-1" v-if="isLoggedIn">
-        <router-link
-          to="/"
-          class="hover:bg-cyan-200 block px-3 py-2 rounded-md text-base font-medium"
-          aria-current="page"
+        <a
+          role="button"
+          type="button"
+          class="hover:bg-cyan-400 text-black px-3 py-2 rounded-md font-medium"
+          href="https://github.com/soulsam480/furikaeru"
         >
-          Home
-        </router-link>
+          <Icon icon="ion:logo-github" size="20px" />
+          &nbsp; GitHub
+        </a>
       </div>
     </div>
   </nav>
