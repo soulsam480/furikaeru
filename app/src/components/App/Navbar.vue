@@ -58,7 +58,7 @@ function handleDarkMode() {
           </button>
         </div>
         <div class="flex-1 flex items-center ml-10 sm:ml-0 sm:items-stretch justify-start">
-          <div class="flex-shrink-0 flex items-center text-2xl font-sans">
+          <div class="flex-shrink-0 flex items-center text-2xl font-sans cursor-pointer" @click="$router.push('/')">
             <img src="/icon-48.png" alt="Furikaeru logo" class="sm:block hidden" style="width: 40px" />
             Furikaeru
           </div>
