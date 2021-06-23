@@ -24,7 +24,7 @@ passport.use(
       clientSecret: process.env.GCLIENT_SECRET as string,
       callbackURL: !process.env.PROD
         ? 'http://localhost:3000/furikaeru/auth/google/redirect'
-        : 'https://apis.sambitsahoo.com/furikaeru/auth/google/redirect',
+        : (process.env.GAUTH_REDIRECT as string),
       passReqToCallback: true,
     },
     async (request: any, accessToken: any, refreshToken: any, profile: any, done: any) => {
