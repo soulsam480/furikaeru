@@ -7,6 +7,11 @@
 
 A small app for discussing retro while being Anonymous.
 
+### Status
+
+- Hosted -> https://furikaeru.sambitsahoo.com
+- Development -> alpha
+
 #### Features
 Current:
 - Create/delete Boards (public only for now)
@@ -17,7 +22,6 @@ Current:
 
 Projected:
 - Add comment edit
-- Add user logout
 - Add private boards
 - Error handling
 - Column color customization
@@ -28,7 +32,6 @@ API:
 - TypeORM
 - Expressjs
 - SocketIo
-- Socket controllers
 - Passport (Google OAuth2)
 - TypeScript
 
@@ -59,6 +62,7 @@ REFRESH_TOKEN_SECRET
 ACCESS_TOKEN_SECRET
 GCLIENT_ID
 GCLIENT_SECRET
+GAUTH_REDIRECT
 # create a postgres db and add it here
 # the DB port is hardcoded to 5432 and an extra env variable can be added to change it
 PGRES_USER
