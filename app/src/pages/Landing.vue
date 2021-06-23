@@ -6,7 +6,7 @@ import Icon from 'src/components/App/Icon.vue';
 import { useUser } from 'src/store/user';
 import type { UserResponse } from 'src/store/user';
 
-const { setLogin, isLoggedIn } = useUser();
+const { setLogin } = useUser();
 
 const url = import.meta.env.VITE_API;
 const { query } = useRoute();
@@ -44,12 +44,23 @@ onMounted(async () => {
 <template>
   <div class="mt-24 flex flex-row justify-center">
     <div class="login sm:w-4/5 lg:w-2/5 w-full">
-      <div class="login_card bg-gray-100 p-10 rounded-xl">
-        <div class="grid grid-cols-1 gap-4 text-center">
-          <div class="text-xl">
-            Hii, Welcome to
+      <div class="login_card bg-gray-100 px-10 pt-5 p-b-10 rounded-xl">
+        <img src="/icon-72.png" class="block m-auto pb-3" alt="icon-48.png" />
+        <div class="grid grid-cols-1 gap-3 text-center">
+          <div class="text-xl pb-4">
+            Welcome to
             <b class="text-cyan-500">Furikaeru</b>
             !
+          </div>
+          <div class="pb-3">
+            <div class="text-md px-2 mb-2 py-1 bg-amber-100 border-1 border-amber-200 rounded-md">
+              You are currently in
+              <b class="text-cyan-600">anonymous</b>
+              mode.
+            </div>
+            <div class="text-sm text-gray-500">
+              You can still view/edit public boards. Login/signup to create a board.
+            </div>
           </div>
           <div>
             <a
@@ -77,7 +88,6 @@ onMounted(async () => {
             </a>
           </div>
           <div class="text-sm text-gray-500">To prevent spamming, only Google login is available.</div>
-          <span>{{ isLoggedIn }}</span>
         </div>
       </div>
     </div>

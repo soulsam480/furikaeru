@@ -6,9 +6,12 @@ import '@purge-icons/generated';
 import { Router } from 'src/router';
 import 'src/styles/index.scss';
 import { createWs } from 'src/utils/createWs';
+//@ts-ignore
+import vClickOutside from 'click-outside-vue3';
 
 const app = createApp(App);
 app.use(createPinia());
 app.use(Router);
 createWs();
+app.use(vClickOutside);
 app.mount('#app');

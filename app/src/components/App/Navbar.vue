@@ -58,7 +58,7 @@ function handleDarkMode() {
           </button>
         </div>
         <div class="flex-1 flex items-center ml-10 sm:ml-0 sm:items-stretch justify-start">
-          <div class="flex-shrink-0 flex items-center text-2xl font-semibold">
+          <div class="flex-shrink-0 flex items-center text-2xl font-sans">
             <img src="/icon-48.png" alt="Furikaeru logo" class="sm:block hidden" style="width: 40px" />
             Furikaeru
           </div>
@@ -78,13 +78,14 @@ function handleDarkMode() {
         <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
           <!-- Profile dropdown -->
           <div class="ml-3 relative">
-            <div class="flex items-center">
-              <Button v-if="!isLoggedIn">
-                Login with &nbsp;
-                <Icon icon="ion:logo-google" />
-              </Button>
-
-              <Button v-else @click="isContext = !isContext" class="focus:bg-cyan-400">
+            <div class="flex space-x-1 items-center">
+              <Button v-if="!isLoggedIn" icon="ion:shield-half-outline" label="&nbsp;Anonymous" />
+              <Button
+                v-else
+                @click="isContext = !isContext"
+                v-click-outside="() => (isContext = false)"
+                class="focus:bg-cyan-400"
+              >
                 <Icon icon="ion:person-outline" />
                 &nbsp; {{ getUser.name }}
               </Button>
@@ -124,7 +125,6 @@ function handleDarkMode() {
                 v-show="isContext"
               >
                 <router-link
-                  @click="isContext = false"
                   to="/user"
                   class="block px-4 py-2 hover:bg-cyan-400 text-sm text-gray-700"
                   role="menuitem"
@@ -153,11 +153,10 @@ function handleDarkMode() {
       ref="mNav"
       :style="isNav ? 'max-height: ' + $refs.mNav.scrollHeight + 'px' : ''"
     >
-      <div class="px-2 pt-2 pb-3 space-y-1" v-if="isLoggedIn">
+      <div class="px-2 pt-2 pb-3 space-y-1">
         <a
-          role="button"
           type="button"
-          class="hover:bg-cyan-400 text-black px-3 py-2 rounded-md font-medium"
+          class="hover:bg-cyan-400 block text-black px-3 py-2 rounded-md font-medium"
           href="https://github.com/soulsam480/furikaeru"
         >
           <Icon icon="ion:logo-github" size="20px" />
