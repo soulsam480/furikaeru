@@ -11,7 +11,7 @@ export const ERROR_MESSAGES = {
   not_found: 'Not found !',
 };
 
-export const CORS_ORIGINS = ['http://localhost:4000', 'http://localhost:5000'];
+export const CORS_ORIGINS = ['http://localhost:4000', 'http://localhost:5000', 'https://furikaeru.sambitsahoo.com'];
 
 export enum NAMESPACES {
   root = '/',
