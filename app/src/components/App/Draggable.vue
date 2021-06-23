@@ -19,7 +19,6 @@ const emits = defineEmit(['upvote', 'change', 'move', 'end']);
 const isEdit = ref<string | null>(null);
 const isComments = ref<string | null>(null);
 const newComment = ref('');
-const isChoosed = ref(false);
 
 function calcVotes(votes: Record<string, any>) {
   if (Object.keys(votes).length === 0) return 0;
@@ -103,15 +102,21 @@ function handleRemoveComment(id: string, coid: string) {
           bg-cyan-400
           hover:(shadow-lg
           shadow-gray-700)
-          transition-all
-          ease-in-out
-          duration-400
           cursor-move
           my-2
+          relative
           rounded-md
         "
         :class="{ 'not-draggable': !enabled }"
       >
+        <!-- <transition
+            enter-active-class="transition ease-out duration-400"
+            enter-class="transform scale-y-0"
+            enter-to-class="transform scale-y-1"
+            leave-active-class="transition ease-in duration-500"
+            leave-class="transform scale-y-1"
+            leave-to-class="transform scale-y-0"
+          > -->
         <div class="pb-2">
           <div class="flex" v-if="isEdit !== element.id">
             <div class="text-lg flex-grow break-all board-grid__column__item__title">{{ element.title }}</div>
@@ -158,16 +163,8 @@ function handleRemoveComment(id: string, coid: string) {
           <span class="text-xs">{{ calcVotes(element.votes) }}</span>
         </div>
         <div
-          class="
-            flex-col
-            relative
-            transition-all
-            duration-400
-            board-grid__column__item__comments
-            bg-cyan-300
-            rounded-md
-          "
-          :class="[isComments === element.id ? 'px-1 flex' : 'hidden']"
+          class="flex-col h-auto board-grid__column__item__comments bg-cyan-300 overflow-hidden rounded-md px-1 flex"
+          v-show="isComments === element.id"
         >
           <div class="flex items-center pt-2">
             <div class="flex-grow mr-1">
@@ -225,6 +222,7 @@ function handleRemoveComment(id: string, coid: string) {
             </div>
           </div>
         </div>
+        <!-- </transition> -->
       </div>
     </template>
   </draggable>
@@ -233,4 +231,7 @@ function handleRemoveComment(id: string, coid: string) {
 .ghost {
   @apply bg-cyan-200;
 }
+/* .ease-custom {
+  transition-timing-function: cubic-bezier(0.61, -0.53, 0.43, 1.43);
+} */
 </style>

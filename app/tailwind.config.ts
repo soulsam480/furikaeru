@@ -7,6 +7,9 @@ export default defineConfig({
   safelist: 'p-3 p-4 p-5',
   theme: {
     extend: {
+      transitionProperty: {
+        height: 'height',
+      },
       colors: {
         teal: {
           100: '#096',
