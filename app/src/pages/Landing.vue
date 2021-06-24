@@ -5,6 +5,7 @@ import { useRoute, useRouter } from 'vue-router';
 import Icon from 'src/components/App/Icon.vue';
 import { useUser } from 'src/store/user';
 import type { UserResponse } from 'src/store/user';
+import FBanner from 'src/components/lib/FBanner.vue';
 
 const { setLogin, showLoader, hideLoader } = useUser();
 
@@ -56,11 +57,11 @@ onMounted(async () => {
             !
           </div>
           <div class="pb-3">
-            <div class="text-md px-2 mb-2 py-1 bg-amber-100 border-1 border-amber-200 rounded-md">
+            <FBanner class="mb-2" noicon>
               You are currently in
               <b class="text-cyan-600">anonymous</b>
-              mode.
-            </div>
+              &nbsp;mode.
+            </FBanner>
             <div class="text-sm text-gray-500">
               You can still view/edit public boards. Login/signup to create a board.
             </div>

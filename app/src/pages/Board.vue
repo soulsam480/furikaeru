@@ -150,7 +150,7 @@ onBeforeUnmount(() => {
   <div class="board">
     <div class="mb-4">
       <div class="flex" v-if="isEditBoardName !== board?.id">
-        <div class="text-2xl font-semibold flex-grow sm:mr-1 sm:flex-none break-all dark:text-white">
+        <div class="text-2xl font-semibold flex-grow sm:mr-1 sm:flex-none break-word dark:text-white">
           {{ board?.title }}
         </div>
         <div class="flex-none">
@@ -174,7 +174,7 @@ onBeforeUnmount(() => {
       <div v-for="column in board?.data" :key="column.id">
         <div class="pb-2">
           <div class="flex" v-if="isEditColumnName !== column.id">
-            <div class="text-lg flex-grow break-all dark:text-white">{{ column.name }}</div>
+            <div class="text-lg flex-grow break-word dark:text-white">{{ column.name }}</div>
             <div class="flex-none">
               <Button
                 title="Edit column title"

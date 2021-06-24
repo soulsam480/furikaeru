@@ -119,7 +119,7 @@ function handleRemoveComment(id: string, coid: string) {
           > -->
         <div class="pb-2">
           <div class="flex" v-if="isEdit !== element.id">
-            <div class="text-lg flex-grow break-all board-grid__column__item__title">{{ element.title }}</div>
+            <div class="text-lg flex-grow break-word board-grid__column__item__title">{{ element.title }}</div>
             <div class="flex board-grid__column__item__edit transition-all ease-in-out">
               <Button
                 icon="ion:pencil"
@@ -190,7 +190,7 @@ function handleRemoveComment(id: string, coid: string) {
           <div class="pt-2">
             <div class="py-1 px-2" v-for="comment in parseComments(element.comments)" :key="comment[0]">
               <div class="flex items-center">
-                <div class="flex-grow text-xs break-all">
+                <div class="flex-grow text-xs break-word">
                   {{ comment[1].text }}
                 </div>
                 <div class="flex-none flex items-center justify-end">

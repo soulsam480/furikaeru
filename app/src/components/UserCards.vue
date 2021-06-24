@@ -61,7 +61,7 @@ onMounted(async () => {
           )
         "
       >
-        <div class="text-lg break-all">{{ board.title }}</div>
+        <div class="text-lg break-word">{{ board.title }}</div>
         <div class="font-semibold text-xs pt-1" v-if="board.is_public">Public</div>
         <div class="text-gray-500 text-xs pt-1">Updated: {{ getDDMMYY(board.updated_at) }}</div>
 
