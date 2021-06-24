@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import Icon from 'src/components/App/Icon.vue';
 import { useUser } from 'src/store/user';
 import FButton from 'src/components/lib/FButton.vue';
@@ -11,7 +11,9 @@ const isNav = ref(false);
 
 const isDark = ref(localStorage.getItem('theme'));
 const isContext = ref(false);
-const mNav = ref(null);
+const mNav = ref<HTMLDivElement | null>(null);
+
+const getNavHeight = computed(() => mNav.value?.scrollHeight);
 
 function setNav() {
   isNav.value = !isNav.value;
@@ -172,7 +174,7 @@ function handleDarkMode() {
       class="overflow-hidden transition-all ease-in-out max-h-0 duration-300 sm:h-0"
       id="mobile-menu"
       ref="mNav"
-      :style="isNav ? 'max-height: ' + $refs['mNav'].scrollHeight + 'px' : ''"
+      :style="isNav ? 'max-height: ' + getNavHeight + 'px' : ''"
     >
       <div class="px-2 pt-2 pb-3 space-y-1">
         <a
