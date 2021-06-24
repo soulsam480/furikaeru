@@ -6,7 +6,7 @@ import Icon from 'src/components/App/Icon.vue';
 import { useUser } from 'src/store/user';
 import type { UserResponse } from 'src/store/user';
 
-const { setLogin } = useUser();
+const { setLogin, showLoader, hideLoader } = useUser();
 
 const url = import.meta.env.VITE_API;
 const { query } = useRoute();
@@ -21,6 +21,7 @@ function login() {
 async function catchRedirect() {
   if (!Object.keys(query)) return;
   if (!query.auth_success) return;
+  showLoader();
   const { auth_success } = query;
   try {
     const { data }: { data: UserResponse } = await Axios({
@@ -31,9 +32,11 @@ async function catchRedirect() {
       },
     });
     setLogin({ ...data });
-    push('/user');
+    await push('/user');
+    hideLoader();
   } catch (error) {
     console.log(error);
+    hideLoader();
   }
 }
 

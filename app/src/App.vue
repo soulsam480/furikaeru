@@ -2,6 +2,10 @@
 import Navbar from 'src/components/App/Navbar.vue';
 import { authState } from 'src/utils/authState';
 import { registerToken } from 'src/utils/helpers';
+import FLoader from './components/lib/FLoader.vue';
+import { useUser } from './store/user';
+
+const { getLoader } = useUser();
 
 authState();
 registerToken();
@@ -24,7 +28,8 @@ checkDarkMode();
 <template>
   <div>
     <Navbar />
-    <div class="max-w-7xl mx-auto p-2">
+    <FLoader v-if="getLoader" />
+    <div class="max-w-7xl mx-auto px-2 py-3">
       <router-view />
     </div>
   </div>

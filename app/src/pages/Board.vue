@@ -13,7 +13,7 @@ const { on, emit, io } = useIo();
 const {
   params: { id: bid },
 } = useRoute();
-const { isLoggedIn, getUser } = useUser();
+const { isLoggedIn, getUser, showLoader, hideLoader } = useUser();
 
 const board = ref<BoardModel>();
 const enabled = ref(true);
@@ -128,7 +128,13 @@ function handleCardAddition(id: string) {
 }
 
 onMounted(() => {
-  emit('get:board', { id: bid });
+  showLoader();
+  const firstListen = ({ d }: { d: BoardModel }) => {
+    board.value = { ...d };
+    io.off('send:board', firstListen);
+    hideLoader();
+  };
+  emit('get:board', { id: bid }).on('send:board', firstListen);
 });
 
 on('send:board', ({ d }: { d: BoardModel }) => {

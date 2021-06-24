@@ -4,10 +4,11 @@ import { v4 } from 'uuid';
 import { useRouter } from 'vue-router';
 
 export async function authState() {
-  const { setLogin, getUser, isLoggedIn } = useUser();
+  const { setLogin, getUser, isLoggedIn, showLoader, hideLoader } = useUser();
   const __token = localStorage.getItem('__token');
 
   if (!!__token) {
+    showLoader();
     const { push } = useRouter();
     try {
       const {
@@ -30,14 +31,16 @@ export async function authState() {
         });
         if (!data) return setLogin(null), localStorage.removeItem('__token');
         setLogin(data);
-        push('/user');
+        await push('/user');
+        hideLoader();
       }
     } catch (error) {
       console.log(error);
 
       setLogin(null);
       localStorage.removeItem('__token');
-      push('/');
+      await push('/');
+      hideLoader();
     }
 
     setInterval(async () => {

@@ -11,8 +11,7 @@ const isNav = ref(false);
 
 const isDark = ref(localStorage.getItem('theme'));
 const isContext = ref(false);
-const mNav = ref(null)
-
+const mNav = ref(null);
 
 function setNav() {
   isNav.value = !isNav.value;
@@ -44,49 +43,62 @@ function handleDarkMode() {
 }
 </script>
 <template>
-  <nav class="bg-cyan-300 sticky top-0 z-20">
+  <nav
+    class="
+      sticky
+      top-0
+      z-20
+      transition-colors
+      duration-200
+      ease-in-out
+      border-b-[0.5px] border-cyan-200
+      shadow-md shadow-cyan-200
+    "
+    :class="{ 'bg-cyan-400 sm:bg-transparent rounded-b-md': isNav }"
+  >
     <div class="max-w-7xl mx-auto px-2">
       <div class="relative flex items-center justify-between h-14">
         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
-          <button
-            type="button"
-            class="inline-flex items-center justify-center p-2 rounded-md hover:bg-cyan-200 focus:outline-none"
+          <Button
+            icon="ion:menu-outline"
+            sm
             aria-controls="mobile-menu"
             :aria-expanded="isNav"
             @click="setNav"
-          >
-            <span class="sr-only">Open main menu</span>
-            <Icon icon="ion:menu-outline" size="24px" />
-          </button>
+          ></Button>
         </div>
         <div class="flex-1 flex items-center ml-10 sm:ml-0 sm:items-stretch justify-start">
-          <div class="flex-shrink-0 flex items-center text-2xl font-sans cursor-pointer" @click="$router.push('/')">
-            <img src="/icon-48.png" alt="Furikaeru logo" class="sm:block hidden" style="width: 40px" />
-            Furikaeru
+          <div
+            class="flex-shrink-0 dark:text-white font-semibold flex items-center text-2xl font-sans cursor-pointer"
+            :class="{ 'dark:text-black': isNav }"
+            @click="$router.push('/')"
+          >
+            <img src="/icon-48.png" alt="Furikaeru logo" class="sm:block hidden mr-1" style="width: 30px" />
+            furikaeru
           </div>
-          <div class="hidden sm:block sm:ml-6">
+          <!-- <div class="hidden sm:block sm:ml-6">
             <div class="flex space-x-4 items-center" v-if="isLoggedIn">
-              <a
-                role="button"
-                type="button"
-                class="hover:bg-cyan-400 text-black px-3 py-2 rounded-md font-medium"
-                href="https://github.com/soulsam480/furikaeru"
-              >
-                <Icon icon="ion:logo-github" size="20px" />
-              </a>
+             
             </div>
-          </div>
+          </div> -->
         </div>
         <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
           <!-- Profile dropdown -->
           <div class="ml-3 relative">
             <div class="flex space-x-1 items-center">
-              <Button v-if="!isLoggedIn" icon="ion:shield-half-outline" label="&nbsp;Anonymous" />
+              <Button
+                v-if="!isLoggedIn"
+                sm
+                icon="ion:shield-half-outline"
+                @click="$router.push('/')"
+                label="&nbsp;Anonymous"
+              />
               <Button
                 v-else
                 @click="isContext = !isContext"
                 v-click-outside="() => (isContext = false)"
                 class="focus:bg-cyan-400"
+                sm
               >
                 <Icon icon="ion:person-outline" />
                 &nbsp; {{ getUser.name }}
@@ -96,6 +108,11 @@ function handleDarkMode() {
                   <Icon v-show="isDark === 'light'" icon="ion:contrast-outline" size="17px" />
                   <Icon v-show="isDark === 'dark'" icon="ion:sunny-outline" size="17px" />
                 </template>
+              </Button>
+              <Button sm class="hidden sm:block">
+                <a target="_blank" href="https://github.com/soulsam480/furikaeru">
+                  <Icon icon="ion:logo-github" size="17px" />
+                </a>
               </Button>
             </div>
             <transition
@@ -158,6 +175,7 @@ function handleDarkMode() {
       <div class="px-2 pt-2 pb-3 space-y-1">
         <a
           type="button"
+          target="_blank"
           class="hover:bg-cyan-400 block text-black px-3 py-2 rounded-md font-medium"
           href="https://github.com/soulsam480/furikaeru"
         >

@@ -5,8 +5,10 @@ import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { getDDMMYY } from 'src/utils/helpers';
 import Button1 from 'src/components/lib/Button.vue';
+import { useUser } from 'src/store/user';
 
 const { push } = useRouter();
+const { showLoader, hideLoader } = useUser();
 const boards = ref<BoardModel[]>([]);
 
 function viewBoard(id: string, is_public: boolean) {
@@ -15,11 +17,14 @@ function viewBoard(id: string, is_public: boolean) {
 }
 
 async function getBoards() {
+  showLoader();
   try {
     const { data }: { data: BoardModel[] } = await furiApi.get('/board');
     boards.value = [...data];
   } catch (error) {
     console.log(error);
+  } finally {
+    hideLoader();
   }
 }
 

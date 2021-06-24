@@ -30,8 +30,8 @@ defineEmit(['click']);
     type="button"
     @click="$emit('click')"
   >
-    <slot name="icon">
-      <Icon v-if="icon || $slots.icon" :icon="icon" :size="icon && sm && !size ? '15px' : size" />
+    <slot v-if="icon || $slots.icon" name="icon">
+      <Icon v-if="icon" :icon="icon" :size="icon && sm && !size ? '15px' : size" />
     </slot>
     <slot v-if="label || $slots.default">
       {{ label }}
