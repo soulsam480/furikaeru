@@ -46,16 +46,24 @@ onMounted(async () => {
 });
 </script>
 <template>
-  <div class="mt-24 flex flex-row justify-center">
+  <div class="mt-20 flex flex-row justify-center">
     <div class="login sm:w-4/5 lg:w-2/5 w-full">
       <div class="login_card bg-gray-100 px-10 pt-5 p-b-10 rounded-xl">
         <img src="/icon-72.png" class="block m-auto pb-3" alt="icon-48.png" />
         <div class="grid grid-cols-1 gap-3 text-center">
-          <div class="text-xl pb-4">
-            Welcome to
-            <b class="text-cyan-500">Furikaeru</b>
-            !
+          <div class="text-xl mb-4">
+            <div>
+              Welcome to
+              <b class="text-cyan-500">Furikaeru</b>
+              !
+            </div>
+            <FBanner
+              noicon
+              text="Furikaeru is in active development. Bugs and frequent changes are expected."
+              class="my-2"
+            />
           </div>
+
           <div class="pb-3">
             <FBanner class="mb-2" noicon>
               You are currently in

@@ -53,8 +53,10 @@ function handleDarkMode() {
       ease-in-out
       border-b-[0.5px] border-cyan-200
       shadow-md shadow-cyan-200
+      bg-white
+      dark:bg-cool-gray-800
     "
-    :class="{ 'bg-cyan-400 sm:bg-transparent rounded-b-md': isNav }"
+    :class="{ '!bg-cyan-400 dark:bg-cyan-400 rounded-b-md': isNav }"
   >
     <div class="max-w-7xl mx-auto px-2">
       <div class="relative flex items-center justify-between h-14">

@@ -76,7 +76,7 @@ async function createBoard() {
 <template>
   <div>
     <FBanner text="Furikaeru is in active development. Bugs and frequent changes are expected." class="my-2" />
-    <div class="flex justify-between">
+    <div class="flex justify-between pt-3">
       <div class="text-3xl font-semibold dark:text-white">My boards</div>
       <FButton label="Add new" icon="ion:add-outline" @click="createBoard" />
     </div>
