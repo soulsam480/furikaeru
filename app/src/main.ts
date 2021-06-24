@@ -8,6 +8,11 @@ import 'src/styles/index.scss';
 import { createWs } from 'src/utils/createWs';
 //@ts-ignore
 import vClickOutside from 'click-outside-vue3';
+import { registerSW } from 'virtual:pwa-register';
+
+registerSW({
+  immediate: true,
+});
 
 const app = createApp(App);
 app.use(createPinia());

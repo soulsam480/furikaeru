@@ -12,7 +12,8 @@
     "lib": ["esnext", "dom"],
     "paths": {
       "src/*": ["src/*"]
-    }
+    },
+    "types": ["vite-plugin-pwa/client"]
   },
   "exclude": ["node_modules"],
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
