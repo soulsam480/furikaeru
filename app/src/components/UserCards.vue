@@ -4,7 +4,7 @@ import type { BoardModel } from 'src/utils/types';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { getDDMMYY } from 'src/utils/helpers';
-import Button1 from 'src/components/lib/Button.vue';
+import FButton from 'src/components/lib/FButton.vue';
 import { useUser } from 'src/store/user';
 
 const { push } = useRouter();
@@ -66,7 +66,7 @@ onMounted(async () => {
         <div class="text-gray-500 text-xs pt-1">Updated: {{ getDDMMYY(board.updated_at) }}</div>
 
         <div class="flex items-center pt-2">
-          <Button1
+          <FButton
             title="Remove board"
             @click="handleBoardRemove(board.id)"
             icon="ion:trash-outline"
@@ -74,7 +74,7 @@ onMounted(async () => {
             class="mr-1"
             sm
           />
-          <Button1
+          <FButton
             title="View board"
             @click="viewBoard(board.id, board.is_public)"
             icon="ion:eye-outline"

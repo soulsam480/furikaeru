@@ -5,7 +5,7 @@ import type { BoardColumn } from 'src/utils/types';
 import { furiApi } from 'src/utils/helpers';
 import UserCards from 'src/components/UserCards.vue';
 import { useRouter } from 'vue-router';
-import Button from 'src/components/lib/Button.vue';
+import FButton from 'src/components/lib/FButton.vue';
 import FBanner from 'src/components/lib/FBanner.vue';
 
 const { getUser } = useUser();
@@ -78,7 +78,7 @@ async function createBoard() {
     <FBanner text="Furikaeru is in active development. Bugs and frequent changes are expected." class="my-2" />
     <div class="flex justify-between">
       <div class="text-3xl font-semibold dark:text-white">My boards</div>
-      <Button label="Add new" icon="ion:add-outline" @click="createBoard" />
+      <FButton label="Add new" icon="ion:add-outline" @click="createBoard" />
     </div>
 
     <UserCards />

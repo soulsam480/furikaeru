@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import Icon from 'src/components/App/Icon.vue';
 import { useUser } from 'src/store/user';
-import Button from 'src/components/lib/Button.vue';
+import FButton from 'src/components/lib/FButton.vue';
 import { useRouter } from 'vue-router';
 
 const { isLoggedIn, getUser, setLogin } = useUser();
@@ -59,13 +59,13 @@ function handleDarkMode() {
     <div class="max-w-7xl mx-auto px-2">
       <div class="relative flex items-center justify-between h-14">
         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
-          <Button
+          <FButton
             icon="ion:menu-outline"
             sm
             aria-controls="mobile-menu"
             :aria-expanded="isNav"
             @click="setNav"
-          ></Button>
+          ></FButton>
         </div>
         <div class="flex-1 flex items-center ml-10 sm:ml-0 sm:items-stretch justify-start">
           <div
@@ -86,14 +86,14 @@ function handleDarkMode() {
           <!-- Profile dropdown -->
           <div class="ml-3 relative">
             <div class="flex space-x-1 items-center">
-              <Button
+              <FButton
                 v-if="!isLoggedIn"
                 sm
                 icon="ion:shield-half-outline"
                 @click="$router.push('/')"
                 label="&nbsp;Anonymous"
               />
-              <Button
+              <FButton
                 v-else
                 @click="isContext = !isContext"
                 v-click-outside="() => (isContext = false)"
@@ -102,18 +102,18 @@ function handleDarkMode() {
               >
                 <Icon icon="ion:person-outline" />
                 &nbsp; {{ getUser.name }}
-              </Button>
-              <Button sm @click="handleDarkMode" title="Toggle dark mode">
+              </FButton>
+              <FButton sm @click="handleDarkMode" title="Toggle dark mode">
                 <template #icon>
                   <Icon v-show="isDark === 'light'" icon="ion:contrast-outline" size="17px" />
                   <Icon v-show="isDark === 'dark'" icon="ion:sunny-outline" size="17px" />
                 </template>
-              </Button>
-              <Button sm class="hidden sm:block">
+              </FButton>
+              <FButton sm class="hidden sm:block">
                 <a target="_blank" href="https://github.com/soulsam480/furikaeru">
                   <Icon icon="ion:logo-github" size="17px" />
                 </a>
-              </Button>
+              </FButton>
             </div>
             <transition
               enter-active-class="transition ease-out duration-100"

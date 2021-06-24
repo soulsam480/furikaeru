@@ -5,7 +5,7 @@ import draggable from 'vuedraggable';
 import Icon from 'src/components/App/Icon.vue';
 import type { Card, Comment } from 'src/utils/types';
 import EditContent from 'src/components/App/EditContent.vue';
-import Button from 'src/components/lib/Button.vue';
+import FButton from 'src/components/lib/FButton.vue';
 
 const props = defineProps({
   enabled: Boolean,
@@ -121,7 +121,7 @@ function handleRemoveComment(id: string, coid: string) {
           <div class="flex" v-if="isEdit !== element.id">
             <div class="text-lg flex-grow break-word board-grid__column__item__title">{{ element.title }}</div>
             <div class="flex board-grid__column__item__edit transition-all ease-in-out">
-              <Button
+              <FButton
                 icon="ion:pencil"
                 title="Edit card title"
                 @click="isEdit = element.id"
@@ -129,7 +129,7 @@ function handleRemoveComment(id: string, coid: string) {
                 sm
                 flat
               />
-              <Button
+              <FButton
                 icon="ion:trash-outline"
                 title="Remove card"
                 @click="handleRemoveCard(element.id)"
@@ -149,7 +149,7 @@ function handleRemoveComment(id: string, coid: string) {
         </div>
 
         <div class="flex space-x-2 justify-end items-center pb-1">
-          <Button
+          <FButton
             title="Comment"
             @click="isComments === element.id ? (isComments = null) : (isComments = element.id)"
             icon="ion:chatbox-ellipses-outline"
@@ -158,7 +158,7 @@ function handleRemoveComment(id: string, coid: string) {
             id="comment"
           />
           <span class="text-xs">{{ calcComments(element.comments) }}</span>
-          <Button title="Up vote" @click="$emit('upvote', { cid: element.id })" icon="ion:rocket-outline" sm flat />
+          <FButton title="Up vote" @click="$emit('upvote', { cid: element.id })" icon="ion:rocket-outline" sm flat />
 
           <span class="text-xs">{{ calcVotes(element.votes) }}</span>
         </div>
@@ -177,7 +177,7 @@ function handleRemoveComment(id: string, coid: string) {
               />
             </div>
             <div class="flex-none">
-              <Button
+              <FButton
                 icon="ion:checkmark"
                 :disabled="!newComment"
                 sm
@@ -194,7 +194,7 @@ function handleRemoveComment(id: string, coid: string) {
                   {{ comment[1].text }}
                 </div>
                 <div class="flex-none flex items-center justify-end">
-                  <Button
+                  <FButton
                     title="Remove comment"
                     @click="handleRemoveComment(element.id, comment[0])"
                     v-if="comment[0].split('--')[0] === userId?.split('-')[4]"
@@ -203,7 +203,7 @@ function handleRemoveComment(id: string, coid: string) {
                     class="px-1 py-0 mr-1"
                     size="12px"
                   />
-                  <Button
+                  <FButton
                     v-else
                     title="Up vote"
                     @click="handleCommentUpVote(element.id, comment[0])"

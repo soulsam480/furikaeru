@@ -6,7 +6,7 @@ import { useIo } from 'src/utils/createWs';
 import { useRoute } from 'vue-router';
 import { useUser } from 'src/store/user';
 import { v4 } from 'uuid';
-import Button from 'src/components/lib/Button.vue';
+import FButton from 'src/components/lib/FButton.vue';
 import EditContent from 'src/components/App/EditContent.vue';
 
 const { on, emit, io } = useIo();
@@ -154,7 +154,7 @@ onBeforeUnmount(() => {
           {{ board?.title }}
         </div>
         <div class="flex-none">
-          <Button
+          <FButton
             title="Edit board title"
             flat
             @click="isEditBoardName = board.id"
@@ -176,7 +176,7 @@ onBeforeUnmount(() => {
           <div class="flex" v-if="isEditColumnName !== column.id">
             <div class="text-lg flex-grow break-word dark:text-white">{{ column.name }}</div>
             <div class="flex-none">
-              <Button
+              <FButton
                 title="Edit column title"
                 @click="isEditColumnName = column.id"
                 flat
@@ -195,7 +195,7 @@ onBeforeUnmount(() => {
           </div>
         </div>
 
-        <Button
+        <FButton
           @click="isNewCard = column.id"
           block
           icon="ion:add"
@@ -215,7 +215,7 @@ onBeforeUnmount(() => {
             @keyup.enter="handleCardAddition(column.id)"
           />
           <div class="flex-none flex">
-            <Button
+            <FButton
               @click="handleCardAddition(column.id)"
               :disabled="!newCardName"
               title="Save"
@@ -224,7 +224,7 @@ onBeforeUnmount(() => {
               sm
               class="dark:text-white dark:hover:text-black"
             />
-            <Button
+            <FButton
               @click="(isNewCard = null), (newCardName = '')"
               title="Cancel"
               class="dark:text-white dark:hover:text-black"

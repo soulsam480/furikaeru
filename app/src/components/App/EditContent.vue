@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineEmit, defineProps, ref } from 'vue';
-import Button from 'src/components/lib/Button.vue';
+import FButton from 'src/components/lib/FButton.vue';
 const props = defineProps({
   content: String,
 });
@@ -23,7 +23,7 @@ function handleSave() {
     v-model="newVal"
     @keyup.enter="handleSave"
   />
-  <Button
+  <FButton
     @click="handleSave"
     :disabled="newVal === content"
     title="Save"
@@ -32,7 +32,7 @@ function handleSave() {
     icon="ion:checkmark"
     sm
   />
-  <Button
+  <FButton
     @click="$emit('cancel')"
     title="Cancel"
     flat
