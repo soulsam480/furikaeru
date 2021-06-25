@@ -15,22 +15,26 @@ export function createListeners(io: Server) {
 
     sock.on('get:board', async (d: { id: string }) => {
       const { id: roomId } = d;
-      const board = await Board.findOne({ id: roomId });
+      try {
+        const board = await Board.findOne({ id: roomId });
 
-      if (!board) return sock.emit('error', new Error('Board not found'));
-      if (!board.is_public) return sock.emit('error', new Error('Private board'));
+        if (!board) return sock.emit('error', new Error('Board not found'));
+        if (!board.is_public) return sock.emit('error', { error: new Error('Private board') });
 
-      await sock.join(roomId);
-      io.sockets.in(roomId).emit('send:board', { d: board });
+        await sock.join(roomId);
+        io.sockets.in(roomId).emit('send:board', { d: board });
 
-      sock.on('update:board', async (d: { id: string; b: Partial<Board> }) => {
-        const { id, b } = d;
+        sock.on('update:board', async (d: { id: string; b: Partial<Board> }) => {
+          const { id, b } = d;
 
-        await Board.update(id, { data: b.data, title: b.title });
-        const nb = await Board.findOne({ id });
+          await Board.update(id, { data: b.data, title: b.title });
+          const nb = await Board.findOne({ id });
 
-        io.sockets.in(roomId).emit('send:board', { d: nb });
-      });
+          io.sockets.in(roomId).emit('send:board', { d: nb });
+        });
+      } catch (error) {
+        return sock.emit('error', { error: new Error('Board not found') });
+      }
 
       sock.on('leave:board', async () => {
         console.log('leave');
