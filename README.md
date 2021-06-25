@@ -11,6 +11,7 @@ A small app for discussing retro while being Anonymous.
 
 - Hosted -> https://furikaeru.sambitsahoo.com
 - Development -> alpha
+- Roadmap board -> [Don't spam please!](https://furikaeru.sambitsahoo.com/62b79a16-a97f-41c4-a6f6-8b7256be10d9/)
 
 #### Features
 Current:
