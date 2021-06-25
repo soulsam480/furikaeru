@@ -5,13 +5,24 @@ import type { BoardColumn } from 'src/utils/types';
 import { furiApi } from 'src/utils/helpers';
 import UserCards from 'src/components/UserCards.vue';
 import { useRouter } from 'vue-router';
-import FButton from 'src/components/lib/FButton.vue';
 import FBanner from 'src/components/lib/FBanner.vue';
+import FMenu from 'src/components/lib/FMenu.vue';
 
 const { getUser } = useUser();
 const { push } = useRouter();
 
-async function createBoard() {
+const boardTypes = [
+  {
+    label: 'Private board',
+    value: 'private',
+  },
+  {
+    label: 'Public board',
+    value: 'public',
+  },
+];
+
+async function createBoard(type: string) {
   const data: { title: string; data: BoardColumn[]; is_public: boolean } = {
     title: 'Example board',
     data: [
@@ -59,15 +70,14 @@ async function createBoard() {
         ],
       },
     ],
-    is_public: true,
+    is_public: type === 'public' ? true : false,
   };
 
   try {
     const { data: result } = await furiApi.post('/board', {
       ...data,
     });
-    console.log(result);
-    push(`/${result.id}/`);
+    push(type === 'public' ? `/${result.id}/` : `/board/${result.id}/`);
   } catch (error) {
     console.log(JSON.parse(JSON.stringify(error)));
   }
@@ -78,7 +88,7 @@ async function createBoard() {
     <FBanner text="Furikaeru is in active development. Bugs and frequent changes are expected." class="my-2" />
     <div class="flex justify-between pt-3">
       <div class="text-3xl font-semibold dark:text-white">My boards</div>
-      <FButton label="Add new" icon="ion:add-outline" @click="createBoard" />
+      <FMenu :options="boardTypes" @input="createBoard" label="Add new" sm option-key="value" icon="ion:add-outline" />
     </div>
 
     <UserCards />

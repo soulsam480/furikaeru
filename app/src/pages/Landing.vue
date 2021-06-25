@@ -2,7 +2,7 @@
 import { onMounted } from 'vue';
 import Axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
-import Icon from 'src/components/App/Icon.vue';
+import Icon from 'src/components/lib/FIcon.vue';
 import { useUser } from 'src/store/user';
 import type { UserResponse } from 'src/store/user';
 import FBanner from 'src/components/lib/FBanner.vue';

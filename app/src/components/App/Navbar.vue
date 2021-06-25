@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import Icon from 'src/components/App/Icon.vue';
+import Icon from 'src/components/lib/FIcon.vue';
 import { useUser } from 'src/store/user';
 import FButton from 'src/components/lib/FButton.vue';
 import { useRouter } from 'vue-router';
@@ -137,7 +137,7 @@ function handleDarkMode() {
                   rounded-md
                   shadow-lg
                   py-1
-                  bg-cyan-300
+                  bg-cyan-200
                   ring-1 ring-black ring-opacity-5
                   focus:outline-none
                 "
@@ -149,7 +149,7 @@ function handleDarkMode() {
               >
                 <router-link
                   to="/user"
-                  class="block px-4 py-2 hover:bg-cyan-400 text-sm text-gray-700"
+                  class="block px-4 py-2 hover:bg-cyan-300 text-sm text-gray-700"
                   role="menuitem"
                   tabindex="-1"
                 >
@@ -175,6 +175,7 @@ function handleDarkMode() {
       id="mobile-menu"
       ref="mNav"
       :style="isNav ? 'max-height: ' + getNavHeight + 'px' : ''"
+      v-click-outside="() => (isNav = false)"
     >
       <div class="px-2 pt-2 pb-3 space-y-1">
         <a

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { defineEmit, defineProps, nextTick, ref } from 'vue';
+import { defineEmit, defineProps, ref } from 'vue';
 import type { PropType } from 'vue';
 import draggable from 'vuedraggable';
-import Icon from 'src/components/App/Icon.vue';
+import Icon from 'src/components/lib/FIcon.vue';
 import type { Card, Comment } from 'src/utils/types';
 import EditContent from 'src/components/App/EditContent.vue';
 import FButton from 'src/components/lib/FButton.vue';

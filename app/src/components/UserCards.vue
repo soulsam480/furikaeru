@@ -62,7 +62,7 @@ onMounted(async () => {
         "
       >
         <div class="text-lg break-word">{{ board.title }}</div>
-        <div class="font-semibold text-xs pt-1" v-if="board.is_public">Public</div>
+        <div class="font-semibold text-xs pt-1">{{ board.is_public ? 'Public' : 'Private' }}</div>
         <div class="text-gray-500 text-xs pt-1">Updated: {{ getDDMMYY(board.updated_at) }}</div>
 
         <div class="flex items-center pt-2">
