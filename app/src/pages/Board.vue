@@ -3,7 +3,7 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import Draggable from 'src/components/App/Draggable.vue';
 import type { BoardModel, Card } from 'src/utils/types';
 import { useIo } from 'src/utils/createWs';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useUser } from 'src/store/user';
 import { v4 } from 'uuid';
 import FButton from 'src/components/lib/FButton.vue';
@@ -13,7 +13,8 @@ const { on, emit, io } = useIo();
 const {
   params: { id: bid },
 } = useRoute();
-const { isLoggedIn, getUser, showLoader, hideLoader } = useUser();
+const { push } = useRouter();
+const { isLoggedIn, getUser, showLoader, hideLoader, getLoader } = useUser();
 
 const board = ref<BoardModel>();
 const enabled = ref(true);
@@ -127,6 +128,13 @@ function handleCardAddition(id: string) {
   isNewCard.value = null;
 }
 
+function handleBoardError() {
+  if (getLoader.value) {
+    hideLoader();
+  }
+  push('/');
+}
+
 onMounted(() => {
   showLoader();
   const firstListen = ({ d }: { d: BoardModel }) => {
@@ -141,9 +149,12 @@ on('send:board', ({ d }: { d: BoardModel }) => {
   board.value = { ...d };
 });
 
+on('error', handleBoardError);
+
 onBeforeUnmount(() => {
   io.off('send:board');
   emit('leave:board');
+  io.off('error', handleBoardError);
 });
 </script>
 <template>
