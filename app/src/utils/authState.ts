@@ -9,7 +9,7 @@ export async function authState() {
 
   if (!!__token) {
     showLoader();
-    const { push } = useRouter();
+    const { push, currentRoute } = useRouter();
     try {
       const {
         data: { accessToken },
@@ -31,7 +31,8 @@ export async function authState() {
         });
         if (!data) return setLogin(null), localStorage.removeItem('__token');
         setLogin(data);
-        await push('/user');
+
+        if (currentRoute.value.name !== 'PublicBoard') await push('/user');
         hideLoader();
       }
     } catch (error) {
