@@ -73,7 +73,7 @@ function handleDarkMode() {
         </div>
         <div class="flex-1 flex items-center ml-10 sm:ml-0 sm:items-stretch justify-start">
           <div
-            class="flex-shrink-0 dark:text-white font-semibold flex items-center text-2xl font-sans cursor-pointer"
+            class="flex-shrink-0 dark:text-white font-semibold flex items-center text-2xl cursor-pointer"
             :class="{ 'dark:text-black': isNav }"
             @click="$router.push('/')"
           >
