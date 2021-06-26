@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { BoardModel } from 'src/utils/types';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { getDDMMYY } from 'src/utils/helpers';
+import { getDDMMYY, copyLink, shareBoard } from 'src/utils/helpers';
 import FButton from 'src/components/lib/FButton.vue';
 import { useUser } from 'src/store/user';
 import { deleteBoard, getAllBoards, updateBoard } from 'src/utils/boardService';
@@ -11,6 +11,8 @@ import FMenu from './lib/FMenu.vue';
 const { push } = useRouter();
 const { showLoader, hideLoader } = useUser();
 const boards = ref<BoardModel[]>([]);
+
+const isShare = navigator.share;
 
 const boardContext = (type: boolean) => [
   {
@@ -95,7 +97,7 @@ onMounted(async () => {
         "
       >
         <div class="flex">
-          <div class="text-lg truncate flex-grow">{{ board.title }}</div>
+          <div class="text-lg truncate flex-grow" :title="board.title">{{ board.title }}</div>
           <div class="flex-none">
             <FMenu
               :options="boardContext(board.is_public)"
@@ -110,11 +112,27 @@ onMounted(async () => {
         <div class="font-semibold text-xs pt-1">{{ board.is_public ? 'Public' : 'Private' }}</div>
         <div class="text-gray-500 text-xs pt-1">Updated: {{ getDDMMYY(board.updated_at) }}</div>
 
-        <div class="flex items-center pt-2">
+        <div class="flex items-center pt-2 space-x-2">
           <FButton
             title="View board"
             @click="viewBoard(board.id, board.is_public)"
             icon="ion:eye-outline"
+            size="17px"
+            sm
+          />
+          <FButton
+            title="Share board"
+            v-if="board.is_public && isShare"
+            @click="shareBoard(`https://furikaeru.sambitsahoo.com/${board.id}`, board.title)"
+            icon="ion:share-social-outline"
+            size="17px"
+            sm
+          />
+          <FButton
+            title="Copy public URL"
+            v-if="board.is_public"
+            @click="copyLink(`https://furikaeru.sambitsahoo.com/${board.id}`)"
+            icon="ion:clipboard-outline"
             size="17px"
             sm
           />
