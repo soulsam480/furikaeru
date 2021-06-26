@@ -31,9 +31,24 @@ async function getPrivateBoard() {
   }
 }
 
-async function updateBoardEmit(id: string, board: BoardModel) {
+async function updateBoardEmit(id: string, board: BoardModel, type: 'board' | 'title' | 'type') {
+  let data: any;
+  switch (type) {
+    case 'title':
+      data = { title: board.title };
+      break;
+
+    case 'type':
+      data = { is_public: board.is_public };
+      break;
+
+    default:
+      data = { data: board.data };
+      break;
+  }
+
   try {
-    await updateBoard(id, board);
+    await updateBoard(id, data);
     await getPrivateBoard();
   } catch (error) {
     console.log(error);
@@ -80,7 +95,7 @@ function upVote(e: { cid: string; coid: string }) {
     { ...column },
   );
 
-  updateBoardEmit(bid as string, board.value as BoardModel);
+  updateBoardEmit(bid as string, board.value as BoardModel, 'board');
 }
 
 function handleColumnNameChange(e: string, id: string) {
@@ -89,13 +104,13 @@ function handleColumnNameChange(e: string, id: string) {
   column.name = e;
 
   isEditColumnName.value = null;
-  updateBoardEmit(bid as string, board.value as BoardModel);
+  updateBoardEmit(bid as string, board.value as BoardModel, 'board');
 }
 
 function handleBoardNameChange(e: string) {
   isEditBoardName.value = null;
   (board.value as BoardModel).title = e;
-  updateBoardEmit(bid as string, board.value as BoardModel);
+  updateBoardEmit(bid as string, board.value as BoardModel, 'title');
 }
 
 function handleCardAddition(id: string) {
@@ -112,7 +127,7 @@ function handleCardAddition(id: string) {
   if (idx !== -1) {
     board.value?.data[idx as number].data.push({ ...card });
   }
-  updateBoardEmit(bid as string, board.value as BoardModel);
+  updateBoardEmit(bid as string, board.value as BoardModel, 'board');
 
   newCardName.value = '';
   isNewCard.value = null;
