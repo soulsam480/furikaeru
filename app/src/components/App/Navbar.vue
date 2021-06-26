@@ -147,17 +147,12 @@ function handleDarkMode() {
                 tabindex="-1"
                 v-show="isContext"
               >
-                <router-link
-                  to="/user"
-                  class="block px-4 py-2 hover:bg-cyan-300 text-sm text-gray-700"
-                  role="menuitem"
-                  tabindex="-1"
-                >
+                <router-link to="/user" class="block px-4 py-2 hover:bg-cyan-300 text-sm" role="menuitem" tabindex="-1">
                   Home
                 </router-link>
                 <a
                   @click="logout"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-cyan-400 cursor-pointer"
+                  class="block px-4 py-2 text-sm hover:bg-cyan-400 cursor-pointer"
                   role="menuitem"
                   tabindex="-1"
                 >

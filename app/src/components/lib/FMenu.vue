@@ -6,7 +6,7 @@ defineProps<{
   options: string[] | Record<'label' | 'value', any>[];
   modelValue?: string;
   optionKey?: 'label' | 'value';
-  label: string;
+  label?: string;
   icon?: string;
   size?: string;
   sm?: boolean;
@@ -62,7 +62,7 @@ function handleClick(val: string, e: MouseEvent) {
             py-1
             text-base
             leading-6
-            shadow-sm
+            shadow
             focus:outline-none
             sm:text-sm
             overflow-auto
@@ -71,7 +71,7 @@ function handleClick(val: string, e: MouseEvent) {
             f-menu__list
           "
         >
-          <slot name="options" :options="options">
+          <slot name="options" :options="options" :get-option-val="getOptionVal">
             <li
               role="option"
               class="

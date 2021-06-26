@@ -5,11 +5,35 @@ import { useRouter } from 'vue-router';
 import { getDDMMYY } from 'src/utils/helpers';
 import FButton from 'src/components/lib/FButton.vue';
 import { useUser } from 'src/store/user';
-import { deleteBoard, getAllBoards } from 'src/utils/boardService';
+import { deleteBoard, getAllBoards, updateBoard } from 'src/utils/boardService';
+import FMenu from './lib/FMenu.vue';
 
 const { push } = useRouter();
 const { showLoader, hideLoader } = useUser();
 const boards = ref<BoardModel[]>([]);
+
+const boardContext = (type: boolean) => [
+  {
+    label: type ? 'Make private' : 'Make public',
+    value: 'changetype',
+  },
+  {
+    label: 'Delete',
+    value: 'delete',
+  },
+];
+
+async function handleBoardContext(type: string, id?: string, is_public?: boolean) {
+  switch (type) {
+    case 'delete':
+      await handleBoardRemove(id as string);
+      break;
+
+    case 'changetype':
+      await handleChangeType(id as string, !is_public);
+      break;
+  }
+}
 
 function viewBoard(id: string, is_public: boolean) {
   if (is_public) return push(`/${id}/`);
@@ -31,6 +55,15 @@ async function getBoards() {
 async function handleBoardRemove(id: string) {
   try {
     await deleteBoard(id);
+    await getBoards();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function handleChangeType(id: string, is_public: boolean) {
+  try {
+    await updateBoard(id, { is_public });
     await getBoards();
   } catch (error) {
     console.log(error);
@@ -61,19 +94,23 @@ onMounted(async () => {
           )
         "
       >
-        <div class="text-lg break-word">{{ board.title }}</div>
+        <div class="flex">
+          <div class="text-lg truncate flex-grow">{{ board.title }}</div>
+          <div class="flex-none">
+            <FMenu
+              :options="boardContext(board.is_public)"
+              option-key="value"
+              sm
+              icon="ion:ellipsis-vertical-outline"
+              @input="handleBoardContext($event, board.id, board.is_public)"
+              title="Board settings"
+            />
+          </div>
+        </div>
         <div class="font-semibold text-xs pt-1">{{ board.is_public ? 'Public' : 'Private' }}</div>
         <div class="text-gray-500 text-xs pt-1">Updated: {{ getDDMMYY(board.updated_at) }}</div>
 
         <div class="flex items-center pt-2">
-          <FButton
-            title="Remove board"
-            @click="handleBoardRemove(board.id)"
-            icon="ion:trash-outline"
-            size="17px"
-            class="mr-1"
-            sm
-          />
           <FButton
             title="View board"
             @click="viewBoard(board.id, board.is_public)"
