@@ -15,7 +15,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/board/:id',
     name: 'Board',
-    component: () => import('src/pages/Board.vue'),
+    component: () => import('src/pages/PrivateBoard.vue'),
   },
   {
     path: '/user',

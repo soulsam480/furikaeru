@@ -2,7 +2,7 @@
 import { useUser } from 'src/store/user';
 import { v4 as uuid } from 'uuid';
 import type { BoardColumn } from 'src/utils/types';
-import { furiApi } from 'src/utils/helpers';
+import { createBoard as furiCreateBoard } from 'src/utils/boardService';
 import UserCards from 'src/components/UserCards.vue';
 import { useRouter } from 'vue-router';
 import FBanner from 'src/components/lib/FBanner.vue';
@@ -74,9 +74,8 @@ async function createBoard(type: string) {
   };
 
   try {
-    const { data: result } = await furiApi.post('/board', {
-      ...data,
-    });
+    const { data: result } = await furiCreateBoard({ ...data });
+
     push(type === 'public' ? `/${result.id}/` : `/board/${result.id}/`);
   } catch (error) {
     console.log(JSON.parse(JSON.stringify(error)));
@@ -90,7 +89,6 @@ async function createBoard(type: string) {
       <div class="text-3xl font-semibold dark:text-white">My boards</div>
       <FMenu :options="boardTypes" @input="createBoard" label="Add new" sm option-key="value" icon="ion:add-outline" />
     </div>
-
     <UserCards />
   </div>
 </template>

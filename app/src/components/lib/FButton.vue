@@ -2,16 +2,16 @@
 import { defineEmit, defineProps } from '@vue/runtime-core';
 import Icon from 'src/components/lib/FIcon.vue';
 
-defineProps({
-  label: String,
-  icon: String,
-  size: String,
-  sm: Boolean,
-  invert: Boolean,
-  center: Boolean,
-  block: Boolean,
-  flat: Boolean,
-});
+defineProps<{
+  label?: any;
+  icon?: string;
+  size?: string;
+  sm?: boolean;
+  invert?: boolean;
+  center?: boolean;
+  block?: boolean;
+  flat?: boolean;
+}>();
 
 defineEmit(['click']);
 </script>

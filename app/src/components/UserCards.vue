@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { furiApi } from 'src/utils/helpers';
 import type { BoardModel } from 'src/utils/types';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { getDDMMYY } from 'src/utils/helpers';
 import FButton from 'src/components/lib/FButton.vue';
 import { useUser } from 'src/store/user';
+import { deleteBoard, getAllBoards } from 'src/utils/boardService';
 
 const { push } = useRouter();
 const { showLoader, hideLoader } = useUser();
@@ -19,7 +19,7 @@ function viewBoard(id: string, is_public: boolean) {
 async function getBoards() {
   showLoader();
   try {
-    const { data }: { data: BoardModel[] } = await furiApi.get('/board');
+    const { data }: { data: BoardModel[] } = await getAllBoards();
     boards.value = [...data];
   } catch (error) {
     console.log(error);
@@ -30,7 +30,7 @@ async function getBoards() {
 
 async function handleBoardRemove(id: string) {
   try {
-    await furiApi.delete(`/board/${id}/`);
+    await deleteBoard(id);
     await getBoards();
   } catch (error) {
     console.log(error);
