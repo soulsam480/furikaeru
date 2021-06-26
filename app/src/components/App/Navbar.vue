@@ -51,7 +51,7 @@ function handleDarkMode() {
       top-0
       z-20
       transition-colors
-      duration-200
+      duration-400
       ease-in-out
       border-b-[0.5px] border-cyan-200
       shadow-md shadow-cyan-200
