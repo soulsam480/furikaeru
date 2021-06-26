@@ -132,6 +132,7 @@ function handleDarkMode() {
                   origin-top-right
                   absolute
                   right-0
+                  z-50
                   mt-2
                   w-48
                   rounded-md

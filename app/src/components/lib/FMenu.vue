@@ -48,7 +48,7 @@ function handleClick(val: string, e: MouseEvent) {
       leave-to-class="transform opacity-0 scale-95"
     >
       <div
-        class="origin-top-right absolute right-0 min-w-32 mt-2 rounded-md bg-white shadow-lg"
+        class="origin-top-right absolute z-50 right-0 min-w-32 mt-2 rounded-md bg-white shadow-lg"
         style="display: none"
         v-show="isMenu"
       >
