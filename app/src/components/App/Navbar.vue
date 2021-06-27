@@ -107,16 +107,11 @@ function handleDarkMode() {
                 icon="ion:person-outline"
                 size="17px"
               />
-              <FButton
-                sm
-                @click="handleDarkMode"
-                :icon="isDark === 'light' ? 'ion:contrast-outline' : 'ion:sunny-outline'"
-                title="Toggle dark mode"
-              >
-                <!-- <template #icon>
+              <FButton sm @click="handleDarkMode" title="Toggle dark mode">
+                <template #icon>
                   <Icon v-if="isDark === 'light'" icon="ion:contrast-outline" size="17px" />
                   <Icon v-if="isDark === 'dark'" icon="ion:sunny-outline" size="17px" />
-                </template> -->
+                </template>
               </FButton>
               <FButton sm class="hidden sm:block">
                 <a target="_blank" href="https://github.com/soulsam480/furikaeru">
