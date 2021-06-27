@@ -7,8 +7,10 @@ import UserCards from 'src/components/UserCards.vue';
 import { useRouter } from 'vue-router';
 import FBanner from 'src/components/lib/FBanner.vue';
 import FMenu from 'src/components/lib/FMenu.vue';
+import { useAlerts } from 'src/store/alert';
 
 const { getUser } = useUser();
+const { setAlerts } = useAlerts();
 const { push } = useRouter();
 
 const boardTypes = [
@@ -75,7 +77,7 @@ async function createBoard(type: string) {
 
   try {
     const { data: result } = await furiCreateBoard({ ...data });
-
+    setAlerts({ type: 'success', message: 'Board created successfully!' });
     push(type === 'public' ? `/${result.id}/` : `/board/${result.id}/`);
   } catch (error) {
     console.log(JSON.parse(JSON.stringify(error)));

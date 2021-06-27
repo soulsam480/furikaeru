@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import type { BoardModel } from 'src/utils/types';
-import { computed, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { getDDMMYY, copyLink, shareBoard } from 'src/utils/helpers';
 import FButton from 'src/components/lib/FButton.vue';
 import { useUser } from 'src/store/user';
 import { deleteBoard, getAllBoards, updateBoard } from 'src/utils/boardService';
-import FMenu from './lib/FMenu.vue';
+import FMenu from 'src/components/lib/FMenu.vue';
+import { useAlerts } from 'src/store/alert';
 
 const { push } = useRouter();
 const { showLoader, hideLoader } = useUser();
+const { setAlerts } = useAlerts();
 const boards = ref<BoardModel[]>([]);
 
 const isShare = navigator.share;
@@ -57,6 +59,7 @@ async function getBoards() {
 async function handleBoardRemove(id: string) {
   try {
     await deleteBoard(id);
+    setAlerts({ type: 'success', message: 'Board removed.' });
     await getBoards();
   } catch (error) {
     console.log(error);
@@ -66,6 +69,7 @@ async function handleBoardRemove(id: string) {
 async function handleChangeType(id: string, is_public: boolean) {
   try {
     await updateBoard(id, { is_public });
+    setAlerts({ type: 'success', message: 'Board type changed.' });
     await getBoards();
   } catch (error) {
     console.log(error);
@@ -131,7 +135,10 @@ onMounted(async () => {
           <FButton
             title="Copy public URL"
             v-if="board.is_public"
-            @click="copyLink(`https://furikaeru.sambitsahoo.com/${board.id}`)"
+            @click="
+              copyLink(`https://furikaeru.sambitsahoo.com/${board.id}`),
+                setAlerts({ type: 'success', message: 'Copied!' })
+            "
             icon="ion:clipboard-outline"
             size="17px"
             sm

@@ -103,15 +103,20 @@ function handleDarkMode() {
                 v-click-outside="() => (isContext = false)"
                 class="focus:bg-cyan-400"
                 sm
+                :label="getUser.name"
+                icon="ion:person-outline"
+                size="17px"
+              />
+              <FButton
+                sm
+                @click="handleDarkMode"
+                :icon="isDark === 'light' ? 'ion:contrast-outline' : 'ion:sunny-outline'"
+                title="Toggle dark mode"
               >
-                <Icon icon="ion:person-outline" />
-                &nbsp; {{ getUser.name }}
-              </FButton>
-              <FButton sm @click="handleDarkMode" title="Toggle dark mode">
-                <template #icon>
-                  <Icon v-show="isDark === 'light'" icon="ion:contrast-outline" size="17px" />
-                  <Icon v-show="isDark === 'dark'" icon="ion:sunny-outline" size="17px" />
-                </template>
+                <!-- <template #icon>
+                  <Icon v-if="isDark === 'light'" icon="ion:contrast-outline" size="17px" />
+                  <Icon v-if="isDark === 'dark'" icon="ion:sunny-outline" size="17px" />
+                </template> -->
               </FButton>
               <FButton sm class="hidden sm:block">
                 <a target="_blank" href="https://github.com/soulsam480/furikaeru">
