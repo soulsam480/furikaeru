@@ -19,7 +19,7 @@ defineEmit(['click']);
   <button
     class="flex items-center text-sm rounded-md focus:outline-none disabled:(cursor-not-allowed hover:bg-red-100)"
     :class="{
-      'px-2 py-2': sm,
+      'px-2 py-[6px]': sm,
       'px-3 py-2': !sm,
       'bg-cyan-300 hover:bg-cyan-400': !invert && !flat,
       'hover:bg-cyan-300': flat,

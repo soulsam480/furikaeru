@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineEmit, defineProps, ref } from 'vue';
+import { defineEmit, defineProps, onBeforeUnmount, onMounted, ref } from 'vue';
 import FButton from 'src/components/lib/FButton.vue';
 
 defineProps<{
@@ -20,6 +20,15 @@ function getOptionVal(option: string | Record<'label' | 'value', any>, optionKey
   if (!optionKey) throw new Error('optionKey prop is required for Object type option.');
   return option[optionKey];
 }
+
+function handleClose(e: KeyboardEvent) {
+  if (!isMenu.value) return;
+  const { key } = e;
+  if (key === 'Escape') return (isMenu.value = false);
+}
+
+onMounted(() => window.addEventListener('keydown', handleClose));
+onBeforeUnmount(() => window.removeEventListener('keydown', handleClose));
 
 function handleClick(val: string, e: MouseEvent) {
   emit('update:modelValue', val);
