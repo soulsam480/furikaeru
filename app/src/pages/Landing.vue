@@ -14,10 +14,7 @@ const url = import.meta.env.VITE_API;
 const { query } = useRoute();
 const { push } = useRouter();
 function login() {
-  Axios({
-    baseURL: import.meta.env.VITE_API,
-    url: '/auth/google',
-  });
+  window.location.href = `${url}/auth/google/`;
 }
 
 async function catchRedirect() {
@@ -77,7 +74,7 @@ onMounted(async () => {
               </div>
             </div>
             <div>
-              <a
+              <button
                 class="
                   bg-cyan-200
                   flex
@@ -91,15 +88,13 @@ onMounted(async () => {
                   border-1 border-cyan-300
                   transition-all
                   ease-in-out
-                  mx-auto
+                  w-full
                 "
-                :href="`${url}/auth/google`"
-                type="button"
                 @click="login"
               >
                 Login with &nbsp;
                 <Icon icon="ion:logo-google" size="25px" />
-              </a>
+              </button>
             </div>
             <div class="text-sm text-gray-500">To prevent spamming, only Google login is available.</div>
           </div>
