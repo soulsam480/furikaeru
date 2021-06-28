@@ -8,6 +8,7 @@ import { useUser } from 'src/store/user';
 import { v4 } from 'uuid';
 import FButton from 'src/components/lib/FButton.vue';
 import EditContent from 'src/components/App/EditContent.vue';
+import BoardContext from 'src/components/BoardContext.vue';
 
 const { on, emit, io } = useIo();
 const {
@@ -159,6 +160,7 @@ onBeforeUnmount(() => {
 </script>
 <template>
   <div class="board">
+    <BoardContext :board="board || {}" />
     <div class="mb-4">
       <div class="flex" v-if="isEditBoardName !== board?.id">
         <div class="text-2xl font-semibold flex-grow sm:mr-1 sm:flex-none break-word dark:text-white">

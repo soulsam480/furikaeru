@@ -171,7 +171,6 @@ function handleDarkMode() {
       id="mobile-menu"
       ref="mNav"
       :style="isNav ? 'max-height: ' + getNavHeight + 'px' : ''"
-      v-click-outside="() => (isNav = false)"
     >
       <div class="px-2 pt-2 pb-3 space-y-1">
         <a
