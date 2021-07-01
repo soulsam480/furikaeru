@@ -16,7 +16,11 @@ export function createListeners(io: Server) {
     sock.on('get:board', async (d: { id: string }) => {
       const { id: roomId } = d;
       try {
-        const board = await Board.findOne({ id: roomId });
+        const board = await Board.findOne({
+          where: { id: roomId },
+          relations: ['user'],
+          loadRelationIds: true,
+        });
 
         if (!board) return sock.emit('error', new Error('Board not found'));
         if (!board.is_public) return sock.emit('error', { error: new Error('Private board') });
