@@ -1,31 +1,30 @@
 <script setup lang="ts">
-import { defineProps } from 'vue';
+import { defineEmit, defineProps } from 'vue';
 import { shareBoard, copyLink } from 'src/utils/helpers';
 import FButton from 'src/components/lib/FButton.vue';
 import type { BoardModel } from 'src/utils/types';
 import { useAlerts } from 'src/store/alert';
-// import { useUser } from 'src/store/user';
 
 defineProps<{
   board: BoardModel;
+  uid: string;
 }>();
+defineEmit(['remove']);
 
 const { setAlerts } = useAlerts();
-// const { getUser } = useUser();
 
 const isShare = navigator.share;
 </script>
 <template>
   <div class="flex space-x-1 justify-end mb-2">
-    <!-- //TODO Fix this -->
-    <!-- <FButton
+    <FButton
       title="Remove board"
-      v-if="board."
+      v-if="board.user === uid"
       @click="$emit('remove')"
       icon="ion:trash-outline"
       size="17px"
       sm
-    /> -->
+    />
     <FButton
       title="Copy public URL"
       v-if="board.is_public"

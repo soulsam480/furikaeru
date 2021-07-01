@@ -25,11 +25,10 @@ export interface BoardColumn {
   data: Card[];
 }
 
-type BoardUser = { id: string };
 export interface BoardModel {
   id: string;
   title: string;
-  user: BoardUser;
+  user: string;
   data: BoardColumn[];
   is_public: boolean;
   created_at: number;

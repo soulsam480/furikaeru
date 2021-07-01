@@ -9,6 +9,8 @@ import { v4 } from 'uuid';
 import FButton from 'src/components/lib/FButton.vue';
 import EditContent from 'src/components/App/EditContent.vue';
 import BoardContext from 'src/components/BoardContext.vue';
+import { deleteBoard } from 'src/utils/boardService';
+import { useAlerts } from 'src/store/alert';
 
 const { on, emit, io } = useIo();
 const {
@@ -16,6 +18,7 @@ const {
 } = useRoute();
 const { push } = useRouter();
 const { isLoggedIn, getUser, showLoader, hideLoader, getLoader } = useUser();
+const { setAlerts } = useAlerts();
 
 const board = ref<BoardModel>();
 const enabled = ref(true);
@@ -129,6 +132,16 @@ function handleCardAddition(id: string) {
   isNewCard.value = null;
 }
 
+async function handleBoardRemove(id: string) {
+  try {
+    await deleteBoard(id);
+    setAlerts({ type: 'success', message: 'Board removed successfully !' });
+    push('/');
+  } catch (error) {
+    setAlerts({ type: 'danger', message: error });
+  }
+}
+
 function handleBoardError() {
   if (getLoader.value) {
     hideLoader();
@@ -160,7 +173,7 @@ onBeforeUnmount(() => {
 </script>
 <template>
   <div class="board">
-    <BoardContext :board="board || {}" />
+    <BoardContext :board="board || {}" :uid="getUserId" @remove="handleBoardRemove(board.id)" />
     <div class="mb-4">
       <div class="flex" v-if="isEditBoardName !== board?.id">
         <div class="text-2xl font-semibold flex-grow sm:mr-1 sm:flex-none break-word dark:text-white">
