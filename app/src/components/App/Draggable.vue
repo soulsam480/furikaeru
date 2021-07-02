@@ -1,23 +1,17 @@
 <script setup lang="ts">
 import { defineEmit, defineProps, ref } from 'vue';
-import type { PropType } from 'vue';
 import draggable from 'vuedraggable';
 import Icon from 'src/components/lib/FIcon.vue';
 import type { Card, Comment } from 'src/utils/types';
 import EditContent from 'src/components/App/EditContent.vue';
 import FButton from 'src/components/lib/FButton.vue';
 
-const props = defineProps({
-  enabled: Boolean,
-  list: Array as PropType<Card[]>,
-  group: [String, Function],
-  userId: String,
-});
+const props = defineProps<{ enabled: boolean; list: Card[]; group: string; userId: string }>();
 
 const emits = defineEmit(['upvote', 'change', 'move', 'end']);
 
 const isEdit = ref<string | null>(null);
-const isComments = ref<string | null>(null);
+const isComments = ref<string[]>([]);
 const newComment = ref('');
 
 function calcVotes(votes: Record<string, any>) {
@@ -43,19 +37,19 @@ function handleTitleChange() {
 }
 
 function handleRemoveCard(id: string) {
-  const cardIndex = (props.list as Card[]).findIndex((el) => el.id === id);
+  const cardIndex = props.list.findIndex((el) => el.id === id);
   if (cardIndex !== -1) {
-    (props.list as Card[]).splice(cardIndex, 1);
+    props.list.splice(cardIndex, 1);
   }
   emits('end');
 }
 
 function handleAddComment(id: string) {
   if (!newComment) return;
-  const cardIndex = (props.list as Card[]).findIndex((el) => el.id === id);
+  const cardIndex = props.list.findIndex((el) => el.id === id);
   const createIndex = `${props.userId?.split('-')[4]}--${new Date().valueOf()}`;
   if (cardIndex !== -1) {
-    (props.list as Card[])[cardIndex].comments[createIndex] = {
+    props.list[cardIndex].comments[createIndex] = {
       text: newComment.value,
       likes: 0,
     };
@@ -65,19 +59,28 @@ function handleAddComment(id: string) {
 }
 
 function handleCommentUpVote(id: string, coid: string) {
-  const cardIndex = (props.list as Card[]).findIndex((el) => el.id === id);
+  const cardIndex = props.list.findIndex((el) => el.id === id);
   if (cardIndex !== -1) {
-    (props.list as Card[])[cardIndex].comments[coid].likes += 1;
+    props.list[cardIndex].comments[coid].likes += 1;
   }
   emits('end');
 }
 
 function handleRemoveComment(id: string, coid: string) {
-  const cardIndex = (props.list as Card[]).findIndex((el) => el.id === id);
+  const cardIndex = props.list.findIndex((el) => el.id === id);
   if (cardIndex !== -1) {
-    delete (props.list as Card[])[cardIndex].comments[coid];
+    delete props.list[cardIndex].comments[coid];
   }
   emits('end');
+}
+
+function toggleComments(id: string) {
+  const idx = isComments.value.findIndex((el) => el === id);
+  if (idx === -1) {
+    isComments.value.push(id);
+    return;
+  }
+  isComments.value.splice(idx, 1);
 }
 </script>
 <template>
@@ -151,7 +154,7 @@ function handleRemoveComment(id: string, coid: string) {
         <div class="flex space-x-2 justify-end items-center pb-1">
           <FButton
             title="Comment"
-            @click="isComments === element.id ? (isComments = null) : (isComments = element.id)"
+            @click="toggleComments(element.id)"
             icon="ion:chatbox-ellipses-outline"
             sm
             flat
@@ -164,7 +167,7 @@ function handleRemoveComment(id: string, coid: string) {
         </div>
         <div
           class="flex-col h-auto board-grid__column__item__comments bg-cyan-300 overflow-hidden rounded-md px-1 flex"
-          v-show="isComments === element.id"
+          v-show="isComments.includes(element.id)"
         >
           <div class="flex items-center pt-2">
             <div class="flex-grow mr-1">
