@@ -27,7 +27,7 @@ boardRouter.post('/', authMiddleware, async (req: RequestWithUser, res) => {
 boardRouter.get('/', authMiddleware, async (req: RequestWithUser, res) => {
   const { userId } = req;
   try {
-    const userBoards = await Board.find({ where: { user: { id: userId } } });
+    const userBoards = await Board.find({ where: { user: { id: userId } }, order: { updated_at: 'DESC' } });
 
     res.send(userBoards);
   } catch (error) {
