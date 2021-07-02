@@ -28,7 +28,7 @@ export interface BoardColumn {
 export interface BoardModel {
   id: string;
   title: string;
-  user: string;
+  user: string | null;
   data: BoardColumn[];
   is_public: boolean;
   created_at: number;

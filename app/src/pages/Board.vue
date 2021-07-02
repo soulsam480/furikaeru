@@ -94,7 +94,7 @@ function upVote(e: { cid: string; coid: string }) {
 }
 
 function updateBoardEmit(id: string, board: BoardModel) {
-  emit('update:board', { id, b: board });
+  emit('update:board', { id, b: { ...board, user: null } });
 }
 
 function handleColumnNameChange(e: string, id: string) {
