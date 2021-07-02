@@ -21,10 +21,10 @@ const { isLoggedIn, getUser, showLoader, hideLoader, getLoader } = useUser();
 const { setAlerts } = useAlerts();
 
 const board = ref<BoardModel>();
-const enabled = ref(true);
 const isEditColumnName = ref<string | null>(null);
 const isEditBoardName = ref<string | null>(null);
 const newCardName = ref('');
+const sortBy = ref('');
 const isNewCard = ref<string | null>(null);
 const getUserId = computed(() => {
   if (isLoggedIn.value) return getUser.value.id;
@@ -142,6 +142,27 @@ async function handleBoardRemove(id: string) {
   }
 }
 
+function handleSortedMove(e: any) {
+  try {
+    const { to, from } = e;
+
+    const fromColIdx = board.value?.data.findIndex((el) => el.id === from.id);
+    if (fromColIdx !== -1) {
+      const removeIdx = board.value?.data[fromColIdx as number].data.findIndex((el) => el.id === to.data.id);
+      board.value?.data[fromColIdx as number].data.splice(removeIdx as number, 1);
+    }
+
+    const toColIdx = board.value?.data.findIndex((el) => el.id === to.id);
+    if (toColIdx !== -1) {
+      board.value?.data[toColIdx as number].data.push(to.data);
+    }
+
+    updateBoardEmit(board.value?.id as string, board.value as BoardModel);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 function handleBoardError() {
   if (getLoader.value) {
     hideLoader();
@@ -173,7 +194,7 @@ onBeforeUnmount(() => {
 </script>
 <template>
   <div class="board">
-    <BoardContext :board="board || {}" :uid="getUserId" @remove="handleBoardRemove(board.id)" />
+    <BoardContext :board="board || {}" :uid="getUserId" @remove="handleBoardRemove(board.id)" @sort="sortBy = $event" />
     <div class="mb-4">
       <div class="flex" v-if="isEditBoardName !== board?.id">
         <div class="text-2xl font-semibold flex-grow sm:mr-1 sm:flex-none break-word dark:text-white">
@@ -262,12 +283,14 @@ onBeforeUnmount(() => {
         </div>
         <Draggable
           :list="column.data"
-          :enabled="enabled"
           group="board"
           v-bind="$attrs"
           @upvote="upVote({ cid: $event.cid, coid: column.id })"
           @end="updateBoardEmit(board?.id, board)"
           :user-id="getUserId"
+          :sort="sortBy"
+          :cId="column.id"
+          @move="handleSortedMove"
         />
       </div>
     </div>

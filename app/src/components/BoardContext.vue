@@ -1,17 +1,30 @@
 <script setup lang="ts">
-import { defineEmit, defineProps } from 'vue';
+import { defineEmit, defineProps, ref } from 'vue';
 import { shareBoard, copyLink } from 'src/utils/helpers';
 import FButton from 'src/components/lib/FButton.vue';
 import type { BoardModel } from 'src/utils/types';
 import { useAlerts } from 'src/store/alert';
+import FMenu from 'src/components/lib/FMenu.vue';
 
 defineProps<{
   board: BoardModel;
   uid: string;
 }>();
-defineEmit(['remove']);
+defineEmit(['remove', 'sort']);
+
+const SortOptions = [
+  {
+    label: 'No sort',
+    value: '',
+  },
+  {
+    label: 'by Vote',
+    value: 'vote',
+  },
+];
 
 const { setAlerts } = useAlerts();
+const sortBy = ref('');
 
 const isShare = navigator.share;
 </script>
@@ -24,6 +37,15 @@ const isShare = navigator.share;
       icon="ion:trash-outline"
       size="17px"
       sm
+    />
+    <FMenu
+      :options="SortOptions"
+      option-key="value"
+      v-model="sortBy"
+      sm
+      :label="sortBy ? `Sort by ${sortBy}` : 'No sort'"
+      icon="ion:filter-circle-outline"
+      @input="$emit('sort', $event)"
     />
     <FButton
       title="Copy public URL"
