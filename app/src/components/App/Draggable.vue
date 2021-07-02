@@ -1,18 +1,38 @@
 <script setup lang="ts">
-import { defineEmit, defineProps, ref } from 'vue';
+import { defineEmit, defineProps, ref, watch } from 'vue';
 import draggable from 'vuedraggable';
 import Icon from 'src/components/lib/FIcon.vue';
 import type { Card, Comment } from 'src/utils/types';
 import EditContent from 'src/components/App/EditContent.vue';
 import FButton from 'src/components/lib/FButton.vue';
 
-const props = defineProps<{ enabled: boolean; list: Card[]; group: string; userId: string }>();
+const props = defineProps<{ list: Card[]; group: string; userId: string; sort: string; cId: string }>();
 
 const emits = defineEmit(['upvote', 'change', 'move', 'end']);
 
 const isEdit = ref<string | null>(null);
 const isComments = ref<string[]>([]);
 const newComment = ref('');
+const sortedList = ref<Card[]>(props.list);
+const movedEl = ref<Card | null>(null);
+
+watch(
+  () => [props.sort, props.list],
+  () => {
+    if (props.sort === 'vote') {
+      sortedList.value = props.list.slice().sort((a, b) => {
+        const aVotes = Object.keys(a.votes).length > 0 ? Object.values(a.votes).reduce((acc, val) => acc + val) : 0;
+        const bVotes = Object.keys(b.votes).length > 0 ? Object.values(b.votes).reduce((acc, val) => acc + val) : 0;
+        return bVotes > aVotes ? 1 : -1;
+      });
+    } else {
+      sortedList.value = props.list;
+    }
+  },
+  {
+    deep: true,
+  },
+);
 
 function calcVotes(votes: Record<string, any>) {
   if (Object.keys(votes).length === 0) return 0;
@@ -26,10 +46,6 @@ function calcComments(comments: Comment) {
 function parseComments(comments: Comment) {
   if (Object.keys(comments).length === 0) return [];
   return Object.entries(comments);
-}
-
-function emitMove() {
-  emits('move');
 }
 
 function handleTitleChange() {
@@ -82,17 +98,57 @@ function toggleComments(id: string) {
   }
   isComments.value.splice(idx, 1);
 }
+
+function handleEnd(e: any) {
+  const { to, from } = e;
+  if (props.sort && to && from) {
+    if (to.id !== from.id) {
+      const movePayload = {
+        to: {
+          data: movedEl.value,
+          id: to.id,
+        },
+        from: {
+          id: from.id,
+        },
+      };
+      movedEl.value = null;
+      emits('move', movePayload);
+      return;
+    }
+    return;
+  }
+  if (movedEl.value) movedEl.value = null;
+  emits('end');
+}
+
+function handleStart(e: any) {
+  if (props.sort) {
+    const { oldIndex } = e;
+    movedEl.value = sortedList.value[oldIndex];
+  }
+}
 </script>
 <template>
   <draggable
-    @change="$emit('change')"
-    :list="list"
-    item-key="id"
     class="board-grid__column flex flex-col"
+    @change="$emit('change')"
+    :list="sortedList"
+    item-key="id"
     :group="group"
-    :move="emitMove"
-    @end="$emit('end')"
+    @end="handleEnd"
     ghost-class="ghost"
+    @start="handleStart"
+    :sort="!sort"
+    v-bind="$attrs"
+    :id="cId"
+    tag="transition-group"
+    :component-data="{
+      tag: 'div',
+      type: 'transition-group',
+      name: 'flip-list',
+    }"
+    :animation="300"
   >
     <template #item="{ element }">
       <div
@@ -110,7 +166,6 @@ function toggleComments(id: string) {
           relative
           rounded-md
         "
-        :class="{ 'not-draggable': !enabled }"
       >
         <!-- <transition
             enter-active-class="transition ease-out duration-400"

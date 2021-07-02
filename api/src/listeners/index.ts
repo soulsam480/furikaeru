@@ -32,7 +32,7 @@ export function createListeners(io: Server) {
           const { id, b } = d;
 
           await Board.update(id, { data: b.data, title: b.title });
-          const nb = await Board.findOne({ id });
+          const nb = await Board.findOne({ where: { id }, relations: ['user'], loadRelationIds: true });
 
           io.sockets.in(roomId).emit('send:board', { d: nb });
         });
