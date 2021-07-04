@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { defineEmit, defineProps, ref } from 'vue';
 import FButton from 'src/components/lib/FButton.vue';
-const props = defineProps({
-  content: String,
-});
+const props = defineProps<{
+  content: string;
+  color?: string;
+}>();
 
 const emit = defineEmit({
   save: String,
@@ -19,7 +20,8 @@ function handleSave() {
 <template>
   <input
     type="text"
-    class="rounded-md border-none bg-cyan-50 flex-grow py-1 focus:shadow-none mr-1"
+    class="rounded-md border-none flex-grow py-1 focus:shadow-none mr-1"
+    :class="`bg-${color || 'cyan'}-50`"
     v-model="newVal"
     @keyup.enter="handleSave"
   />
@@ -31,6 +33,7 @@ function handleSave() {
     flat
     icon="ion:checkmark"
     sm
+    :color="color"
   />
   <FButton
     @click="$emit('cancel')"
@@ -39,5 +42,6 @@ function handleSave() {
     icon="ion:close"
     class="dark:text-white dark:hover:text-black"
     sm
+    :color="color"
   />
 </template>

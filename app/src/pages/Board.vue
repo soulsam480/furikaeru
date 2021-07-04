@@ -20,8 +20,10 @@ const { push } = useRouter();
 const { isLoggedIn, getUser, showLoader, hideLoader, getLoader } = useUser();
 const { setAlerts } = useAlerts();
 
+const COLORS = ['red', 'green', 'purple', 'indigo', 'amber', 'lime', 'cyan'];
 const board = ref<BoardModel>();
 const isEditColumnName = ref<string | null>(null);
+const isEditColumnColor = ref<string | null>(null);
 const isEditBoardName = ref<string | null>(null);
 const newCardName = ref('');
 const sortBy = ref('');
@@ -142,6 +144,33 @@ async function handleBoardRemove(id: string) {
   }
 }
 
+function handleColumnTheme(id: string, color: string) {
+  const idx = board.value?.data.findIndex((el) => el.id === id);
+  if (idx !== -1) {
+    (board.value as BoardModel).data[idx as number]['color'] = color;
+  }
+  updateBoardEmit(bid as string, board.value as BoardModel);
+}
+
+function handleColumnColorToggle(id: string) {
+  if (isEditColumnColor.value === id) {
+    isEditColumnColor.value = null;
+    return;
+  }
+  isEditColumnColor.value = id;
+}
+
+function handleEditColumnName(id: string) {
+  if (isEditColumnColor.value === id) {
+    isEditColumnColor.value = null;
+  }
+  if (isEditColumnName.value === id) {
+    isEditColumnName.value = null;
+    return;
+  }
+  isEditColumnName.value = id;
+}
+
 function handleSortedMove(e: any) {
   try {
     const { to, from } = e;
@@ -220,16 +249,26 @@ onBeforeUnmount(() => {
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 board-grid">
       <div v-for="column in board?.data" :key="column.id">
         <div class="pb-2">
-          <div class="flex" v-if="isEditColumnName !== column.id">
+          <div class="flex items-center space-x-1" v-if="isEditColumnName !== column.id">
             <div class="text-lg flex-grow break-word dark:text-white">{{ column.name }}</div>
-            <div class="flex-none">
+            <div class="flex-none flex">
               <FButton
                 title="Edit column title"
-                @click="isEditColumnName = column.id"
+                @click="handleEditColumnName(column.id)"
                 flat
                 icon="ion:pencil"
                 class="dark:text-white dark:hover:text-black"
                 sm
+                :color="column.color || 'cyan'"
+              />
+              <FButton
+                title="Column color"
+                @click="handleColumnColorToggle(column.id)"
+                flat
+                icon="ion:color-palette-outline"
+                class="dark:text-white dark:hover:text-black"
+                sm
+                :color="column.color || 'cyan'"
               />
             </div>
           </div>
@@ -238,9 +277,29 @@ onBeforeUnmount(() => {
               :content="column.name"
               @save="handleColumnNameChange($event, column.id)"
               @cancel="isEditColumnName = null"
+              :color="column.color || 'cyan'"
             />
           </div>
         </div>
+        <transition
+          enter-active-class="transition ease-out duration-300"
+          enter-from-class="transform opacity-0 scale-95"
+          enter-to-class="transform opacity-100 scale-100"
+          leave-active-class="transition ease-in duration-75 duration-200"
+          leave-from-class="transform opacity-100 scale-100"
+          leave-to-class="transform opacity-0 scale-95"
+        >
+          <div class="flex space-x-1 mb-2" v-if="isEditColumnColor === column.id">
+            <div
+              class="p-3 rounded-sm cursor-pointer"
+              :class="`palette--${color}`"
+              v-for="color in COLORS"
+              :key="color"
+              @click="handleColumnTheme(column.id, color)"
+              :title="color"
+            ></div>
+          </div>
+        </transition>
 
         <FButton
           @click="isNewCard = column.id"
@@ -251,6 +310,7 @@ onBeforeUnmount(() => {
           center
           label="Add"
           sm
+          :color="column.color || 'cyan'"
         />
 
         <div class="w-full flex py-1" v-if="isNewCard === column.id">
@@ -291,6 +351,7 @@ onBeforeUnmount(() => {
           :sort="sortBy"
           :cId="column.id"
           @move="handleSortedMove"
+          :color="column.color || 'cyan'"
         />
       </div>
     </div>
@@ -315,6 +376,36 @@ onBeforeUnmount(() => {
         visibility: hidden;
       }
     }
+  }
+}
+
+.palette {
+  &--red {
+    @apply bg-red-400;
+  }
+
+  &--green {
+    @apply bg-green-400;
+  }
+
+  &--indigo {
+    @apply bg-indigo-400;
+  }
+
+  &--purple {
+    @apply bg-purple-400;
+  }
+
+  &--amber {
+    @apply bg-amber-400;
+  }
+
+  &--lime {
+    @apply bg-lime-400;
+  }
+
+  &--cyan {
+    @apply bg-cyan-400;
   }
 }
 </style>
