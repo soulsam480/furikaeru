@@ -316,7 +316,8 @@ onBeforeUnmount(() => {
         <div class="w-full flex py-1" v-if="isNewCard === column.id">
           <input
             type="text"
-            class="rounded-md border-none bg-cyan-100 flex-grow py-1 mr-1 focus:shadow-none"
+            class="rounded-md border-none flex-grow py-1 mr-1 focus:shadow-none"
+            :class="`bg-${column.color || 'cyan'}-100`"
             v-model="newCardName"
             placeholder="New card title"
             @keyup.enter="handleCardAddition(column.id)"
@@ -330,6 +331,7 @@ onBeforeUnmount(() => {
               icon="ion:checkmark"
               sm
               class="dark:text-white dark:hover:text-black"
+              :color="column.color || 'cyan'"
             />
             <FButton
               @click="(isNewCard = null), (newCardName = '')"
@@ -338,6 +340,7 @@ onBeforeUnmount(() => {
               flat
               icon="ion:close"
               sm
+              :color="column.color || 'cyan'"
             />
           </div>
         </div>
