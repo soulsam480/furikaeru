@@ -6,7 +6,7 @@ import type { Card, Comment } from 'src/utils/types';
 import EditContent from 'src/components/App/EditContent.vue';
 import FButton from 'src/components/lib/FButton.vue';
 
-const props = defineProps<{ list: Card[]; group: string; userId: string; sort: string; cId: string }>();
+const props = defineProps<{ list: Card[]; group: string; userId: string; sort: string; cId: string; color?: string }>();
 
 const emits = defineEmit(['upvote', 'change', 'move', 'end']);
 
@@ -158,7 +158,6 @@ function handleStart(e: any) {
           block
           px-3
           py-2
-          bg-cyan-400
           hover:(shadow-lg
           shadow-gray-700)
           cursor-move
@@ -166,6 +165,7 @@ function handleStart(e: any) {
           relative
           rounded-md
         "
+        :class="`bg-${color}-400`"
       >
         <!-- <transition
             enter-active-class="transition ease-out duration-400"
@@ -180,6 +180,7 @@ function handleStart(e: any) {
             <div class="text-lg flex-grow break-word board-grid__column__item__title">{{ element.title }}</div>
             <div class="flex board-grid__column__item__edit transition-all ease-in-out">
               <FButton
+                :color="color"
                 icon="ion:pencil"
                 title="Edit card title"
                 @click="isEdit = element.id"
@@ -188,6 +189,7 @@ function handleStart(e: any) {
                 flat
               />
               <FButton
+                :color="color"
                 icon="ion:trash-outline"
                 title="Remove card"
                 @click="handleRemoveCard(element.id)"
@@ -202,12 +204,14 @@ function handleStart(e: any) {
               :content="element.title"
               @save="(element.title = $event), handleTitleChange()"
               @cancel="isEdit = null"
+              :color="color"
             />
           </div>
         </div>
 
         <div class="flex space-x-2 justify-end items-center pb-1">
           <FButton
+            :color="color"
             title="Comment"
             @click="toggleComments(element.id)"
             icon="ion:chatbox-ellipses-outline"
@@ -216,19 +220,28 @@ function handleStart(e: any) {
             id="comment"
           />
           <span class="text-xs">{{ calcComments(element.comments) }}</span>
-          <FButton title="Up vote" @click="$emit('upvote', { cid: element.id })" icon="ion:rocket-outline" sm flat />
+          <FButton
+            :color="color"
+            title="Up vote"
+            @click="$emit('upvote', { cid: element.id })"
+            icon="ion:rocket-outline"
+            sm
+            flat
+          />
 
           <span class="text-xs">{{ calcVotes(element.votes) }}</span>
         </div>
         <div
-          class="flex-col h-auto board-grid__column__item__comments bg-cyan-300 overflow-hidden rounded-md px-1 flex"
+          class="flex-col h-auto board-grid__column__item__comments overflow-hidden rounded-md px-1 flex"
+          :class="`bg-${color}-300`"
           v-show="isComments.includes(element.id)"
         >
           <div class="flex items-center pt-2">
             <div class="flex-grow mr-1">
               <input
                 type="text"
-                class="rounded-md border-none w-full bg-cyan-50 py-1 focus:shadow-none"
+                class="rounded-md border-none w-full py-1 focus:shadow-none"
+                :class="`bg-${color}-50`"
                 v-model="newComment"
                 @keyup.enter="handleAddComment(element.id)"
                 placeholder="Add a comment"
@@ -236,6 +249,7 @@ function handleStart(e: any) {
             </div>
             <div class="flex-none">
               <FButton
+                :color="color"
                 icon="ion:checkmark"
                 :disabled="!newComment"
                 sm
@@ -253,6 +267,7 @@ function handleStart(e: any) {
                 </div>
                 <div class="flex-none flex items-center justify-end">
                   <FButton
+                    :color="color"
                     title="Remove comment"
                     @click="handleRemoveComment(element.id, comment[0])"
                     v-if="comment[0].split('--')[0] === userId?.split('-')[4]"
@@ -262,6 +277,7 @@ function handleStart(e: any) {
                     size="12px"
                   />
                   <FButton
+                    :color="color"
                     v-else
                     title="Up vote"
                     @click="handleCommentUpVote(element.id, comment[0])"
@@ -287,7 +303,7 @@ function handleStart(e: any) {
 </template>
 <style>
 .ghost {
-  @apply bg-cyan-200;
+  @apply bg-gray-50;
 }
 /* .ease-custom {
   transition-timing-function: cubic-bezier(0.61, -0.53, 0.43, 1.43);

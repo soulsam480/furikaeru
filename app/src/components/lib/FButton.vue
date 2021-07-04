@@ -11,6 +11,7 @@ defineProps<{
   center?: boolean;
   block?: boolean;
   flat?: boolean;
+  color?: string;
 }>();
 
 defineEmit(['click']);
@@ -18,16 +19,22 @@ defineEmit(['click']);
 <template>
   <button
     class="flex items-center text-sm rounded-md focus:outline-none disabled:(cursor-not-allowed hover:bg-red-100)"
-    :class="{
-      'px-2 py-[6px]': sm,
-      'px-3 py-2': !sm,
-      'bg-cyan-300 hover:bg-cyan-400': !invert && !flat,
-      'hover:bg-cyan-300': flat,
-      'bg-cyan-200 hover:bg-cyan-300': invert,
-      'justify-center': center,
-      'w-full': block,
-      'space-x-1': icon || $slots.icon,
-    }"
+    :class="[
+      {
+        'px-2 py-[6px]': sm,
+        'px-3 py-2': !sm,
+        'justify-center': center,
+        'w-full': block,
+        'space-x-1': icon || $slots.icon,
+      },
+      `${
+        invert
+          ? `bg-${color || 'cyan'}-200 hover:bg-${color || 'cyan'}-300`
+          : flat
+          ? `hover:bg-${color || 'cyan'}-300`
+          : `bg-${color || 'cyan'}-300 hover:bg-${color || 'cyan'}-400`
+      }`,
+    ]"
     type="button"
     @click="$emit('click')"
   >

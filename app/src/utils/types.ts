@@ -22,6 +22,7 @@ export interface BoardColumn {
   id: string;
   name: string;
   owner_id: string;
+  color: string;
   data: Card[];
 }
 
