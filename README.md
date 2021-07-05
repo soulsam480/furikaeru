@@ -26,6 +26,9 @@ Projected:
 - Add private boards
 - Error handling
 - Column color customization
+
+#### Furi component library
+In the heart of `Furikaeru`, there is a standalone `vue 3` component library. There are only a few components, which are being used repeatedly throughout the app. It was designed on the basis of the project needs but has room for customisations. To view or use the components have a look [here](./app/src/components/lib).
 #### Stack
 
 API:
@@ -37,7 +40,7 @@ API:
 - TypeScript
 
 APP:
-- Vue 3
+- Vue 3 
 - Vite
 - Vue router
 - Pinia
