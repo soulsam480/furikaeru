@@ -11,6 +11,7 @@ import EditContent from 'src/components/App/EditContent.vue';
 import BoardContext from 'src/components/BoardContext.vue';
 import { deleteBoard } from 'src/utils/boardService';
 import { useAlerts } from 'src/store/alert';
+import FMenu from 'src/components/lib/FMenu.vue';
 
 const { on, emit, io } = useIo();
 const {
@@ -261,15 +262,28 @@ onBeforeUnmount(() => {
                 sm
                 :color="column.color || 'cyan'"
               />
-              <FButton
-                title="Column color"
-                @click="handleColumnColorToggle(column.id)"
-                flat
-                icon="ion:color-palette-outline"
-                class="dark:text-white dark:hover:text-black"
+              <FMenu
+                :options="COLORS"
                 sm
+                icon="ion:color-palette-outline"
+                flat
                 :color="column.color || 'cyan'"
-              />
+                class="dark:text-white dark:hover:text-black"
+                @input="handleColumnTheme(column.id, $event)"
+              >
+                <template #option="{ option }">
+                  <div class="flex items-center space-x-2">
+                    <div
+                      class="p-3 flex-none rounded-sm cursor-pointer"
+                      :class="`palette--${option}`"
+                      :title="option"
+                    ></div>
+                    <div class="flex-grow capitalize">
+                      {{ option }}
+                    </div>
+                  </div>
+                </template>
+              </FMenu>
             </div>
           </div>
           <div v-else class="flex items-center">
@@ -281,25 +295,6 @@ onBeforeUnmount(() => {
             />
           </div>
         </div>
-        <transition
-          enter-active-class="transition ease-out duration-300"
-          enter-from-class="transform opacity-0 scale-95"
-          enter-to-class="transform opacity-100 scale-100"
-          leave-active-class="transition ease-in duration-75 duration-200"
-          leave-from-class="transform opacity-100 scale-100"
-          leave-to-class="transform opacity-0 scale-95"
-        >
-          <div class="flex space-x-1 mb-2" v-if="isEditColumnColor === column.id">
-            <div
-              class="p-3 rounded-sm cursor-pointer"
-              :class="`palette--${color}`"
-              v-for="color in COLORS"
-              :key="color"
-              @click="handleColumnTheme(column.id, color)"
-              :title="color"
-            ></div>
-          </div>
-        </transition>
 
         <FButton
           @click="isNewCard = column.id"
