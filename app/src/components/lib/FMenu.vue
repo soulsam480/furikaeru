@@ -10,6 +10,8 @@ defineProps<{
   icon?: string;
   size?: string;
   sm?: boolean;
+  color?: string;
+  flat?: boolean;
 }>();
 const emit = defineEmit(['update:modelValue', 'input']);
 
@@ -45,6 +47,9 @@ function handleClick(val: string, e: MouseEvent) {
         :icon="icon || 'ion:chevron-down-outline'"
         :size="size || '17px'"
         @click="isMenu = !isMenu"
+        :color="color"
+        :flat="flat"
+        v-bind="$attrs"
       />
     </div>
 
@@ -76,9 +81,9 @@ function handleClick(val: string, e: MouseEvent) {
             sm:text-sm
             overflow-auto
             sm:leading-5
-            bg-cyan-200
             f-menu__list
           "
+          :class="`bg-${color || 'cyan'}-200`"
         >
           <slot name="options" :options="options" :get-option-val="getOptionVal">
             <li
@@ -91,7 +96,6 @@ function handleClick(val: string, e: MouseEvent) {
                 px-3
                 py-2
                 flex
-                hover:bg-cyan-300
                 transition-colors
                 duration-300
                 ease-in-out
@@ -100,9 +104,14 @@ function handleClick(val: string, e: MouseEvent) {
               :key="getOptionVal(option, optionKey)"
               @click="handleClick(getOptionVal(option, optionKey), $event)"
               :title="getOptionVal(option, optionKey)"
-              :class="{ 'bg-cyan-300': modelValue === getOptionVal(option, optionKey) }"
+              :class="[
+                modelValue === getOptionVal(option, optionKey) ? `bg-${color || 'cyan'}-300` : '',
+                `hover:bg-${color || 'cyan'}-300`,
+              ]"
             >
-              <div class="font-normal flex-grow truncate">{{ getOptionVal(option, 'label') }}</div>
+              <slot name="option" :option="getOptionVal(option, 'label')" :get-option-val="getOptionVal">
+                <div class="font-normal flex-grow truncate">{{ getOptionVal(option, 'label') }}</div>
+              </slot>
             </li>
           </slot>
         </ul>
