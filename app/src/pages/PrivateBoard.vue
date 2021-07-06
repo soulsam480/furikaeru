@@ -2,23 +2,30 @@
 import { computed, onMounted, ref } from 'vue';
 import Draggable from 'src/components/App/Draggable.vue';
 import type { BoardModel, Card } from 'src/utils/types';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useUser } from 'src/store/user';
 import { v4 } from 'uuid';
 import FButton from 'src/components/lib/FButton.vue';
 import EditContent from 'src/components/App/EditContent.vue';
-import { getBoard, updateBoard } from 'src/utils/boardService';
+import { deleteBoard, getBoard, updateBoard } from 'src/utils/boardService';
+import BoardContext from 'src/components/BoardContext.vue';
+import { useAlerts } from 'src/store/alert';
+import FMenu from 'src/components/lib/FMenu.vue';
 
 const {
   params: { id: bid },
 } = useRoute();
+const { push } = useRouter();
 const { getUser, showLoader, hideLoader } = useUser();
+const { setAlerts } = useAlerts();
 
+const COLORS = ['red', 'green', 'purple', 'indigo', 'amber', 'lime', 'cyan'];
 const board = ref<BoardModel>();
 const enabled = ref(true);
 const isEditColumnName = ref<string | null>(null);
 const isEditBoardName = ref<string | null>(null);
 const newCardName = ref('');
+const sortBy = ref('');
 const isNewCard = ref<string | null>(null);
 const getUserId = computed(() => getUser.value.id);
 
@@ -113,6 +120,14 @@ function handleBoardNameChange(e: string) {
   updateBoardEmit(bid as string, board.value as BoardModel, 'title');
 }
 
+function handleColumnTheme(id: string, color: string) {
+  const idx = board.value?.data.findIndex((el) => el.id === id);
+  if (idx !== -1) {
+    (board.value as BoardModel).data[idx as number]['color'] = color;
+  }
+  updateBoardEmit(bid as string, board.value as BoardModel, 'board');
+}
+
 function handleCardAddition(id: string) {
   if (!newCardName.value) return;
   const card: Card = {
@@ -133,6 +148,37 @@ function handleCardAddition(id: string) {
   isNewCard.value = null;
 }
 
+async function handleBoardRemove(id: string) {
+  try {
+    await deleteBoard(id);
+    setAlerts({ type: 'success', message: 'Board removed successfully !' });
+    push('/');
+  } catch (error) {
+    setAlerts({ type: 'danger', message: error });
+  }
+}
+
+function handleSortedMove(e: any) {
+  try {
+    const { to, from } = e;
+
+    const fromColIdx = board.value?.data.findIndex((el) => el.id === from.id);
+    if (fromColIdx !== -1) {
+      const removeIdx = board.value?.data[fromColIdx as number].data.findIndex((el) => el.id === to.data.id);
+      board.value?.data[fromColIdx as number].data.splice(removeIdx as number, 1);
+    }
+
+    const toColIdx = board.value?.data.findIndex((el) => el.id === to.id);
+    if (toColIdx !== -1) {
+      board.value?.data[toColIdx as number].data.push(to.data);
+    }
+
+    updateBoardEmit(board.value?.id as string, board.value as BoardModel, 'board');
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 onMounted(async () => {
   showLoader();
   await getPrivateBoard();
@@ -141,6 +187,7 @@ onMounted(async () => {
 </script>
 <template>
   <div class="board">
+    <BoardContext :board="board || {}" :uid="getUserId" @remove="handleBoardRemove(board.id)" @sort="sortBy = $event" />
     <div class="mb-4">
       <div class="flex" v-if="isEditBoardName !== board?.id">
         <div class="text-2xl font-semibold flex-grow sm:mr-1 sm:flex-none break-word dark:text-white">
@@ -168,7 +215,7 @@ onMounted(async () => {
         <div class="pb-2">
           <div class="flex" v-if="isEditColumnName !== column.id">
             <div class="text-lg flex-grow break-word dark:text-white">{{ column.name }}</div>
-            <div class="flex-none">
+            <div class="flex-none flex">
               <FButton
                 title="Edit column title"
                 @click="isEditColumnName = column.id"
@@ -176,7 +223,30 @@ onMounted(async () => {
                 icon="ion:pencil"
                 class="dark:text-white dark:hover:text-black"
                 sm
+                :color="column.color || 'cyan'"
               />
+              <FMenu
+                :options="COLORS"
+                sm
+                icon="ion:color-palette-outline"
+                flat
+                :color="column.color || 'cyan'"
+                class="dark:text-white dark:hover:text-black"
+                @input="handleColumnTheme(column.id, $event)"
+              >
+                <template #option="{ option }">
+                  <div class="flex items-center space-x-2">
+                    <div
+                      class="p-3 flex-none rounded-sm cursor-pointer"
+                      :class="`palette--${option}`"
+                      :title="option"
+                    ></div>
+                    <div class="flex-grow capitalize">
+                      {{ option }}
+                    </div>
+                  </div>
+                </template>
+              </FMenu>
             </div>
           </div>
           <div v-else class="flex items-center">
@@ -184,6 +254,7 @@ onMounted(async () => {
               :content="column.name"
               @save="handleColumnNameChange($event, column.id)"
               @cancel="isEditColumnName = null"
+              :color="column.color || 'cyan'"
             />
           </div>
         </div>
@@ -197,15 +268,17 @@ onMounted(async () => {
           center
           label="Add"
           sm
+          :color="column.color || 'cyan'"
         />
 
         <div class="w-full flex py-1" v-if="isNewCard === column.id">
           <input
             type="text"
-            class="rounded-md border-none bg-cyan-100 flex-grow py-1 mr-1 focus:shadow-none"
+            class="rounded-md border-none flex-grow py-1 mr-1 focus:shadow-none"
             v-model="newCardName"
             placeholder="New card title"
             @keyup.enter="handleCardAddition(column.id)"
+            :class="`bg-${column.color || 'cyan'}-50`"
           />
           <div class="flex-none flex">
             <FButton
@@ -224,6 +297,7 @@ onMounted(async () => {
               flat
               icon="ion:close"
               sm
+              :color="column.color || 'cyan'"
             />
           </div>
         </div>
@@ -233,8 +307,12 @@ onMounted(async () => {
           group="board"
           v-bind="$attrs"
           @upvote="upVote({ cid: $event.cid, coid: column.id })"
-          @end="updateBoardEmit(board?.id, board)"
+          @end="updateBoardEmit(board?.id, board, 'board')"
           :user-id="getUserId"
+          :sort="sortBy"
+          :c-id="column.id"
+          :color="column.color || 'cyan'"
+          @move="handleSortedMove"
         />
       </div>
     </div>

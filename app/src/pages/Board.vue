@@ -153,14 +153,6 @@ function handleColumnTheme(id: string, color: string) {
   updateBoardEmit(bid as string, board.value as BoardModel);
 }
 
-function handleColumnColorToggle(id: string) {
-  if (isEditColumnColor.value === id) {
-    isEditColumnColor.value = null;
-    return;
-  }
-  isEditColumnColor.value = id;
-}
-
 function handleEditColumnName(id: string) {
   if (isEditColumnColor.value === id) {
     isEditColumnColor.value = null;
@@ -374,36 +366,6 @@ onBeforeUnmount(() => {
         visibility: hidden;
       }
     }
-  }
-}
-
-.palette {
-  &--red {
-    @apply bg-red-400;
-  }
-
-  &--green {
-    @apply bg-green-400;
-  }
-
-  &--indigo {
-    @apply bg-indigo-400;
-  }
-
-  &--purple {
-    @apply bg-purple-400;
-  }
-
-  &--amber {
-    @apply bg-amber-400;
-  }
-
-  &--lime {
-    @apply bg-lime-400;
-  }
-
-  &--cyan {
-    @apply bg-cyan-400;
   }
 }
 </style>
