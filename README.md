@@ -3,14 +3,16 @@
 </p>
 <h1 align="center"> Furikaeru </h1>
 
-> Look back on
+> A look back
 
-A small app for discussing retro while being Anonymous.
+A small app for discussing retro while being `Anonymous`. Create public/private boards with a simple `kanban` baord interface and `realtime` changes. Built with a smooth and approachable UI, Furi is is more than an app for discussing retro.
+
+![GitHub package.json version](https://img.shields.io/github/package-json/v/soulsam480/furikaeru)
 
 ### Status
 
 - Hosted -> https://furikaeru.sambitsahoo.com
-- Development -> alpha
+- Development -> public alpha
 - Roadmap board -> [Don't spam please!](https://furikaeru.sambitsahoo.com/62b79a16-a97f-41c4-a6f6-8b7256be10d9/)
 
 #### Features
@@ -20,15 +22,16 @@ Current:
 - Vote on cards
 - Comment/vote comment on cards
 - Edit Board title/ Column title
+- Column color customization
+- Private boards
+- Error handling
 
 Projected:
 - Add comment edit
-- Add private boards
-- Error handling
-- Column color customization
+- Add more in the public [roadmap board](https://furikaeru.sambitsahoo.com/62b79a16-a97f-41c4-a6f6-8b7256be10d9/)
 
 #### Furi component library
-In the heart of `Furikaeru`, there is a standalone `vue 3` component library. There are only a few components, which are being used repeatedly throughout the app. It was designed on the basis of the project needs but has room for customisations. To view or use the components have a look [here](./app/src/components/lib).
+At the heart of `Furikaeru`, there is a standalone `vue 3` component library. There are only a few components, which are being used repeatedly throughout the app. It was designed on the basis of the project needs but has room for customisations. To view or use the components have a look [here](./app/src/components/lib).
 #### Stack
 
 API:
@@ -79,3 +82,4 @@ PGRES_DB
 yarn dev # devserver
 yarn build # build 
 ```
+Any contributions are welcome. reach me on [soulsam480@hotmail.com](mailto:soulsam480@hotmail.com)
