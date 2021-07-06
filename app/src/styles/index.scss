@@ -19,3 +19,33 @@ body {
   font-family: 'Yantramanav', sans-serif;
   letter-spacing: 0.5px;
 }
+
+.palette {
+  &--red {
+    @apply bg-red-400;
+  }
+
+  &--green {
+    @apply bg-green-400;
+  }
+
+  &--indigo {
+    @apply bg-indigo-400;
+  }
+
+  &--purple {
+    @apply bg-purple-400;
+  }
+
+  &--amber {
+    @apply bg-amber-400;
+  }
+
+  &--lime {
+    @apply bg-lime-400;
+  }
+
+  &--cyan {
+    @apply bg-cyan-400;
+  }
+}
