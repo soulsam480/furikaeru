@@ -43,7 +43,11 @@ boardRouter.get('/:id', authMiddleware, async (req: RequestWithUser, res) => {
     params: { id },
   } = req;
   try {
-    const userBoard = await Board.findOne({ where: { id, user: { id: userId } } });
+    const userBoard = await Board.findOne({
+      where: { id, user: { id: userId } },
+      relations: ['user'],
+      loadRelationIds: true,
+    });
     if (!userBoard) return res.status(404).send(ERROR_MESSAGES.not_found);
 
     res.send(userBoard);
