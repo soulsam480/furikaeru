@@ -31,7 +31,7 @@ async function createBoard(type: string) {
       {
         id: uuid(),
         name: 'This is a column',
-        color: 'cyan',
+        color: 'lime',
         owner_id: getUser.value.id as string,
         data: [
           {
@@ -46,7 +46,7 @@ async function createBoard(type: string) {
       {
         id: uuid(),
         name: 'This is another column',
-        color: 'cyan',
+        color: 'green',
         owner_id: getUser.value.id as string,
         data: [
           {
@@ -61,7 +61,7 @@ async function createBoard(type: string) {
       {
         id: uuid(),
         name: 'This is another column',
-        color: 'cyan',
+        color: 'amber',
         owner_id: getUser.value.id as string,
         data: [
           {
