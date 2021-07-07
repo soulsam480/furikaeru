@@ -12,7 +12,7 @@ export default defineConfig({
   plugins: [
     vue(),
     WindiCSS(),
-    PurgeIcons(),
+    PurgeIcons({ included: ['ion:expand-outline', 'ion:contract-outline'] }),
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: 'inline',

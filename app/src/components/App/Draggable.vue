@@ -1,12 +1,21 @@
 <script setup lang="ts">
 import { defineEmit, defineProps, ref, watch } from 'vue';
-import draggable from 'vuedraggable';
+import vuedraggable from 'vuedraggable';
 import Icon from 'src/components/lib/FIcon.vue';
 import type { Card, Comment } from 'src/utils/types';
 import EditContent from 'src/components/App/EditContent.vue';
 import FButton from 'src/components/lib/FButton.vue';
 
-const props = defineProps<{ list: Card[]; group: string; userId: string; sort: string; cId: string; color?: string }>();
+const props = defineProps<{
+  list: Card[];
+  group: string;
+  userId: string;
+  sort: string;
+  cId: string;
+  isCommentsExpand: boolean;
+  isFocusMode?: boolean;
+  color?: string;
+}>();
 
 const emits = defineEmit(['upvote', 'change', 'move', 'end']);
 
@@ -16,6 +25,7 @@ const newComment = ref('');
 const sortedList = ref<Card[]>(props.list);
 const movedEl = ref<Card | null>(null);
 
+//TODO: Anti pattern but have to do it
 watch(
   () => [props.sort, props.list],
   () => {
@@ -31,6 +41,17 @@ watch(
   },
   {
     deep: true,
+  },
+);
+
+watch(
+  () => props.isCommentsExpand,
+  (v) => {
+    if (v) {
+      isComments.value = [...sortedList.value.map((el) => el.id)];
+      return;
+    }
+    isComments.value = [];
   },
 );
 
@@ -130,7 +151,7 @@ function handleStart(e: any) {
 }
 </script>
 <template>
-  <draggable
+  <vuedraggable
     class="board-grid__column flex flex-col"
     @change="$emit('change')"
     :list="sortedList"
@@ -165,7 +186,7 @@ function handleStart(e: any) {
           relative
           rounded-md
         "
-        :class="`bg-${color}-400`"
+        :class="[`bg-${color}-400`, { 'filter blur-sm': isFocusMode && element.user_id !== userId }]"
       >
         <!-- <transition
             enter-active-class="transition ease-out duration-400"
@@ -299,7 +320,7 @@ function handleStart(e: any) {
         <!-- </transition> -->
       </div>
     </template>
-  </draggable>
+  </vuedraggable>
 </template>
 <style>
 .ghost {

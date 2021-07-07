@@ -10,7 +10,7 @@ defineProps<{
   board: BoardModel;
   uid: string;
 }>();
-defineEmit(['remove', 'sort']);
+const emit = defineEmit(['remove', 'sort', 'expand', 'focus-mode']);
 
 const SortOptions = [
   {
@@ -22,11 +22,22 @@ const SortOptions = [
     value: 'vote',
   },
 ];
+const isShare = navigator.share;
 
 const { setAlerts } = useAlerts();
 const sortBy = ref('');
+const isExpand = ref(false);
+const isFocus = ref(false);
 
-const isShare = navigator.share;
+function handleCommentCollapse() {
+  isExpand.value = !isExpand.value;
+  emit('expand');
+}
+
+function handleFocusMode() {
+  isFocus.value = !isFocus.value;
+  emit('focus-mode');
+}
 </script>
 <template>
   <div class="flex space-x-1 justify-end mb-2">
@@ -46,6 +57,24 @@ const isShare = navigator.share;
       :label="sortBy ? `Sort by ${sortBy}` : 'No sort'"
       icon="ion:filter-circle-outline"
       @input="$emit('sort', $event)"
+    />
+    <FButton
+      @click="handleFocusMode"
+      icon="ion:radio-button-on-outline"
+      size="17px"
+      sm
+      title="Toggle focus mode"
+      :color="isFocus ? 'green' : 'cyan'"
+      v-if="board.is_public"
+    />
+    <!-- //TODO: Find a solution to dynamic icon change -->
+    <FButton
+      :key="isExpand ? 'e' : 'c'"
+      @click="handleCommentCollapse"
+      :icon="!isExpand ? 'ion:expand-outline' : 'ion:contract-outline'"
+      size="17px"
+      sm
+      :title="`${!isExpand ? 'Expand' : 'Collapse'} comments`"
     />
     <FButton
       title="Copy public URL"

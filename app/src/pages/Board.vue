@@ -28,9 +28,11 @@ const isEditColumnColor = ref<string | null>(null);
 const isEditBoardName = ref<string | null>(null);
 const newCardName = ref('');
 const sortBy = ref('');
+const isCommentsExpand = ref(false);
+const isFocusMode = ref(false);
 const isNewCard = ref<string | null>(null);
 const getUserId = computed(() => {
-  if (isLoggedIn.value) return getUser.value.id;
+  if (isLoggedIn.value) return getUser.value.id as string;
   const uid = localStorage.getItem('__uuid');
   return uid ?? v4();
 });
@@ -216,7 +218,14 @@ onBeforeUnmount(() => {
 </script>
 <template>
   <div class="board">
-    <BoardContext :board="board || {}" :uid="getUserId" @remove="handleBoardRemove(board.id)" @sort="sortBy = $event" />
+    <BoardContext
+      :board="board || {}"
+      :uid="getUserId"
+      @remove="handleBoardRemove(board.id)"
+      @sort="sortBy = $event"
+      @expand="isCommentsExpand = !isCommentsExpand"
+      @focus-mode="isFocusMode = !isFocusMode"
+    />
     <div class="mb-4">
       <div class="flex" v-if="isEditBoardName !== board?.id">
         <div class="text-2xl font-semibold flex-grow sm:mr-1 sm:flex-none break-word dark:text-white">
@@ -342,6 +351,8 @@ onBeforeUnmount(() => {
           :cId="column.id"
           @move="handleSortedMove"
           :color="column.color || 'cyan'"
+          :is-comments-expand="isCommentsExpand"
+          :is-focus-mode="isFocusMode"
         />
       </div>
     </div>
