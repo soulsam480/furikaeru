@@ -73,7 +73,6 @@ function handleClick(val: string, e: MouseEvent) {
           class="
             max-h-56
             rounded-md
-            py-1
             text-base
             leading-6
             shadow
