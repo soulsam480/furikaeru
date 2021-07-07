@@ -26,8 +26,9 @@ const isEditColumnName = ref<string | null>(null);
 const isEditBoardName = ref<string | null>(null);
 const newCardName = ref('');
 const sortBy = ref('');
+const isCommentsExpand = ref(false);
 const isNewCard = ref<string | null>(null);
-const getUserId = computed(() => getUser.value.id);
+const getUserId = computed(() => getUser.value.id as string);
 
 async function getPrivateBoard() {
   try {
@@ -187,7 +188,13 @@ onMounted(async () => {
 </script>
 <template>
   <div class="board">
-    <BoardContext :board="board || {}" :uid="getUserId" @remove="handleBoardRemove(board.id)" @sort="sortBy = $event" />
+    <BoardContext
+      :board="board || {}"
+      :uid="getUserId"
+      @remove="handleBoardRemove(board.id)"
+      @sort="sortBy = $event"
+      @expand="isCommentsExpand = !isCommentsExpand"
+    />
     <div class="mb-4">
       <div class="flex" v-if="isEditBoardName !== board?.id">
         <div class="text-2xl font-semibold flex-grow sm:mr-1 sm:flex-none break-word dark:text-white">
@@ -313,6 +320,7 @@ onMounted(async () => {
           :c-id="column.id"
           :color="column.color || 'cyan'"
           @move="handleSortedMove"
+          :is-comments-expand="isCommentsExpand"
         />
       </div>
     </div>

@@ -10,7 +10,7 @@ defineProps<{
   board: BoardModel;
   uid: string;
 }>();
-defineEmit(['remove', 'sort']);
+const emit = defineEmit(['remove', 'sort', 'expand']);
 
 const SortOptions = [
   {
@@ -22,11 +22,16 @@ const SortOptions = [
     value: 'vote',
   },
 ];
+const isShare = navigator.share;
 
 const { setAlerts } = useAlerts();
 const sortBy = ref('');
+const isExpand = ref(false);
 
-const isShare = navigator.share;
+function handleCommentCollapse() {
+  isExpand.value = !isExpand.value;
+  emit('expand');
+}
 </script>
 <template>
   <div class="flex space-x-1 justify-end mb-2">
@@ -46,6 +51,15 @@ const isShare = navigator.share;
       :label="sortBy ? `Sort by ${sortBy}` : 'No sort'"
       icon="ion:filter-circle-outline"
       @input="$emit('sort', $event)"
+    />
+    <!-- //TODO: Find a solution to dynamic icon change -->
+    <FButton
+      :key="isExpand ? 'e' : 'c'"
+      @click="handleCommentCollapse"
+      :icon="!isExpand ? 'ion:expand-outline' : 'ion:contract-outline'"
+      size="17px"
+      sm
+      :title="`${!isExpand ? 'Expand' : 'Collapse'} comments`"
     />
     <FButton
       title="Copy public URL"
