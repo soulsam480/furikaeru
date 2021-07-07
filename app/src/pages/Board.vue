@@ -29,6 +29,7 @@ const isEditBoardName = ref<string | null>(null);
 const newCardName = ref('');
 const sortBy = ref('');
 const isCommentsExpand = ref(false);
+const isFocusMode = ref(false);
 const isNewCard = ref<string | null>(null);
 const getUserId = computed(() => {
   if (isLoggedIn.value) return getUser.value.id as string;
@@ -223,6 +224,7 @@ onBeforeUnmount(() => {
       @remove="handleBoardRemove(board.id)"
       @sort="sortBy = $event"
       @expand="isCommentsExpand = !isCommentsExpand"
+      @focus-mode="isFocusMode = !isFocusMode"
     />
     <div class="mb-4">
       <div class="flex" v-if="isEditBoardName !== board?.id">
@@ -348,6 +350,7 @@ onBeforeUnmount(() => {
           @move="handleSortedMove"
           :color="column.color || 'cyan'"
           :is-comments-expand="isCommentsExpand"
+          :is-focus-mode="isFocusMode"
         />
       </div>
     </div>

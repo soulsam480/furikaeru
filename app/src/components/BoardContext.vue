@@ -10,7 +10,7 @@ defineProps<{
   board: BoardModel;
   uid: string;
 }>();
-const emit = defineEmit(['remove', 'sort', 'expand']);
+const emit = defineEmit(['remove', 'sort', 'expand', 'focus-mode']);
 
 const SortOptions = [
   {
@@ -27,10 +27,16 @@ const isShare = navigator.share;
 const { setAlerts } = useAlerts();
 const sortBy = ref('');
 const isExpand = ref(false);
+const isFocus = ref(false);
 
 function handleCommentCollapse() {
   isExpand.value = !isExpand.value;
   emit('expand');
+}
+
+function handleFocusMode() {
+  isFocus.value = !isFocus.value;
+  emit('focus-mode');
 }
 </script>
 <template>
@@ -51,6 +57,15 @@ function handleCommentCollapse() {
       :label="sortBy ? `Sort by ${sortBy}` : 'No sort'"
       icon="ion:filter-circle-outline"
       @input="$emit('sort', $event)"
+    />
+    <FButton
+      @click="handleFocusMode"
+      icon="ion:radio-button-on-outline"
+      size="17px"
+      sm
+      title="Toggle focus mode"
+      :color="isFocus ? 'green' : 'cyan'"
+      v-if="board.is_public"
     />
     <!-- //TODO: Find a solution to dynamic icon change -->
     <FButton

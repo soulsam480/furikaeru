@@ -13,6 +13,7 @@ const props = defineProps<{
   sort: string;
   cId: string;
   isCommentsExpand: boolean;
+  isFocusMode?: boolean;
   color?: string;
 }>();
 
@@ -185,7 +186,7 @@ function handleStart(e: any) {
           relative
           rounded-md
         "
-        :class="`bg-${color}-400`"
+        :class="[`bg-${color}-400`, { 'filter blur-sm': isFocusMode && element.user_id !== userId }]"
       >
         <!-- <transition
             enter-active-class="transition ease-out duration-400"
