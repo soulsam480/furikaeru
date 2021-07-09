@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineEmit, defineProps } from '@vue/runtime-core';
 import Icon from 'src/components/lib/FIcon.vue';
 
 defineProps<{
@@ -14,7 +13,7 @@ defineProps<{
   color?: string;
 }>();
 
-defineEmit(['click']);
+defineEmits(['click']);
 </script>
 <template>
   <button

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineEmit, defineProps, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import vuedraggable from 'vuedraggable';
 import Icon from 'src/components/lib/FIcon.vue';
 import type { Card, Comment } from 'src/utils/types';
@@ -17,7 +17,7 @@ const props = defineProps<{
   color?: string;
 }>();
 
-const emits = defineEmit(['upvote', 'change', 'move', 'end']);
+const emits = defineEmits(['upvote', 'change', 'move', 'end']);
 
 const isEdit = ref<string | null>(null);
 const isComments = ref<string[]>([]);

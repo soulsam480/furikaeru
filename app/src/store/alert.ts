@@ -1,4 +1,4 @@
-import { computed } from '@vue/runtime-core';
+import { computed } from 'vue';
 import { defineStore } from 'pinia';
 import { v4 as uuid } from 'uuid';
 

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { defineEmit, defineProps, onBeforeUnmount, onMounted, ref } from 'vue';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 import FButton from 'src/components/lib/FButton.vue';
 
 const props = defineProps<{
   content: string;
   color?: string;
 }>();
-const emit = defineEmit({
+const emit = defineEmits({
   save: String,
   cancel: null,
 });

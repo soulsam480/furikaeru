@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineEmit, defineProps, ref } from 'vue';
+import { ref } from 'vue';
 import { shareBoard, copyLink } from 'src/utils/helpers';
 import FButton from 'src/components/lib/FButton.vue';
 import type { BoardModel } from 'src/utils/types';
@@ -10,7 +10,7 @@ defineProps<{
   board: BoardModel;
   uid: string;
 }>();
-const emit = defineEmit(['remove', 'sort', 'expand', 'focus-mode']);
+const emits = defineEmits(['remove', 'sort', 'expand', 'focus-mode']);
 
 const SortOptions = [
   {
@@ -31,12 +31,12 @@ const isFocus = ref(false);
 
 function handleCommentCollapse() {
   isExpand.value = !isExpand.value;
-  emit('expand');
+  emits('expand');
 }
 
 function handleFocusMode() {
   isFocus.value = !isFocus.value;
-  emit('focus-mode');
+  emits('focus-mode');
 }
 </script>
 <template>
