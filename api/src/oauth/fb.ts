@@ -9,7 +9,7 @@ export function setupFbOauth(passportInstance: PassportStatic) {
       {
         clientID: process.env.FAPP_ID as string,
         clientSecret: process.env.FAPP_SECRET as string,
-        callbackURL: !process.env.PRODx
+        callbackURL: !process.env.PROD
           ? 'https://localhost:2015/furikaeru/auth/fb/redirect'
           : (process.env.FAUTH_REDIRECT as string),
         profileFields: ['email', 'displayName', 'id'],
