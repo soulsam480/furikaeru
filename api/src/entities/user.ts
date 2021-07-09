@@ -18,6 +18,9 @@ export class User extends BaseEntity {
   @Column({ type: 'text', nullable: true, unique: true })
   ga_id: string;
 
+  @Column({ type: 'text', nullable: true, unique: true })
+  fb_id: string;
+
   @OneToMany(() => Board, (board) => board.user)
   boards: Board[];
 

@@ -23,6 +23,21 @@ authRouter.get('/google/redirect', authenticate('google'), (req: RequestWithUser
   res.redirect(redirectUrl);
 });
 
+authRouter.get('/fb', authenticate('facebook', { scope: ['public_profile', 'email'] }));
+
+authRouter.get('/fb/redirect', authenticate('facebook'), (req: RequestWithUser, res) => {
+  const uid = req?.user?.id;
+  const token = sign({ userId: uid }, process.env.ACCESS_TOKEN_SECRET as string, {
+    expiresIn: '15min',
+  });
+
+  const redirectUrl = !process.env.PROD
+    ? `http://localhost:4000/#/?auth_success=${token}`
+    : `https://furikaeru.sambitsahoo.com/?auth_success=${token}`;
+
+  res.redirect(redirectUrl);
+});
+
 authRouter.get('/token', async (request, response) => {
   const refreshToken = request.headers['refresh-token'] as string;
   const token = refreshToken.split('Bearer ')[1];
