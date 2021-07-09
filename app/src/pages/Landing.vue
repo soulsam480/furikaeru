@@ -2,19 +2,31 @@
 import { onMounted } from 'vue';
 import Axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
-import Icon from 'src/components/lib/FIcon.vue';
 import { useUser } from 'src/store/user';
 import type { UserResponse } from 'src/store/user';
 import FBanner from 'src/components/lib/FBanner.vue';
 import AppFooter from 'src/components/App/Footer.vue';
+import FButton from 'src/components/lib/FButton.vue';
 
 const { setLogin, showLoader, hideLoader } = useUser();
 
 const url = import.meta.env.VITE_API;
 const { query } = useRoute();
 const { push } = useRouter();
-function login() {
-  window.location.href = `${url}/auth/google/`;
+
+function login(type: 'google' | 'fb') {
+  switch (type) {
+    case 'google':
+      window.location.href = `${url}/auth/google/`;
+      break;
+
+    case 'fb':
+      window.location.href = `${url}/auth/fb/`;
+      break;
+
+    default:
+      break;
+  }
 }
 
 async function catchRedirect() {
@@ -73,30 +85,12 @@ onMounted(async () => {
                 You can still view/edit public boards. Login/signup to create a board.
               </div>
             </div>
-            <div>
-              <button
-                class="
-                  bg-cyan-200
-                  flex
-                  rounded-md
-                  justify-center
-                  items-center
-                  text-lg
-                  px-3
-                  py-2
-                  hover:bg-cyan-300
-                  border-1 border-cyan-300
-                  transition-all
-                  ease-in-out
-                  w-full
-                "
-                @click="login"
-              >
-                Login with &nbsp;
-                <Icon icon="ion:logo-google" size="25px" />
-              </button>
+            <div class="text-xl">Login with</div>
+            <div class="flex space-x-2 justify-center">
+              <FButton icon="ion:logo-google" size="25px" class="!px-2" @click="login('google')" />
+              <FButton icon="ion:logo-facebook" size="25px" class="!px-2" @click="login('fb')" />
             </div>
-            <div class="text-sm text-gray-500">To prevent spamming, only Google login is available.</div>
+            <div class="text-sm text-gray-500">To prevent spamming, only passwordless login is available.</div>
           </div>
         </div>
       </div>
