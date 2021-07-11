@@ -1,3 +1,5 @@
+import { InjectionKey } from 'vue';
+
 export type Vote = {
   [x: string]: number;
 };
@@ -35,3 +37,10 @@ export interface BoardModel {
   created_at: number;
   updated_at: number;
 }
+
+export type FLoadingBarExpose = {
+  start: (inc?: number) => void;
+  stop: () => void;
+};
+
+export const FLoadingKey: InjectionKey<FLoadingBarExpose> = Symbol();

@@ -1,7 +1,7 @@
-import { readonly, ref, Ref, watch } from 'vue';
+import { inject, readonly, ref, Ref, watch } from 'vue';
 import Axios from 'axios';
 import { useUser } from 'src/store/user';
-import { BoardModel } from './types';
+import { BoardModel, FLoadingBarExpose, FLoadingKey } from './types';
 
 export const furiApi = Axios.create({
   baseURL: import.meta.env.VITE_API,
@@ -78,4 +78,8 @@ export function generateRoute(board: BoardModel) {
     .replace(/#|\/|\?|-/g, '')
     .split(' ')
     .join('_')}--${board.id}`;
+}
+
+export function useLoadingBar() {
+  return inject(FLoadingKey) as FLoadingBarExpose;
 }
