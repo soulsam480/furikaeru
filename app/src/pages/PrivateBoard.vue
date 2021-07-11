@@ -11,6 +11,8 @@ import { deleteBoard, getBoard, updateBoard } from 'src/utils/boardService';
 import BoardContext from 'src/components/BoardContext.vue';
 import { useAlerts } from 'src/store/alert';
 import FMenu from 'src/components/lib/FMenu.vue';
+import { useIo } from 'src/utils/createWs';
+import FBanner from 'src/components/lib/FBanner.vue';
 
 const {
   params: { id: routeBid },
@@ -18,6 +20,7 @@ const {
 const { push } = useRouter();
 const { getUser, showLoader, hideLoader } = useUser();
 const { setAlerts } = useAlerts();
+const { isConnected } = useIo();
 
 const COLORS = ['red', 'green', 'purple', 'indigo', 'amber', 'lime', 'cyan'];
 const board = ref<BoardModel>();
@@ -195,6 +198,15 @@ onMounted(async () => {
 </script>
 <template>
   <div class="board">
+    <Transition name="fade">
+      <FBanner
+        v-if="!isConnected"
+        text="You are not connected. Changes won't be saved."
+        class="mb-4 mt-1"
+        type="danger"
+      />
+    </Transition>
+
     <BoardContext
       :board="board || {}"
       :uid="getUserId"

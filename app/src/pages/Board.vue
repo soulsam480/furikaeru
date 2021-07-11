@@ -12,8 +12,9 @@ import BoardContext from 'src/components/BoardContext.vue';
 import { deleteBoard } from 'src/utils/boardService';
 import { useAlerts } from 'src/store/alert';
 import FMenu from 'src/components/lib/FMenu.vue';
+import FBanner from 'src/components/lib/FBanner.vue';
 
-const { on, emit, io } = useIo();
+const { on, emit, io, isConnected } = useIo();
 const {
   params: { id: bid },
 } = useRoute();
@@ -225,6 +226,15 @@ onBeforeUnmount(() => {
 </script>
 <template>
   <div class="board">
+    <transition name="fade">
+      <FBanner
+        v-if="!isConnected"
+        text="You are not connected. Changes won't be saved."
+        class="mb-4 mt-1"
+        type="danger"
+      />
+    </transition>
+
     <BoardContext
       :board="board || {}"
       :uid="getUserId"

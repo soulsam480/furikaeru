@@ -1,22 +1,43 @@
 <script setup lang="ts">
-import { provide, ref } from 'vue';
+import { provide, ref, watch } from 'vue';
 import type { ComponentPublicInstance } from 'vue';
-import Navbar from 'src/components/App/Navbar.vue';
-import { authState } from 'src/utils/authState';
-import { registerToken } from 'src/utils/helpers';
-import FLoader from 'src/components/lib/FLoader.vue';
-import { useUser } from 'src/store/user';
-import FAlert from 'src/components/lib/FAlert.vue';
-import { useAlerts } from 'src/store/alert';
-import FLoadingBar from 'src/components/lib/FLoadingBar.vue';
 import type { FLoadingBarExpose } from 'src/utils/types';
 import { FLoadingKey } from 'src/utils/types';
+import Navbar from 'src/components/App/Navbar.vue';
+import FLoadingBar from 'src/components/lib/FLoadingBar.vue';
+import FLoader from 'src/components/lib/FLoader.vue';
+import FAlert from 'src/components/lib/FAlert.vue';
+import { authState } from 'src/utils/authState';
+import { registerToken } from 'src/utils/helpers';
+import { useAlerts } from 'src/store/alert';
+import { useUser } from 'src/store/user';
+import { useIo } from 'src/utils/createWs';
 
 const { getLoader } = useUser();
-const { getAlerts } = useAlerts();
+const { getAlerts, setAlerts } = useAlerts();
 
 const loadingBar = ref<ComponentPublicInstance<{}, FLoadingBarExpose> | null>(null);
 const isBarLoader = ref(false);
+const { isConnected } = useIo();
+
+watch(
+  () => isConnected.value,
+  (v, o) => {
+    if (v !== o) {
+      if (v === false) {
+        setAlerts({
+          message: 'Connection lost !',
+          type: 'danger',
+        });
+      } else if (v === true) {
+        setAlerts({
+          message: 'Connection established !',
+          type: 'success',
+        });
+      }
+    }
+  },
+);
 
 function checkDarkMode() {
   const root = document.querySelector(':root');
@@ -49,7 +70,6 @@ provide(FLoadingKey, {
 
 authState();
 registerToken();
-
 checkDarkMode();
 </script>
 <template>
