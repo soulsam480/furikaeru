@@ -43,7 +43,7 @@ const iconName = computed(() => {
 });
 </script>
 <template>
-  <div class="py-3 pr-5">
+  <div class="py-3">
     <div
       class="flex items-center space-x-2 text-white text-sm font-bold px-4 py-2 rounded-md shadow-md z-50"
       role="alert"
@@ -52,7 +52,7 @@ const iconName = computed(() => {
       <span v-if="icon || iconName">
         <f-icon :icon="icon || iconName" size="15px" />
       </span>
-      <span class="flex text-lg">{{ message }}</span>
+      <span class="flex text-base font-normal flex-nowrap">{{ message }}</span>
     </div>
   </div>
 </template>
