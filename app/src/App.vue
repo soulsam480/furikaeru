@@ -1,17 +1,23 @@
 <script setup lang="ts">
+import { provide, ref } from 'vue';
+import type { ComponentPublicInstance } from 'vue';
 import Navbar from 'src/components/App/Navbar.vue';
 import { authState } from 'src/utils/authState';
 import { registerToken } from 'src/utils/helpers';
-import FLoader from './components/lib/FLoader.vue';
-import { useUser } from './store/user';
+import FLoader from 'src/components/lib/FLoader.vue';
+import { useUser } from 'src/store/user';
 import FAlert from 'src/components/lib/FAlert.vue';
-import { useAlerts } from './store/alert';
+import { useAlerts } from 'src/store/alert';
+import FLoadingBar from 'src/components/lib/FLoadingBar.vue';
+import type { FLoadingBarExpose } from 'src/utils/types';
+import { FLoadingKey } from 'src/utils/types';
 
 const { getLoader } = useUser();
 const { getAlerts } = useAlerts();
 
-authState();
-registerToken();
+const loadingBar = ref<ComponentPublicInstance<{}, FLoadingBarExpose> | null>(null);
+const isBarLoader = ref(false);
+
 function checkDarkMode() {
   const root = document.querySelector(':root');
   if (!localStorage.theme) localStorage.theme = 'light';
@@ -25,6 +31,24 @@ function checkDarkMode() {
     root.style.setProperty('--f-bg', '#ffffff');
   }
 }
+
+function start(inc?: number) {
+  isBarLoader.value = true;
+  loadingBar.value!.start(inc);
+}
+
+function stop() {
+  loadingBar.value!.stop();
+  isBarLoader.value = false;
+}
+
+provide(FLoadingKey, {
+  start,
+  stop,
+});
+
+authState();
+registerToken();
 
 checkDarkMode();
 </script>
@@ -45,7 +69,15 @@ checkDarkMode();
     </div>
 
     <Navbar />
+
+    <div class="relative">
+      <transition name="fade">
+        <FLoadingBar ref="loadingBar" v-show="isBarLoader" />
+      </transition>
+    </div>
+
     <FLoader v-if="getLoader" />
+
     <div class="max-w-7xl mx-auto px-2 py-3">
       <router-view />
     </div>
@@ -64,5 +96,15 @@ checkDarkMode();
 .list-enter-from {
   opacity: 0;
   transform: translateY(30px);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease-in-out;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

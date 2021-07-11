@@ -4,14 +4,15 @@ import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { getDDMMYY, copyLink, shareBoard, generateRoute } from 'src/utils/helpers';
 import FButton from 'src/components/lib/FButton.vue';
-import { useUser } from 'src/store/user';
 import { deleteBoard, getAllBoards, updateBoard } from 'src/utils/boardService';
 import FMenu from 'src/components/lib/FMenu.vue';
 import { useAlerts } from 'src/store/alert';
+import { useLoadingBar } from 'src/utils/helpers';
 
 const { push } = useRouter();
-const { showLoader, hideLoader } = useUser();
 const { setAlerts } = useAlerts();
+const { start, stop } = useLoadingBar();
+
 const boards = ref<BoardModel[]>([]);
 
 const isShare = navigator.share;
@@ -46,14 +47,14 @@ function viewBoard(board: BoardModel) {
 }
 
 async function getBoards() {
-  showLoader();
+  start();
   try {
     const { data }: { data: BoardModel[] } = await getAllBoards();
     boards.value = [...data];
   } catch (error) {
     console.log(error);
   } finally {
-    hideLoader();
+    stop();
   }
 }
 
