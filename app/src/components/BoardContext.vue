@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import { defineEmit, defineProps, ref } from 'vue';
+import { ref } from 'vue';
 import { shareBoard, copyLink } from 'src/utils/helpers';
 import FButton from 'src/components/lib/FButton.vue';
 import type { BoardModel } from 'src/utils/types';
 import { useAlerts } from 'src/store/alert';
 import FMenu from 'src/components/lib/FMenu.vue';
+import FIcon from './lib/FIcon.vue';
 
 defineProps<{
   board: BoardModel;
   uid: string;
 }>();
-const emit = defineEmit(['remove', 'sort', 'expand', 'focus-mode']);
+const emits = defineEmits(['remove', 'sort', 'expand', 'focus-mode']);
 
 const SortOptions = [
   {
@@ -31,12 +32,12 @@ const isFocus = ref(false);
 
 function handleCommentCollapse() {
   isExpand.value = !isExpand.value;
-  emit('expand');
+  emits('expand');
 }
 
 function handleFocusMode() {
   isFocus.value = !isFocus.value;
-  emit('focus-mode');
+  emits('focus-mode');
 }
 </script>
 <template>
@@ -67,15 +68,13 @@ function handleFocusMode() {
       :color="isFocus ? 'green' : 'cyan'"
       v-if="board.is_public"
     />
-    <!-- //TODO: Find a solution to dynamic icon change -->
-    <FButton
-      :key="isExpand ? 'e' : 'c'"
-      @click="handleCommentCollapse"
-      :icon="!isExpand ? 'ion:expand-outline' : 'ion:contract-outline'"
-      size="17px"
-      sm
-      :title="`${!isExpand ? 'Expand' : 'Collapse'} comments`"
-    />
+    <FButton @click="handleCommentCollapse" sm :title="`${!isExpand ? 'Expand' : 'Collapse'} comments`">
+      <template #icon>
+        <FIcon icon="ion:contract-outline" size="17px" v-show="isExpand" />
+        <FIcon icon="ion:expand-outline" size="17px" v-show="!isExpand" />
+      </template>
+    </FButton>
+
     <FButton
       title="Copy public URL"
       v-if="board.is_public"

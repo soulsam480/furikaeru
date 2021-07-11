@@ -1,9 +1,6 @@
 <script setup lang="ts">
-import { computed, defineProps } from '@vue/runtime-core';
+import { computed } from 'vue';
 import FIcon from 'src/components/lib/FIcon.vue';
-// import { useAlerts } from 'src/store/alert';
-
-// const { removeAlert } = useAlerts();
 
 const props = defineProps<{
   icon?: string;
@@ -56,14 +53,6 @@ const iconName = computed(() => {
         <f-icon :icon="icon || iconName" size="15px" />
       </span>
       <span class="flex text-lg">{{ message }}</span>
-      <!-- <button
-        type="button"
-        class="flex pa-2 hover:(bg-opacity-10) rounded-md"
-        :class="bgColor"
-        @click="removeAlert(id)"
-      >
-        <f-icon icon="ion:close-circle-outline" />
-      </button> -->
     </div>
   </div>
 </template>

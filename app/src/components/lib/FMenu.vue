@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineEmit, defineProps, onBeforeUnmount, onMounted, ref } from 'vue';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 import FButton from 'src/components/lib/FButton.vue';
 
 defineProps<{
@@ -13,7 +13,7 @@ defineProps<{
   color?: string;
   flat?: boolean;
 }>();
-const emit = defineEmit(['update:modelValue', 'input']);
+const emit = defineEmits(['update:modelValue', 'input']);
 
 const isMenu = ref(false);
 

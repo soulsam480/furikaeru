@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineProps } from '@vue/runtime-core';
 import Icon from 'src/components/lib/FIcon.vue';
 
 defineProps({
