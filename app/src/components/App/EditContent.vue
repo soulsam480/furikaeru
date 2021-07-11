@@ -30,7 +30,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleClose));
   <input
     type="text"
     class="rounded-md border-none flex-grow py-1 focus:shadow-none mr-1"
-    :class="`bg-${color || 'cyan'}-50`"
+    :class="`bg-${color || 'cyan'}-100`"
     v-model="newVal"
     @keyup.enter="handleSave"
   />

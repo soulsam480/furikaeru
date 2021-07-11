@@ -36,7 +36,7 @@ const getUserId = computed(() => {
   const uid = localStorage.getItem('__uuid');
   return uid ?? v4();
 });
-const parseBoardId = computed(() => {
+const parsedBoardId = computed(() => {
   const id = bid as string;
   if (id.includes('--')) return id.split('--')[1];
   return id;
@@ -100,7 +100,7 @@ function upVote(e: { cid: string; coid: string }) {
     { ...column },
   );
 
-  updateBoardEmit(parseBoardId.value, board.value as BoardModel);
+  updateBoardEmit(parsedBoardId.value, board.value as BoardModel);
 }
 
 function updateBoardEmit(id: string, board: BoardModel) {
@@ -113,13 +113,13 @@ function handleColumnNameChange(e: string, id: string) {
   column.name = e;
 
   isEditColumnName.value = null;
-  updateBoardEmit(parseBoardId.value, board.value as BoardModel);
+  updateBoardEmit(parsedBoardId.value, board.value as BoardModel);
 }
 
 function handleBoardNameChange(e: string) {
   isEditBoardName.value = null;
   (board.value as BoardModel).title = e;
-  updateBoardEmit(parseBoardId.value, board.value as BoardModel);
+  updateBoardEmit(parsedBoardId.value, board.value as BoardModel);
 }
 
 function handleCardAddition(id: string) {
@@ -133,10 +133,10 @@ function handleCardAddition(id: string) {
   };
 
   const idx = board.value?.data.findIndex((el) => el.id === id);
-  if (idx && idx !== -1) {
+  if (idx !== undefined && idx !== -1) {
     board.value?.data[idx].data.push({ ...card });
   }
-  updateBoardEmit(parseBoardId.value, board.value as BoardModel);
+  updateBoardEmit(parsedBoardId.value, board.value as BoardModel);
 
   newCardName.value = '';
   isNewCard.value = null;
@@ -154,10 +154,10 @@ async function handleBoardRemove(id: string) {
 
 function handleColumnTheme(id: string, color: string) {
   const idx = board.value?.data.findIndex((el) => el.id === id);
-  if (idx && idx !== -1) {
+  if (idx !== undefined && idx !== -1) {
     (board.value as BoardModel).data[idx]['color'] = color;
   }
-  updateBoardEmit(parseBoardId.value, board.value as BoardModel);
+  updateBoardEmit(parsedBoardId.value, board.value as BoardModel);
 }
 
 function handleEditColumnName(id: string) {
@@ -176,15 +176,15 @@ function handleSortedMove(e: any) {
     const { to, from } = e;
 
     const fromColIdx = board.value?.data.findIndex((el) => el.id === from.id);
-    if (fromColIdx && fromColIdx !== -1) {
+    if (fromColIdx !== undefined && fromColIdx !== -1) {
       const removeIdx = board.value?.data[fromColIdx].data.findIndex((el) => el.id === to.data.id);
-      if (removeIdx && removeIdx !== -1) {
+      if (removeIdx !== undefined && removeIdx !== -1) {
         board.value?.data[fromColIdx].data.splice(removeIdx, 1);
       }
     }
 
     const toColIdx = board.value?.data.findIndex((el) => el.id === to.id);
-    if (toColIdx && toColIdx !== -1) {
+    if (toColIdx !== undefined && toColIdx !== -1) {
       board.value?.data[toColIdx].data.push(to.data);
     }
 
@@ -208,7 +208,7 @@ onMounted(() => {
     io.off('send:board', firstListen);
     hideLoader();
   };
-  emit('get:board', { id: parseBoardId.value }).on('send:board', firstListen);
+  emit('get:board', { id: parsedBoardId.value }).on('send:board', firstListen);
 });
 
 on('send:board', ({ d }: { d: BoardModel }) => {
@@ -316,7 +316,7 @@ onBeforeUnmount(() => {
           :color="column.color || 'cyan'"
         />
 
-        <div class="w-full flex py-1" v-if="isNewCard === column.id">
+        <div class="w-full flex py-2" v-if="isNewCard === column.id">
           <input
             type="text"
             class="rounded-md border-none flex-grow py-1 mr-1 focus:shadow-none"
