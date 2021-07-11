@@ -87,19 +87,7 @@ onMounted(async () => {
       <div
         v-for="board in boards"
         :key="board.id"
-        class="
-          bg-cyan-200
-          transition-colors
-          ease-in-out
-          filter
-          py-3
-          px-2
-          rounded-md
-          duration-500
-          hover:(shadow-md
-          shadow-gray-500
-          )
-        "
+        class="bg-cyan-200 transition-colors ease-in-out filter py-3 px-2 rounded-md shadow-md"
       >
         <div class="flex">
           <div class="text-lg truncate flex-grow" :title="board.title">{{ board.title }}</div>
@@ -121,7 +109,7 @@ onMounted(async () => {
           <FButton title="View board" @click="viewBoard(board)" icon="ion:eye-outline" size="17px" sm />
           <FButton
             title="Share board"
-            v-if="board.is_public && isShare"
+            v-if="board.is_public && !!isShare"
             @click="
               shareBoard(
                 `https://furikaeru.sambitsahoo.com/${board.title.split(' ').join('_')}--${board.id}`,

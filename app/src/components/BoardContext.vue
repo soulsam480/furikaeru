@@ -88,7 +88,7 @@ function handleFocusMode() {
     />
     <FButton
       title="Share board"
-      v-if="board.is_public && isShare"
+      v-if="board.is_public && !!isShare"
       @click="
         shareBoard(`https://furikaeru.sambitsahoo.com/${board.title.split(' ').join('_')}--${board.id}`, board.title)
       "
