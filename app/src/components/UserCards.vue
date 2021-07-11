@@ -39,10 +39,17 @@ async function handleBoardContext(type: string, id?: string, is_public?: boolean
   }
 }
 
+function generateRoute(board: BoardModel) {
+  return `${board.title
+    .replaceAll(/#|\/|\?/g, '')
+    .split(' ')
+    .join('_')}--${board.id}`;
+}
+
 function viewBoard(board: BoardModel) {
-  const { is_public, id, title } = board;
-  if (is_public) return push(`/${title.split(' ').join('_')}--${id}/`);
-  return push(`/board/${title.split(' ').join('_')}--${id}/`);
+  const { is_public } = board;
+  if (is_public) return push(`/${generateRoute(board)}/`);
+  return push(`/board/${generateRoute(board)}/`);
 }
 
 async function getBoards() {
@@ -110,12 +117,7 @@ onMounted(async () => {
           <FButton
             title="Share board"
             v-if="board.is_public && !!isShare"
-            @click="
-              shareBoard(
-                `https://furikaeru.sambitsahoo.com/${board.title.split(' ').join('_')}--${board.id}`,
-                board.title,
-              )
-            "
+            @click="shareBoard(`https://furikaeru.sambitsahoo.com/${generateRoute(board)}`, board.title)"
             icon="ion:share-social-outline"
             size="17px"
             sm
@@ -124,7 +126,7 @@ onMounted(async () => {
             title="Copy public URL"
             v-if="board.is_public"
             @click="
-              copyLink(`https://furikaeru.sambitsahoo.com/${board.title.split(' ').join('_')}--${board.id}`),
+              copyLink(`https://furikaeru.sambitsahoo.com/${generateRoute(board)}`),
                 setAlerts({ type: 'success', message: 'Copied!' })
             "
             icon="ion:clipboard-outline"

@@ -30,6 +30,13 @@ const sortBy = ref('');
 const isExpand = ref(false);
 const isFocus = ref(false);
 
+function generateRoute(board: BoardModel) {
+  return `${board.title
+    .replaceAll(/#|\/|\?/g, '')
+    .split(' ')
+    .join('_')}--${board.id}`;
+}
+
 function handleCommentCollapse() {
   isExpand.value = !isExpand.value;
   emits('expand');
@@ -79,7 +86,7 @@ function handleFocusMode() {
       title="Copy public URL"
       v-if="board.is_public"
       @click="
-        copyLink(`https://furikaeru.sambitsahoo.com/${board.title.split(' ').join('_')}--${board.id}`),
+        copyLink(`https://furikaeru.sambitsahoo.com/${generateRoute(board)}`),
           setAlerts({ type: 'success', message: 'Copied!' })
       "
       icon="ion:clipboard-outline"
@@ -89,9 +96,7 @@ function handleFocusMode() {
     <FButton
       title="Share board"
       v-if="board.is_public && !!isShare"
-      @click="
-        shareBoard(`https://furikaeru.sambitsahoo.com/${board.title.split(' ').join('_')}--${board.id}`, board.title)
-      "
+      @click="shareBoard(`https://furikaeru.sambitsahoo.com/${generateRoute(board)}`, board.title)"
       icon="ion:share-social-outline"
       size="17px"
       sm
