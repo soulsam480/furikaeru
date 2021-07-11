@@ -17,14 +17,22 @@ defineEmits(['click']);
 </script>
 <template>
   <button
-    class="flex items-center text-sm rounded-md focus:outline-none disabled:(cursor-not-allowed hover:bg-red-100)"
+    class="
+      flex
+      items-center
+      text-sm
+      rounded-md
+      space-x-1
+      focus:outline-none
+      disabled:(cursor-not-allowed
+      hover:bg-red-100)
+    "
     :class="[
       {
         'px-2 py-[6px]': sm,
         'px-3 py-2': !sm,
         'justify-center': center,
         'w-full': block,
-        'space-x-1': icon || $slots.icon,
       },
       `${
         invert
@@ -37,13 +45,15 @@ defineEmits(['click']);
     type="button"
     @click="$emit('click')"
   >
-    <slot name="icon">
-      <Icon v-if="icon" :icon="icon" :size="icon && sm && !size ? '15px' : size" />
-    </slot>
+    <span>
+      <slot name="icon">
+        <Icon v-if="icon" :icon="icon" :size="icon && sm && !size ? '15px' : size" />
+      </slot>
+    </span>
     <slot>
-      <div v-if="label">
+      <span v-if="label">
         {{ label }}
-      </div>
+      </span>
     </slot>
   </button>
 </template>

@@ -109,8 +109,8 @@ function handleDarkMode() {
               />
               <FButton sm @click="handleDarkMode" title="Toggle dark mode">
                 <template #icon>
-                  <Icon v-if="isDark === 'light'" icon="ion:contrast-outline" size="17px" />
-                  <Icon v-if="isDark === 'dark'" icon="ion:sunny-outline" size="17px" />
+                  <Icon v-show="isDark === 'light'" icon="ion:contrast-outline" size="17px" />
+                  <Icon v-show="isDark === 'dark'" icon="ion:sunny-outline" size="17px" />
                 </template>
               </FButton>
               <FButton sm class="hidden sm:block">
