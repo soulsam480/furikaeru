@@ -75,7 +75,7 @@ export async function shareBoard(url: string, title: string) {
 
 export function generateRoute(board: BoardModel) {
   return `${board.title
-    .replaceAll(/#|\/|\?|-/g, '')
+    .replace(/#|\/|\?|-/g, '')
     .split(' ')
     .join('_')}--${board.id}`;
 }
