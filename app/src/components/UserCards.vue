@@ -39,9 +39,10 @@ async function handleBoardContext(type: string, id?: string, is_public?: boolean
   }
 }
 
-function viewBoard(id: string, is_public: boolean) {
-  if (is_public) return push(`/${id}/`);
-  return push(`/board/${id}/`);
+function viewBoard(board: BoardModel) {
+  const { is_public, id, title } = board;
+  if (is_public) return push(`/${title.split(' ').join('_')}--${id}/`);
+  return push(`/board/${title.split(' ').join('_')}--${id}/`);
 }
 
 async function getBoards() {
@@ -117,17 +118,16 @@ onMounted(async () => {
         <div class="text-gray-500 text-xs pt-1">Updated: {{ getDDMMYY(board.updated_at) }}</div>
 
         <div class="flex items-center pt-2 space-x-2">
-          <FButton
-            title="View board"
-            @click="viewBoard(board.id, board.is_public)"
-            icon="ion:eye-outline"
-            size="17px"
-            sm
-          />
+          <FButton title="View board" @click="viewBoard(board)" icon="ion:eye-outline" size="17px" sm />
           <FButton
             title="Share board"
             v-if="board.is_public && isShare"
-            @click="shareBoard(`https://furikaeru.sambitsahoo.com/${board.id}`, board.title)"
+            @click="
+              shareBoard(
+                `https://furikaeru.sambitsahoo.com/${board.title.split(' ').join('_')}--${board.id}`,
+                board.title,
+              )
+            "
             icon="ion:share-social-outline"
             size="17px"
             sm
@@ -136,7 +136,7 @@ onMounted(async () => {
             title="Copy public URL"
             v-if="board.is_public"
             @click="
-              copyLink(`https://furikaeru.sambitsahoo.com/${board.id}`),
+              copyLink(`https://furikaeru.sambitsahoo.com/${board.title.split(' ').join('_')}--${board.id}`),
                 setAlerts({ type: 'success', message: 'Copied!' })
             "
             icon="ion:clipboard-outline"

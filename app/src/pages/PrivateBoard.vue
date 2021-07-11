@@ -13,7 +13,7 @@ import { useAlerts } from 'src/store/alert';
 import FMenu from 'src/components/lib/FMenu.vue';
 
 const {
-  params: { id: bid },
+  params: { id: routeBid },
 } = useRoute();
 const { push } = useRouter();
 const { getUser, showLoader, hideLoader } = useUser();
@@ -29,10 +29,15 @@ const sortBy = ref('');
 const isCommentsExpand = ref(false);
 const isNewCard = ref<string | null>(null);
 const getUserId = computed(() => getUser.value.id as string);
+const bid = computed(() => {
+  const id = routeBid as string;
+  if (id.includes('--')) return id.split('--')[1];
+  return id;
+});
 
 async function getPrivateBoard() {
   try {
-    const { data } = await getBoard(bid as string);
+    const { data } = await getBoard(bid.value);
     board.value = { ...data };
   } catch (error) {
     console.log(error);
@@ -103,7 +108,7 @@ function upVote(e: { cid: string; coid: string }) {
     { ...column },
   );
 
-  updateBoardEmit(bid as string, board.value as BoardModel, 'board');
+  updateBoardEmit(bid.value, board.value as BoardModel, 'board');
 }
 
 function handleColumnNameChange(e: string, id: string) {
@@ -112,21 +117,21 @@ function handleColumnNameChange(e: string, id: string) {
   column.name = e;
 
   isEditColumnName.value = null;
-  updateBoardEmit(bid as string, board.value as BoardModel, 'board');
+  updateBoardEmit(bid.value, board.value as BoardModel, 'board');
 }
 
 function handleBoardNameChange(e: string) {
   isEditBoardName.value = null;
   (board.value as BoardModel).title = e;
-  updateBoardEmit(bid as string, board.value as BoardModel, 'title');
+  updateBoardEmit(bid.value, board.value as BoardModel, 'title');
 }
 
 function handleColumnTheme(id: string, color: string) {
   const idx = board.value?.data.findIndex((el) => el.id === id);
-  if (idx !== -1) {
-    (board.value as BoardModel).data[idx as number]['color'] = color;
+  if (idx && idx !== -1) {
+    (board.value as BoardModel).data[idx]['color'] = color;
   }
-  updateBoardEmit(bid as string, board.value as BoardModel, 'board');
+  updateBoardEmit(bid.value, board.value as BoardModel, 'board');
 }
 
 function handleCardAddition(id: string) {
@@ -140,10 +145,10 @@ function handleCardAddition(id: string) {
   };
 
   const idx = board.value?.data.findIndex((el) => el.id === id);
-  if (idx !== -1) {
-    board.value?.data[idx as number].data.push({ ...card });
+  if (idx && idx !== -1) {
+    board.value?.data[idx].data.push({ ...card });
   }
-  updateBoardEmit(bid as string, board.value as BoardModel, 'board');
+  updateBoardEmit(bid.value, board.value as BoardModel, 'board');
 
   newCardName.value = '';
   isNewCard.value = null;
@@ -164,14 +169,16 @@ function handleSortedMove(e: any) {
     const { to, from } = e;
 
     const fromColIdx = board.value?.data.findIndex((el) => el.id === from.id);
-    if (fromColIdx !== -1) {
-      const removeIdx = board.value?.data[fromColIdx as number].data.findIndex((el) => el.id === to.data.id);
-      board.value?.data[fromColIdx as number].data.splice(removeIdx as number, 1);
+    if (fromColIdx && fromColIdx !== -1) {
+      const removeIdx = board.value?.data[fromColIdx].data.findIndex((el) => el.id === to.data.id);
+      if (removeIdx && removeIdx !== -1) {
+        board.value?.data[fromColIdx].data.splice(removeIdx, 1);
+      }
     }
 
     const toColIdx = board.value?.data.findIndex((el) => el.id === to.id);
-    if (toColIdx !== -1) {
-      board.value?.data[toColIdx as number].data.push(to.data);
+    if (toColIdx && toColIdx !== -1) {
+      board.value?.data[toColIdx].data.push(to.data);
     }
 
     updateBoardEmit(board.value?.id as string, board.value as BoardModel, 'board');

@@ -79,7 +79,8 @@ function handleFocusMode() {
       title="Copy public URL"
       v-if="board.is_public"
       @click="
-        copyLink(`https://furikaeru.sambitsahoo.com/${board.id}`), setAlerts({ type: 'success', message: 'Copied!' })
+        copyLink(`https://furikaeru.sambitsahoo.com/${board.title.split(' ').join('_')}--${board.id}`),
+          setAlerts({ type: 'success', message: 'Copied!' })
       "
       icon="ion:clipboard-outline"
       size="17px"
@@ -88,7 +89,9 @@ function handleFocusMode() {
     <FButton
       title="Share board"
       v-if="board.is_public && isShare"
-      @click="shareBoard(`https://furikaeru.sambitsahoo.com/${board.id}`, board.title)"
+      @click="
+        shareBoard(`https://furikaeru.sambitsahoo.com/${board.title.split(' ').join('_')}--${board.id}`, board.title)
+      "
       icon="ion:share-social-outline"
       size="17px"
       sm
