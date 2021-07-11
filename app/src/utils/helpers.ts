@@ -39,14 +39,7 @@ export function copyLink(link: string) {
     fallbackCopyTextToClipboard(link);
     return;
   }
-  navigator.clipboard.writeText(link).then(
-    function () {
-      console.log('Async: Copying to clipboard was successful!');
-    },
-    function (err) {
-      console.error('Async: Could not copy text: ', err);
-    },
-  );
+  navigator.clipboard.writeText(link);
 
   function fallbackCopyTextToClipboard(text: string) {
     var textArea = document.createElement('textarea');

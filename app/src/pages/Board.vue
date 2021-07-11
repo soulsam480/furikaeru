@@ -36,6 +36,11 @@ const getUserId = computed(() => {
   const uid = localStorage.getItem('__uuid');
   return uid ?? v4();
 });
+const parseBoardId = computed(() => {
+  const id = bid as string;
+  if (id.includes('--')) return id.split('--')[1];
+  return id;
+});
 
 //TODO: THis will be changed
 // function blockUserVotes() {
@@ -95,7 +100,7 @@ function upVote(e: { cid: string; coid: string }) {
     { ...column },
   );
 
-  updateBoardEmit(bid as string, board.value as BoardModel);
+  updateBoardEmit(parseBoardId.value, board.value as BoardModel);
 }
 
 function updateBoardEmit(id: string, board: BoardModel) {
@@ -108,13 +113,13 @@ function handleColumnNameChange(e: string, id: string) {
   column.name = e;
 
   isEditColumnName.value = null;
-  updateBoardEmit(bid as string, board.value as BoardModel);
+  updateBoardEmit(parseBoardId.value, board.value as BoardModel);
 }
 
 function handleBoardNameChange(e: string) {
   isEditBoardName.value = null;
   (board.value as BoardModel).title = e;
-  updateBoardEmit(bid as string, board.value as BoardModel);
+  updateBoardEmit(parseBoardId.value, board.value as BoardModel);
 }
 
 function handleCardAddition(id: string) {
@@ -128,10 +133,10 @@ function handleCardAddition(id: string) {
   };
 
   const idx = board.value?.data.findIndex((el) => el.id === id);
-  if (idx !== -1) {
-    board.value?.data[idx as number].data.push({ ...card });
+  if (idx && idx !== -1) {
+    board.value?.data[idx].data.push({ ...card });
   }
-  updateBoardEmit(bid as string, board.value as BoardModel);
+  updateBoardEmit(parseBoardId.value, board.value as BoardModel);
 
   newCardName.value = '';
   isNewCard.value = null;
@@ -149,10 +154,10 @@ async function handleBoardRemove(id: string) {
 
 function handleColumnTheme(id: string, color: string) {
   const idx = board.value?.data.findIndex((el) => el.id === id);
-  if (idx !== -1) {
-    (board.value as BoardModel).data[idx as number]['color'] = color;
+  if (idx && idx !== -1) {
+    (board.value as BoardModel).data[idx]['color'] = color;
   }
-  updateBoardEmit(bid as string, board.value as BoardModel);
+  updateBoardEmit(parseBoardId.value, board.value as BoardModel);
 }
 
 function handleEditColumnName(id: string) {
@@ -171,14 +176,16 @@ function handleSortedMove(e: any) {
     const { to, from } = e;
 
     const fromColIdx = board.value?.data.findIndex((el) => el.id === from.id);
-    if (fromColIdx !== -1) {
-      const removeIdx = board.value?.data[fromColIdx as number].data.findIndex((el) => el.id === to.data.id);
-      board.value?.data[fromColIdx as number].data.splice(removeIdx as number, 1);
+    if (fromColIdx && fromColIdx !== -1) {
+      const removeIdx = board.value?.data[fromColIdx].data.findIndex((el) => el.id === to.data.id);
+      if (removeIdx && removeIdx !== -1) {
+        board.value?.data[fromColIdx].data.splice(removeIdx, 1);
+      }
     }
 
     const toColIdx = board.value?.data.findIndex((el) => el.id === to.id);
-    if (toColIdx !== -1) {
-      board.value?.data[toColIdx as number].data.push(to.data);
+    if (toColIdx && toColIdx !== -1) {
+      board.value?.data[toColIdx].data.push(to.data);
     }
 
     updateBoardEmit(board.value?.id as string, board.value as BoardModel);
@@ -201,7 +208,7 @@ onMounted(() => {
     io.off('send:board', firstListen);
     hideLoader();
   };
-  emit('get:board', { id: bid }).on('send:board', firstListen);
+  emit('get:board', { id: parseBoardId.value }).on('send:board', firstListen);
 });
 
 on('send:board', ({ d }: { d: BoardModel }) => {

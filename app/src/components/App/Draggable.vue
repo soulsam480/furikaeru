@@ -174,18 +174,7 @@ function handleStart(e: any) {
     <template #item="{ element }">
       <div
         v-bind="$attrs"
-        class="
-          board-grid__column__item
-          block
-          px-3
-          py-2
-          hover:(shadow-lg
-          shadow-gray-700)
-          cursor-move
-          my-2
-          relative
-          rounded-md
-        "
+        class="board-grid__column__item block px-3 py-2 shadow-md cursor-move my-2 relative rounded-md"
         :class="[`bg-${color}-400`, { 'filter blur-sm': isFocusMode && element.user_id !== userId }]"
       >
         <!-- <transition
