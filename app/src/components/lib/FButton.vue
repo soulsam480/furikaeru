@@ -45,15 +45,16 @@ defineEmits(['click']);
     type="button"
     @click="$emit('click')"
   >
-    <span>
+    <span v-if="icon || $slots.icon">
       <slot name="icon">
         <Icon v-if="icon" :icon="icon" :size="icon && sm && !size ? '15px' : size" />
       </slot>
     </span>
-    <slot>
-      <span v-if="label">
+
+    <span v-if="label || $slots.default">
+      <slot>
         {{ label }}
-      </span>
-    </slot>
+      </slot>
+    </span>
   </button>
 </template>
