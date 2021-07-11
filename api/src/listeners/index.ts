@@ -33,8 +33,10 @@ export function createListeners(io: Server) {
 
           await Board.update(id, { data: b.data, title: b.title });
           const nb = await Board.findOne({ where: { id }, relations: ['user'], loadRelationIds: true });
-
-          io.sockets.in(roomId).emit('send:board', { d: nb });
+          // don't send to the socket who updated the board it
+          // Error prone as any kind of error can make the user believe that he is updating
+          // but he is not. Will think of a solution
+          io.sockets.in(roomId).except(sock.id).emit('send:board', { d: nb });
         });
       } catch (error) {
         return sock.emit('error', { error: new Error('Board not found') });

@@ -11,6 +11,8 @@ import { deleteBoard, getBoard, updateBoard } from 'src/utils/boardService';
 import BoardContext from 'src/components/BoardContext.vue';
 import { useAlerts } from 'src/store/alert';
 import FMenu from 'src/components/lib/FMenu.vue';
+import { useIo } from 'src/utils/createWs';
+import FBanner from 'src/components/lib/FBanner.vue';
 
 const {
   params: { id: routeBid },
@@ -18,6 +20,7 @@ const {
 const { push } = useRouter();
 const { getUser, showLoader, hideLoader } = useUser();
 const { setAlerts } = useAlerts();
+const { isConnected } = useIo();
 
 const COLORS = ['red', 'green', 'purple', 'indigo', 'amber', 'lime', 'cyan'];
 const board = ref<BoardModel>();
@@ -128,7 +131,7 @@ function handleBoardNameChange(e: string) {
 
 function handleColumnTheme(id: string, color: string) {
   const idx = board.value?.data.findIndex((el) => el.id === id);
-  if (idx && idx !== -1) {
+  if (idx !== undefined && idx !== -1) {
     (board.value as BoardModel).data[idx]['color'] = color;
   }
   updateBoardEmit(bid.value, board.value as BoardModel, 'board');
@@ -145,7 +148,7 @@ function handleCardAddition(id: string) {
   };
 
   const idx = board.value?.data.findIndex((el) => el.id === id);
-  if (idx && idx !== -1) {
+  if (idx !== undefined && idx !== -1) {
     board.value?.data[idx].data.push({ ...card });
   }
   updateBoardEmit(bid.value, board.value as BoardModel, 'board');
@@ -169,15 +172,15 @@ function handleSortedMove(e: any) {
     const { to, from } = e;
 
     const fromColIdx = board.value?.data.findIndex((el) => el.id === from.id);
-    if (fromColIdx && fromColIdx !== -1) {
+    if (fromColIdx !== undefined && fromColIdx !== -1) {
       const removeIdx = board.value?.data[fromColIdx].data.findIndex((el) => el.id === to.data.id);
-      if (removeIdx && removeIdx !== -1) {
+      if (removeIdx !== undefined && removeIdx !== -1) {
         board.value?.data[fromColIdx].data.splice(removeIdx, 1);
       }
     }
 
     const toColIdx = board.value?.data.findIndex((el) => el.id === to.id);
-    if (toColIdx && toColIdx !== -1) {
+    if (toColIdx !== undefined && toColIdx !== -1) {
       board.value?.data[toColIdx].data.push(to.data);
     }
 
@@ -195,6 +198,15 @@ onMounted(async () => {
 </script>
 <template>
   <div class="board">
+    <Transition name="fade">
+      <FBanner
+        v-if="!isConnected"
+        text="You are not connected. Changes won't be saved."
+        class="mb-4 mt-1"
+        type="danger"
+      />
+    </Transition>
+
     <BoardContext
       :board="board || {}"
       :uid="getUserId"
@@ -285,14 +297,14 @@ onMounted(async () => {
           :color="column.color || 'cyan'"
         />
 
-        <div class="w-full flex py-1" v-if="isNewCard === column.id">
+        <div class="w-full flex py-2" v-if="isNewCard === column.id">
           <input
             type="text"
             class="rounded-md border-none flex-grow py-1 mr-1 focus:shadow-none"
             v-model="newCardName"
             placeholder="New card title"
             @keyup.enter="handleCardAddition(column.id)"
-            :class="`bg-${column.color || 'cyan'}-50`"
+            :class="`bg-${column.color || 'cyan'}-100`"
           />
           <div class="flex-none flex">
             <FButton

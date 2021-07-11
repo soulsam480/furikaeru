@@ -1,5 +1,8 @@
+import { ref, readonly } from 'vue';
 import { io as Io, Socket } from 'socket.io-client';
+
 let io: Socket;
+const isConnected = ref(false);
 
 export function createWs() {
   io = Io(import.meta.env.VITE_WSS, {
@@ -7,17 +10,20 @@ export function createWs() {
   });
 
   io.on('connect', () => {
-    console.log('Socket connected!');
+    isConnected.value = true;
   });
 
-  io.on('pong', () => {
-    console.log('pong');
+  io.on('connect_error', () => {
+    isConnected.value = false;
   });
 
-  setInterval(() => {
-    console.log('ping');
-    io.emit('ping');
-  }, 60000);
+  io.on('connect_failed', () => {
+    isConnected.value = false;
+  });
+
+  io.on('reconnect', () => {
+    isConnected.value = true;
+  });
 
   return io;
 }
@@ -27,5 +33,6 @@ export function useIo() {
     io,
     emit: (ev: string, ...args: any[]) => io.emit(ev, ...args),
     on: (ev: string, listener: (...args: any[]) => void) => io.on(ev, listener),
+    isConnected: readonly(isConnected),
   };
 }
