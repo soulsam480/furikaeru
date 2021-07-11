@@ -1,6 +1,7 @@
 import { readonly, ref, Ref, watch } from 'vue';
 import Axios from 'axios';
 import { useUser } from 'src/store/user';
+import { BoardModel } from './types';
 
 export const furiApi = Axios.create({
   baseURL: import.meta.env.VITE_API,
@@ -70,4 +71,11 @@ export async function shareBoard(url: string, title: string) {
     url,
   };
   await navigator.share(data);
+}
+
+export function generateRoute(board: BoardModel) {
+  return `${board.title
+    .replaceAll(/#|\/|\?|-/g, '')
+    .split(' ')
+    .join('_')}--${board.id}`;
 }

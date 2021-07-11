@@ -2,7 +2,7 @@
 import type { BoardModel } from 'src/utils/types';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { getDDMMYY, copyLink, shareBoard } from 'src/utils/helpers';
+import { getDDMMYY, copyLink, shareBoard, generateRoute } from 'src/utils/helpers';
 import FButton from 'src/components/lib/FButton.vue';
 import { useUser } from 'src/store/user';
 import { deleteBoard, getAllBoards, updateBoard } from 'src/utils/boardService';
@@ -37,13 +37,6 @@ async function handleBoardContext(type: string, id?: string, is_public?: boolean
       await handleChangeType(id as string, !is_public);
       break;
   }
-}
-
-function generateRoute(board: BoardModel) {
-  return `${board.title
-    .replaceAll(/#|\/|\?/g, '')
-    .split(' ')
-    .join('_')}--${board.id}`;
 }
 
 function viewBoard(board: BoardModel) {

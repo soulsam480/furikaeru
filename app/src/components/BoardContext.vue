@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { shareBoard, copyLink } from 'src/utils/helpers';
+import { shareBoard, copyLink, generateRoute } from 'src/utils/helpers';
 import FButton from 'src/components/lib/FButton.vue';
 import type { BoardModel } from 'src/utils/types';
 import { useAlerts } from 'src/store/alert';
 import FMenu from 'src/components/lib/FMenu.vue';
-import FIcon from './lib/FIcon.vue';
+import FIcon from 'src/components/lib/FIcon.vue';
 
 defineProps<{
   board: BoardModel;
@@ -29,13 +29,6 @@ const { setAlerts } = useAlerts();
 const sortBy = ref('');
 const isExpand = ref(false);
 const isFocus = ref(false);
-
-function generateRoute(board: BoardModel) {
-  return `${board.title
-    .replaceAll(/#|\/|\?/g, '')
-    .split(' ')
-    .join('_')}--${board.id}`;
-}
 
 function handleCommentCollapse() {
   isExpand.value = !isExpand.value;
