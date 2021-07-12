@@ -98,7 +98,6 @@ export function useKeyBindings(bindings: KeyBinding[], inSetup?: boolean): KeyBi
     const { key, handler: bindingHandler, modifier } = binding;
 
     function handler(e: KeyboardEvent) {
-      e.preventDefault();
       const { key: eventKey } = e;
 
       if (systemKeys.includes(eventKey)) return;

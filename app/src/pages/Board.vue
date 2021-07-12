@@ -4,11 +4,7 @@ const BINDINGS: KeyBinding[] = [
   {
     key: 'n',
     modifier: 'Alt',
-    handler: () => console.log('This is from handler'),
-  },
-  {
-    key: 'f',
-    handler: () => console.log('this is an handler for F key'),
+    handler: () => (isNewCardModal.value = !isNewCardModal.value),
   },
 ];
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
@@ -26,6 +22,7 @@ import { useAlerts } from 'src/store/alert';
 import FMenu from 'src/components/lib/FMenu.vue';
 import FBanner from 'src/components/lib/FBanner.vue';
 import { useKeyBindings } from 'src/utils/helpers';
+import NewCardModal from 'src/components/NewCardModal.vue';
 
 const { on, emit, io, isConnected } = useIo();
 const {
@@ -45,6 +42,8 @@ const sortBy = ref('');
 const isCommentsExpand = ref(false);
 const isFocusMode = ref(false);
 const isNewCard = ref<string | null>(null);
+const isNewCardModal = ref(false);
+const newCardParent = ref('');
 const getUserId = computed(() => {
   if (isLoggedIn.value) return getUser.value.id as string;
   const uid = localStorage.getItem('__uuid');
@@ -54,6 +53,13 @@ const parsedBoardId = computed(() => {
   const id = bid as string;
   if (id.includes('--')) return id.split('--')[1];
   return id;
+});
+const columnOptions = computed(() => {
+  if (!board.value) return [];
+  return (board.value as BoardModel).data.map((col) => ({
+    label: col.name,
+    value: col.id,
+  }));
 });
 
 //TODO: THis will be changed
@@ -137,6 +143,7 @@ function handleBoardNameChange(e: string) {
 }
 
 function handleCardAddition(id: string) {
+  if (isNewCardModal && !newCardParent.value) return;
   if (!newCardName.value) return;
   const card: Card = {
     id: v4(),
@@ -153,7 +160,10 @@ function handleCardAddition(id: string) {
   updateBoardEmit(parsedBoardId.value, board.value as BoardModel);
 
   newCardName.value = '';
+  newCardParent.value = '';
   isNewCard.value = null;
+
+  if (isNewCardModal.value) isNewCardModal.value = false;
 }
 
 async function handleBoardRemove(id: string) {
@@ -239,6 +249,14 @@ onBeforeUnmount(() => {
 </script>
 <template>
   <div class="board">
+    <NewCardModal
+      :options="columnOptions"
+      v-model:new-card-name="newCardName"
+      v-model:new-card-parent="newCardParent"
+      v-model:is-modal="isNewCardModal"
+      @add="handleCardAddition(newCardParent)"
+    />
+
     <transition name="fade">
       <FBanner
         v-if="!isConnected"
