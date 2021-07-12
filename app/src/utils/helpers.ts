@@ -1,7 +1,8 @@
-import { inject, onBeforeUnmount, onMounted, readonly, ref, Ref, watch } from 'vue';
+import { watch } from 'vue';
+// readonly, ref, Ref,
 import Axios from 'axios';
 import { useUser } from 'src/store/user';
-import { BoardModel, FLoadingBarExpose, FLoadingKey, KeyBindingSwitches, KeyBinding } from './types';
+import { BoardModel } from 'src/utils/types';
 
 export const furiApi = Axios.create({
   baseURL: import.meta.env.VITE_API,
@@ -27,13 +28,13 @@ export function getDDMMYY(time: number) {
 /**
  * To be only used inside setup().
  */
-export function useState<S>(value: S): [Readonly<Ref<S>>, (updatedState: S) => void] {
-  const state = ref(value);
-  //@ts-ignore
-  const setStateAction = (updatedState: S) => (state.value = updatedState);
-  //@ts-ignore
-  return [readonly(state), setStateAction];
-}
+// export function useState<S>(value: S): [Readonly<Ref<S>>, (updatedState: S) => void] {
+//   const state = ref(value);
+//   //@ts-ignore
+//   const setStateAction = (updatedState: S) => (state.value = updatedState);
+//   //@ts-ignore
+//   return [readonly(state), setStateAction];
+// }
 
 export function copyLink(link: string) {
   if (!navigator.clipboard) {
@@ -56,7 +57,7 @@ export function copyLink(link: string) {
     textArea.select();
 
     try {
-      var successful = document.execCommand('copy');
+      document.execCommand('copy');
     } catch (err) {
       console.error('Copy error', err);
     }
@@ -78,72 +79,4 @@ export function generateRoute(board: BoardModel) {
     .replace(/#|\/|\?|-/g, '')
     .split(' ')
     .join('_')}--${board.id}`;
-}
-
-export function useLoadingBar() {
-  return inject(FLoadingKey) as FLoadingBarExpose;
-}
-
-/**
- * use key bindings
- * @param bindings
- * @param isSetup automatically enable/disable inside setup
- * @returns an object containing on/off switches for the key bindings
- */
-export function useKeyBindings(bindings: KeyBinding[], inSetup?: boolean): KeyBindingSwitches {
-  const systemKeys = ['Control', 'Alt', 'Shift'];
-  let handlers: ((e: KeyboardEvent) => void)[] = [];
-
-  function generateHandler(binding: KeyBinding) {
-    const { key, handler: bindingHandler, modifier } = binding;
-
-    function handler(e: KeyboardEvent) {
-      const { key: eventKey } = e;
-
-      if (systemKeys.includes(eventKey)) return;
-
-      let newModifier = '';
-
-      if (e.ctrlKey) newModifier = 'Control';
-      if (e.altKey) newModifier = 'Alt';
-      if (e.shiftKey) newModifier = 'Shift';
-
-      if (!modifier) {
-        if (eventKey === key) bindingHandler();
-        newModifier = '';
-        return;
-      }
-
-      if (modifier === newModifier && eventKey === key) {
-        console.log('Running handler for', modifier, key);
-        bindingHandler();
-        newModifier = '';
-      }
-    }
-
-    handlers.push(handler);
-
-    return handler;
-  }
-
-  const switches: KeyBindingSwitches = {
-    on: () => {
-      bindings.forEach((binding) => {
-        window.addEventListener('keydown', generateHandler(binding));
-      });
-    },
-    off: () => {
-      handlers.forEach((handler) => {
-        window.removeEventListener('keydown', handler);
-      });
-      handlers = [];
-    },
-  };
-
-  if (inSetup) {
-    onMounted(() => switches.on());
-    onBeforeUnmount(() => switches.off());
-  }
-
-  return switches;
 }

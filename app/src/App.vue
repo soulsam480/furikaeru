@@ -1,20 +1,19 @@
 <script setup lang="ts">
 import { provide, ref, watch } from 'vue';
 import type { ComponentPublicInstance } from 'vue';
+import { AlertKey, FLoadingKey } from 'src/utils/types';
 import type { FLoadingBarExpose } from 'src/utils/types';
-import { FLoadingKey } from 'src/utils/types';
 import Navbar from 'src/components/App/Navbar.vue';
 import FLoadingBar from 'src/components/lib/FLoadingBar.vue';
 import FLoader from 'src/components/lib/FLoader.vue';
 import FAlert from 'src/components/lib/FAlert.vue';
 import { authState } from 'src/utils/authState';
 import { registerToken } from 'src/utils/helpers';
-import { useAlerts } from 'src/store/alert';
 import { useUser } from 'src/store/user';
 import { useIo } from 'src/utils/createWs';
+import { getAlerts, removeAlert, setAlerts } from 'src/utils/composables';
 
 const { getLoader } = useUser();
-const { getAlerts, setAlerts } = useAlerts();
 
 const loadingBar = ref<ComponentPublicInstance<{}, FLoadingBarExpose> | null>(null);
 const isBarLoader = ref(false);
@@ -66,6 +65,12 @@ function stop() {
 provide(FLoadingKey, {
   start,
   stop,
+});
+
+provide(AlertKey, {
+  set: setAlerts,
+  remove: removeAlert,
+  alerts: getAlerts,
 });
 
 authState();

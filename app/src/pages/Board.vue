@@ -18,11 +18,10 @@ import FButton from 'src/components/lib/FButton.vue';
 import EditContent from 'src/components/App/EditContent.vue';
 import BoardContext from 'src/components/BoardContext.vue';
 import { deleteBoard } from 'src/utils/boardService';
-import { useAlerts } from 'src/store/alert';
 import FMenu from 'src/components/lib/FMenu.vue';
 import FBanner from 'src/components/lib/FBanner.vue';
-import { useKeyBindings } from 'src/utils/helpers';
 import NewCardModal from 'src/components/NewCardModal.vue';
+import { useAlert, useKeyBindings } from 'src/utils/composables';
 
 const { on, emit, io, isConnected } = useIo();
 const {
@@ -30,7 +29,7 @@ const {
 } = useRoute();
 const { push } = useRouter();
 const { isLoggedIn, getUser, showLoader, hideLoader, getLoader } = useUser();
-const { setAlerts } = useAlerts();
+const { set } = useAlert();
 useKeyBindings(BINDINGS, true);
 
 const board = ref<BoardModel>();
@@ -169,10 +168,10 @@ function handleCardAddition(id: string) {
 async function handleBoardRemove(id: string) {
   try {
     await deleteBoard(id);
-    setAlerts({ type: 'success', message: 'Board removed successfully !' });
+    set({ type: 'success', message: 'Board removed successfully !' });
     push('/');
   } catch (error) {
-    setAlerts({ type: 'danger', message: error });
+    set({ type: 'danger', message: error });
   }
 }
 

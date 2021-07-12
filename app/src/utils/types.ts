@@ -1,4 +1,5 @@
-import { InjectionKey } from 'vue';
+import { ComputedRef, InjectionKey } from 'vue';
+import { Alert } from 'src/utils/composables';
 
 export type Vote = {
   [x: string]: number;
@@ -55,3 +56,11 @@ export type KeyBindingSwitches = {
   on: () => void;
   off: () => void;
 };
+
+export type AlertAPI = {
+  set: (alert: Alert) => void;
+  remove: (id: string) => void;
+  alerts: ComputedRef<Alert[]>;
+};
+
+export const AlertKey: InjectionKey<AlertAPI> = Symbol();
