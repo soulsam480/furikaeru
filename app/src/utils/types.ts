@@ -44,3 +44,14 @@ export type FLoadingBarExpose = {
 };
 
 export const FLoadingKey: InjectionKey<FLoadingBarExpose> = Symbol();
+
+export type KeyBinding = {
+  key: string;
+  modifier?: 'Control' | 'Alt' | 'Shift';
+  handler: () => void;
+};
+
+export type KeyBindingSwitches = {
+  on: () => void;
+  off: () => void;
+};

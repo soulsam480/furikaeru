@@ -1,7 +1,19 @@
 <script setup lang="ts">
+const COLORS = ['red', 'green', 'purple', 'indigo', 'amber', 'lime', 'cyan'];
+const BINDINGS: KeyBinding[] = [
+  {
+    key: 'n',
+    modifier: 'Alt',
+    handler: () => console.log('This is from handler'),
+  },
+  {
+    key: 'f',
+    handler: () => console.log('this is an handler for F key'),
+  },
+];
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import Draggable from 'src/components/App/Draggable.vue';
-import type { BoardModel, Card } from 'src/utils/types';
+import type { BoardModel, Card, KeyBinding } from 'src/utils/types';
 import { useIo } from 'src/utils/createWs';
 import { useRoute, useRouter } from 'vue-router';
 import { useUser } from 'src/store/user';
@@ -13,6 +25,7 @@ import { deleteBoard } from 'src/utils/boardService';
 import { useAlerts } from 'src/store/alert';
 import FMenu from 'src/components/lib/FMenu.vue';
 import FBanner from 'src/components/lib/FBanner.vue';
+import { useKeyBindings } from 'src/utils/helpers';
 
 const { on, emit, io, isConnected } = useIo();
 const {
@@ -21,8 +34,8 @@ const {
 const { push } = useRouter();
 const { isLoggedIn, getUser, showLoader, hideLoader, getLoader } = useUser();
 const { setAlerts } = useAlerts();
+useKeyBindings(BINDINGS, true);
 
-const COLORS = ['red', 'green', 'purple', 'indigo', 'amber', 'lime', 'cyan'];
 const board = ref<BoardModel>();
 const isEditColumnName = ref<string | null>(null);
 const isEditColumnColor = ref<string | null>(null);

@@ -1,7 +1,7 @@
-import { inject, readonly, ref, Ref, watch } from 'vue';
+import { inject, onBeforeUnmount, onMounted, readonly, ref, Ref, watch } from 'vue';
 import Axios from 'axios';
 import { useUser } from 'src/store/user';
-import { BoardModel, FLoadingBarExpose, FLoadingKey } from './types';
+import { BoardModel, FLoadingBarExpose, FLoadingKey, KeyBindingSwitches, KeyBinding } from './types';
 
 export const furiApi = Axios.create({
   baseURL: import.meta.env.VITE_API,
@@ -82,4 +82,69 @@ export function generateRoute(board: BoardModel) {
 
 export function useLoadingBar() {
   return inject(FLoadingKey) as FLoadingBarExpose;
+}
+
+/**
+ * use key bindings
+ * @param bindings
+ * @param isSetup automatically enable/disable inside setup
+ * @returns an object containing on/off switches for the key bindings
+ */
+export function useKeyBindings(bindings: KeyBinding[], inSetup?: boolean): KeyBindingSwitches {
+  const systemKeys = ['Control', 'Alt', 'Shift'];
+  let handlers: ((e: KeyboardEvent) => void)[] = [];
+
+  function generateHandler(binding: KeyBinding) {
+    const { key, handler: bindingHandler, modifier } = binding;
+
+    function handler(e: KeyboardEvent) {
+      e.preventDefault();
+      const { key: eventKey } = e;
+
+      if (systemKeys.includes(eventKey)) return;
+
+      let newModifier = '';
+
+      if (e.ctrlKey) newModifier = 'Control';
+      if (e.altKey) newModifier = 'Alt';
+      if (e.shiftKey) newModifier = 'Shift';
+
+      if (!modifier) {
+        if (eventKey === key) bindingHandler();
+        newModifier = '';
+        return;
+      }
+
+      if (modifier === newModifier && eventKey === key) {
+        console.log('Running handler for', modifier, key);
+        bindingHandler();
+        newModifier = '';
+      }
+    }
+
+    handlers.push(handler);
+
+    return handler;
+  }
+
+  const switches: KeyBindingSwitches = {
+    on: () => {
+      bindings.forEach((binding) => {
+        window.addEventListener('keydown', generateHandler(binding));
+      });
+    },
+    off: () => {
+      handlers.forEach((handler) => {
+        window.removeEventListener('keydown', handler);
+      });
+      handlers = [];
+    },
+  };
+
+  if (inSetup) {
+    onMounted(() => switches.on());
+    onBeforeUnmount(() => switches.off());
+  }
+
+  return switches;
 }
