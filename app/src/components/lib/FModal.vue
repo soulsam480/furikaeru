@@ -72,8 +72,11 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleKeyDown));
               relative
               flex flex-col
               p-3
-              bg-gray-50
+              bg-gray-200
               dark:bg-cool-gray-700
+              transition-colors
+              duration-400
+              ease-in-out
               outline-none
               focus:outline-none
               f-modal__content
@@ -94,7 +97,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleKeyDown));
                   </div>
                   <div class="flex-none">
                     <FIcon
-                      icon="ion:close"
+                      icon="ion:close-circle-outline"
                       class="
                         cursor-pointer
                         dark:text-white

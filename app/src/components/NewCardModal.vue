@@ -59,4 +59,3 @@ defineEmits<{
     </template>
   </FModal>
 </template>
-<style lang="scss" scoped></style>
