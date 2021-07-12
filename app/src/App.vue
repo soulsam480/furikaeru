@@ -75,7 +75,7 @@ checkDarkMode();
 <template>
   <div>
     <div class="fixed bottom-0 left-1/2 transform -translate-x-1/2 list-group z-50">
-      <transition-group name="list" tag="div">
+      <transition-group name="list" tag="div" class="flex flex-col justify-center items-center">
         <FAlert
           v-for="alert in getAlerts"
           :key="alert.id"
@@ -118,12 +118,14 @@ checkDarkMode();
   transform: translateY(30px);
 }
 
-.fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.5s ease-in-out;
+  transition: opacity 0.5s ease-out;
 }
 
-.fade-enter-from,
+.fade-enter-from {
+  opacity: 1;
+}
+
 .fade-leave-to {
   opacity: 0;
 }

@@ -43,7 +43,7 @@ const iconName = computed(() => {
 });
 </script>
 <template>
-  <div class="py-3">
+  <div class="py-3 self-center">
     <div
       class="flex items-center space-x-2 text-white text-sm font-bold px-4 py-2 rounded-md shadow-md z-50"
       role="alert"
