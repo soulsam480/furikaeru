@@ -1,20 +1,19 @@
 <script setup lang="ts">
 import { provide, ref, watch } from 'vue';
 import type { ComponentPublicInstance } from 'vue';
+import { AlertKey, FLoadingKey } from 'src/utils/types';
 import type { FLoadingBarExpose } from 'src/utils/types';
-import { FLoadingKey } from 'src/utils/types';
 import Navbar from 'src/components/App/Navbar.vue';
 import FLoadingBar from 'src/components/lib/FLoadingBar.vue';
 import FLoader from 'src/components/lib/FLoader.vue';
 import FAlert from 'src/components/lib/FAlert.vue';
 import { authState } from 'src/utils/authState';
 import { registerToken } from 'src/utils/helpers';
-import { useAlerts } from 'src/store/alert';
 import { useUser } from 'src/store/user';
 import { useIo } from 'src/utils/createWs';
+import { getAlerts, removeAlert, setAlerts } from 'src/utils/composables';
 
 const { getLoader } = useUser();
-const { getAlerts, setAlerts } = useAlerts();
 
 const loadingBar = ref<ComponentPublicInstance<{}, FLoadingBarExpose> | null>(null);
 const isBarLoader = ref(false);
@@ -68,6 +67,12 @@ provide(FLoadingKey, {
   stop,
 });
 
+provide(AlertKey, {
+  set: setAlerts,
+  remove: removeAlert,
+  alerts: getAlerts,
+});
+
 authState();
 registerToken();
 checkDarkMode();
@@ -75,7 +80,7 @@ checkDarkMode();
 <template>
   <div>
     <div class="fixed bottom-0 left-1/2 transform -translate-x-1/2 list-group z-50">
-      <transition-group name="list" tag="div">
+      <transition-group name="list" tag="div" class="flex flex-col justify-center items-center">
         <FAlert
           v-for="alert in getAlerts"
           :key="alert.id"
@@ -118,12 +123,14 @@ checkDarkMode();
   transform: translateY(30px);
 }
 
-.fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.5s ease-in-out;
+  transition: opacity 0.5s ease-out;
 }
 
-.fade-enter-from,
+.fade-enter-from {
+  opacity: 1;
+}
+
 .fade-leave-to {
   opacity: 0;
 }

@@ -1,7 +1,8 @@
-import { inject, readonly, ref, Ref, watch } from 'vue';
+import { watch } from 'vue';
+// readonly, ref, Ref,
 import Axios from 'axios';
 import { useUser } from 'src/store/user';
-import { BoardModel, FLoadingBarExpose, FLoadingKey } from './types';
+import { BoardModel } from 'src/utils/types';
 
 export const furiApi = Axios.create({
   baseURL: import.meta.env.VITE_API,
@@ -27,13 +28,13 @@ export function getDDMMYY(time: number) {
 /**
  * To be only used inside setup().
  */
-export function useState<S>(value: S): [Readonly<Ref<S>>, (updatedState: S) => void] {
-  const state = ref(value);
-  //@ts-ignore
-  const setStateAction = (updatedState: S) => (state.value = updatedState);
-  //@ts-ignore
-  return [readonly(state), setStateAction];
-}
+// export function useState<S>(value: S): [Readonly<Ref<S>>, (updatedState: S) => void] {
+//   const state = ref(value);
+//   //@ts-ignore
+//   const setStateAction = (updatedState: S) => (state.value = updatedState);
+//   //@ts-ignore
+//   return [readonly(state), setStateAction];
+// }
 
 export function copyLink(link: string) {
   if (!navigator.clipboard) {
@@ -56,7 +57,7 @@ export function copyLink(link: string) {
     textArea.select();
 
     try {
-      var successful = document.execCommand('copy');
+      document.execCommand('copy');
     } catch (err) {
       console.error('Copy error', err);
     }
@@ -78,8 +79,4 @@ export function generateRoute(board: BoardModel) {
     .replace(/#|\/|\?|-/g, '')
     .split(' ')
     .join('_')}--${board.id}`;
-}
-
-export function useLoadingBar() {
-  return inject(FLoadingKey) as FLoadingBarExpose;
 }

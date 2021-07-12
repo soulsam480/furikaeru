@@ -6,11 +6,10 @@ import { getDDMMYY, copyLink, shareBoard, generateRoute } from 'src/utils/helper
 import FButton from 'src/components/lib/FButton.vue';
 import { deleteBoard, getAllBoards, updateBoard } from 'src/utils/boardService';
 import FMenu from 'src/components/lib/FMenu.vue';
-import { useAlerts } from 'src/store/alert';
-import { useLoadingBar } from 'src/utils/helpers';
+import { useAlert, useLoadingBar } from 'src/utils/composables';
 
 const { push } = useRouter();
-const { setAlerts } = useAlerts();
+const { set } = useAlert();
 const { start, stop } = useLoadingBar();
 
 const boards = ref<BoardModel[]>([]);
@@ -61,7 +60,7 @@ async function getBoards() {
 async function handleBoardRemove(id: string) {
   try {
     await deleteBoard(id);
-    setAlerts({ type: 'success', message: 'Board removed.' });
+    set({ type: 'success', message: 'Board removed.' });
     await getBoards();
   } catch (error) {
     console.log(error);
@@ -71,7 +70,7 @@ async function handleBoardRemove(id: string) {
 async function handleChangeType(id: string, is_public: boolean) {
   try {
     await updateBoard(id, { is_public });
-    setAlerts({ type: 'success', message: 'Board type changed.' });
+    set({ type: 'success', message: 'Board type changed.' });
     await getBoards();
   } catch (error) {
     console.log(error);
@@ -121,7 +120,7 @@ onMounted(async () => {
             v-if="board.is_public"
             @click="
               copyLink(`https://furikaeru.sambitsahoo.com/${generateRoute(board)}`),
-                setAlerts({ type: 'success', message: 'Copied!' })
+                set({ type: 'success', message: 'Copied!' })
             "
             icon="ion:clipboard-outline"
             size="17px"

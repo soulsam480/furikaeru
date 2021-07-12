@@ -3,16 +3,36 @@ import vue from '@vitejs/plugin-vue';
 import WindiCSS from 'vite-plugin-windicss';
 import PurgeIcons from 'vite-plugin-purge-icons';
 import { VitePWA } from 'vite-plugin-pwa';
+import { dependencies } from './package.json';
+
+function renderChunks(deps: Record<string, string>) {
+  let chunks = {};
+  Object.keys(deps).forEach((key) => {
+    if (['vue', 'vue-router'].includes(key)) return;
+    chunks[key] = [key];
+  });
+  return chunks;
+}
 
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
     port: 4000,
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['vue', 'vue-router'],
+          ...renderChunks(dependencies),
+        },
+      },
+    },
+  },
   plugins: [
     vue(),
     WindiCSS(),
-    PurgeIcons({ included: ['ion:expand-outline', 'ion:contract-outline'] }),
+    PurgeIcons(),
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: 'inline',

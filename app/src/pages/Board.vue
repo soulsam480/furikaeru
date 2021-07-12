@@ -1,7 +1,15 @@
 <script setup lang="ts">
+const COLORS = ['red', 'green', 'purple', 'indigo', 'amber', 'lime', 'cyan'];
+const BINDINGS: KeyBinding[] = [
+  {
+    key: 'n',
+    modifier: 'Alt',
+    handler: () => (isNewCardModal.value = !isNewCardModal.value),
+  },
+];
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import Draggable from 'src/components/App/Draggable.vue';
-import type { BoardModel, Card } from 'src/utils/types';
+import type { BoardModel, Card, KeyBinding } from 'src/utils/types';
 import { useIo } from 'src/utils/createWs';
 import { useRoute, useRouter } from 'vue-router';
 import { useUser } from 'src/store/user';
@@ -10,9 +18,10 @@ import FButton from 'src/components/lib/FButton.vue';
 import EditContent from 'src/components/App/EditContent.vue';
 import BoardContext from 'src/components/BoardContext.vue';
 import { deleteBoard } from 'src/utils/boardService';
-import { useAlerts } from 'src/store/alert';
 import FMenu from 'src/components/lib/FMenu.vue';
 import FBanner from 'src/components/lib/FBanner.vue';
+import NewCardModal from 'src/components/NewCardModal.vue';
+import { useAlert, useKeyBindings } from 'src/utils/composables';
 
 const { on, emit, io, isConnected } = useIo();
 const {
@@ -20,9 +29,9 @@ const {
 } = useRoute();
 const { push } = useRouter();
 const { isLoggedIn, getUser, showLoader, hideLoader, getLoader } = useUser();
-const { setAlerts } = useAlerts();
+const { set } = useAlert();
+useKeyBindings(BINDINGS, true);
 
-const COLORS = ['red', 'green', 'purple', 'indigo', 'amber', 'lime', 'cyan'];
 const board = ref<BoardModel>();
 const isEditColumnName = ref<string | null>(null);
 const isEditColumnColor = ref<string | null>(null);
@@ -32,6 +41,8 @@ const sortBy = ref('');
 const isCommentsExpand = ref(false);
 const isFocusMode = ref(false);
 const isNewCard = ref<string | null>(null);
+const isNewCardModal = ref(false);
+const newCardParent = ref('');
 const getUserId = computed(() => {
   if (isLoggedIn.value) return getUser.value.id as string;
   const uid = localStorage.getItem('__uuid');
@@ -41,6 +52,13 @@ const parsedBoardId = computed(() => {
   const id = bid as string;
   if (id.includes('--')) return id.split('--')[1];
   return id;
+});
+const columnOptions = computed(() => {
+  if (!board.value) return [];
+  return (board.value as BoardModel).data.map((col) => ({
+    label: col.name,
+    value: col.id,
+  }));
 });
 
 //TODO: THis will be changed
@@ -124,6 +142,7 @@ function handleBoardNameChange(e: string) {
 }
 
 function handleCardAddition(id: string) {
+  if (isNewCardModal && !newCardParent.value) return;
   if (!newCardName.value) return;
   const card: Card = {
     id: v4(),
@@ -140,16 +159,19 @@ function handleCardAddition(id: string) {
   updateBoardEmit(parsedBoardId.value, board.value as BoardModel);
 
   newCardName.value = '';
+  newCardParent.value = '';
   isNewCard.value = null;
+
+  if (isNewCardModal.value) isNewCardModal.value = false;
 }
 
 async function handleBoardRemove(id: string) {
   try {
     await deleteBoard(id);
-    setAlerts({ type: 'success', message: 'Board removed successfully !' });
+    set({ type: 'success', message: 'Board removed successfully !' });
     push('/');
   } catch (error) {
-    setAlerts({ type: 'danger', message: error });
+    set({ type: 'danger', message: error });
   }
 }
 
@@ -226,6 +248,14 @@ onBeforeUnmount(() => {
 </script>
 <template>
   <div class="board">
+    <NewCardModal
+      :options="columnOptions"
+      v-model:new-card-name="newCardName"
+      v-model:new-card-parent="newCardParent"
+      v-model:is-modal="isNewCardModal"
+      @add="handleCardAddition(newCardParent)"
+    />
+
     <transition name="fade">
       <FBanner
         v-if="!isConnected"

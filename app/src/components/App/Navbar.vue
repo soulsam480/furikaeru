@@ -4,11 +4,29 @@ import Icon from 'src/components/lib/FIcon.vue';
 import { useUser } from 'src/store/user';
 import FButton from 'src/components/lib/FButton.vue';
 import { useRouter } from 'vue-router';
+import KeyboardShortcutsModal from 'src/components/KeyboardShortcutsModal.vue';
+import { useKeyBindings } from 'src/utils/composables';
 
 const { isLoggedIn, getUser, setLogin } = useUser();
 const { push } = useRouter();
-const isNav = ref(false);
+useKeyBindings(
+  [
+    {
+      key: 's',
+      modifier: 'Alt',
+      handler: () => (isShortcuts.value = !isShortcuts.value),
+    },
+    {
+      key: 'q',
+      modifier: 'Alt',
+      handler: () => handleDarkMode(),
+    },
+  ],
+  true,
+);
 
+const isNav = ref(false);
+const isShortcuts = ref(false);
 const isDark = ref(localStorage.getItem('theme'));
 const isContext = ref(false);
 const mNav = ref<HTMLDivElement | null>(null);
@@ -60,6 +78,8 @@ function handleDarkMode() {
     "
     :class="{ '!bg-cyan-400 dark:bg-cyan-400 rounded-b-md': isNav }"
   >
+    <KeyboardShortcutsModal v-model="isShortcuts" />
+
     <div class="max-w-7xl mx-auto px-2">
       <div class="relative flex items-center justify-between h-14">
         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -97,6 +117,7 @@ function handleDarkMode() {
                 @click="$router.push('/')"
                 label="&nbsp;Anonymous"
               />
+
               <FButton
                 v-else
                 @click="isContext = !isContext"
@@ -107,12 +128,21 @@ function handleDarkMode() {
                 icon="ion:person-outline"
                 size="17px"
               />
+
               <FButton sm @click="handleDarkMode" title="Toggle dark mode">
                 <template #icon>
                   <Icon v-show="isDark === 'light'" icon="ion:contrast-outline" size="17px" />
                   <Icon v-show="isDark === 'dark'" icon="ion:sunny-outline" size="17px" />
                 </template>
               </FButton>
+
+              <FButton
+                icon="mdi:apple-keyboard-command"
+                sm
+                @click="isShortcuts = !isShortcuts"
+                title="View shortcuts"
+              />
+
               <FButton sm class="hidden sm:block">
                 <a target="_blank" href="https://github.com/soulsam480/furikaeru">
                   <Icon icon="ion:logo-github" size="17px" />

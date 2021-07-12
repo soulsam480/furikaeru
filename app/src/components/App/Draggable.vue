@@ -186,7 +186,7 @@ function handleStart(e: any) {
             leave-to-class="transform scale-y-0"
           > -->
         <div class="pb-2">
-          <div class="flex" v-if="isEdit !== element.id">
+          <div class="flex space-x-1 items-start" v-if="isEdit !== element.id">
             <div class="text-lg py-[2px] flex-grow break-word board-grid__column__item__title">{{ element.title }}</div>
             <div class="flex board-grid__column__item__edit transition-all ease-in-out">
               <FButton

@@ -3,9 +3,9 @@ import { ref } from 'vue';
 import { shareBoard, copyLink, generateRoute } from 'src/utils/helpers';
 import FButton from 'src/components/lib/FButton.vue';
 import type { BoardModel } from 'src/utils/types';
-import { useAlerts } from 'src/store/alert';
 import FMenu from 'src/components/lib/FMenu.vue';
 import FIcon from 'src/components/lib/FIcon.vue';
+import { useAlert } from 'src/utils/composables';
 
 defineProps<{
   board: BoardModel;
@@ -25,7 +25,7 @@ const SortOptions = [
 ];
 const isShare = navigator.share;
 
-const { setAlerts } = useAlerts();
+const { set } = useAlert();
 const sortBy = ref('');
 const isExpand = ref(false);
 const isFocus = ref(false);
@@ -80,7 +80,7 @@ function handleFocusMode() {
       v-if="board.is_public"
       @click="
         copyLink(`https://furikaeru.sambitsahoo.com/${generateRoute(board)}`),
-          setAlerts({ type: 'success', message: 'Copied!' })
+          set({ type: 'success', message: 'Copied!' })
       "
       icon="ion:clipboard-outline"
       size="17px"

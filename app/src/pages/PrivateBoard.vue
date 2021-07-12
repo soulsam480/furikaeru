@@ -9,17 +9,17 @@ import FButton from 'src/components/lib/FButton.vue';
 import EditContent from 'src/components/App/EditContent.vue';
 import { deleteBoard, getBoard, updateBoard } from 'src/utils/boardService';
 import BoardContext from 'src/components/BoardContext.vue';
-import { useAlerts } from 'src/store/alert';
 import FMenu from 'src/components/lib/FMenu.vue';
 import { useIo } from 'src/utils/createWs';
 import FBanner from 'src/components/lib/FBanner.vue';
+import { useAlert } from 'src/utils/composables';
 
 const {
   params: { id: routeBid },
 } = useRoute();
 const { push } = useRouter();
 const { getUser, showLoader, hideLoader } = useUser();
-const { setAlerts } = useAlerts();
+const { set } = useAlert();
 const { isConnected } = useIo();
 
 const COLORS = ['red', 'green', 'purple', 'indigo', 'amber', 'lime', 'cyan'];
@@ -160,10 +160,10 @@ function handleCardAddition(id: string) {
 async function handleBoardRemove(id: string) {
   try {
     await deleteBoard(id);
-    setAlerts({ type: 'success', message: 'Board removed successfully !' });
+    set({ type: 'success', message: 'Board removed successfully !' });
     push('/');
   } catch (error) {
-    setAlerts({ type: 'danger', message: error });
+    set({ type: 'danger', message: error });
   }
 }
 

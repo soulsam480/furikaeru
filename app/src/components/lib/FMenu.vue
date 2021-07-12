@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import FButton from 'src/components/lib/FButton.vue';
 
-defineProps<{
-  options: string[] | Record<'label' | 'value', any>[];
+const props = defineProps<{
+  options: (string | { [x in 'label' | 'value']: any })[];
   modelValue?: string;
   optionKey?: 'label' | 'value';
   label?: string;
@@ -16,12 +16,19 @@ defineProps<{
 const emit = defineEmits(['update:modelValue', 'input']);
 
 const isMenu = ref(false);
+const selectedOption = ref<Record<'label' | 'value', any> | string>('');
 
 function getOptionVal(option: string | Record<'label' | 'value', any>, optionKey?: 'label' | 'value'): string {
   if (typeof option !== 'object') return option;
   if (!optionKey) throw new Error('optionKey prop is required for Object type option.');
   return option[optionKey];
 }
+
+const buttonLabel = computed((): any => {
+  if (!selectedOption.value) return null;
+  if (typeof selectedOption.value === 'string') return selectedOption.value;
+  return selectedOption.value.label;
+});
 
 function handleClose(e: KeyboardEvent) {
   if (!isMenu.value) return;
@@ -32,9 +39,13 @@ function handleClose(e: KeyboardEvent) {
 onMounted(() => window.addEventListener('keydown', handleClose));
 onBeforeUnmount(() => window.removeEventListener('keydown', handleClose));
 
-function handleClick(val: string, e: MouseEvent) {
+function handleClick(option: string | Record<'label' | 'value', any>, e: MouseEvent) {
+  const val = getOptionVal(option, props.optionKey);
+  selectedOption.value = option;
+
   emit('update:modelValue', val);
   emit('input', val, e);
+
   isMenu.value = false;
 }
 </script>
@@ -42,7 +53,7 @@ function handleClick(val: string, e: MouseEvent) {
   <div class="relative f-menu" v-click-outside="() => (isMenu = false)">
     <div>
       <FButton
-        :label="label"
+        :label="!!modelValue ? buttonLabel : label"
         :sm="sm"
         :icon="icon || 'ion:chevron-down-outline'"
         :size="size || '17px'"
@@ -65,6 +76,7 @@ function handleClick(val: string, e: MouseEvent) {
         class="origin-top-right absolute z-50 right-0 min-w-32 mt-2 rounded-md bg-white shadow-lg"
         style="display: none"
         v-show="isMenu"
+        v-bind="$attrs"
       >
         <ul
           tabindex="-1"
@@ -101,7 +113,7 @@ function handleClick(val: string, e: MouseEvent) {
               "
               v-for="option in options"
               :key="getOptionVal(option, optionKey)"
-              @click="handleClick(getOptionVal(option, optionKey), $event)"
+              @click="handleClick(option, $event)"
               :title="getOptionVal(option, optionKey)"
               :class="[
                 modelValue === getOptionVal(option, optionKey) ? `bg-${color || 'cyan'}-300` : '',
