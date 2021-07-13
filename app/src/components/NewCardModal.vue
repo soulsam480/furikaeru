@@ -32,9 +32,9 @@ defineEmits<{
           :options="options"
           option-key="value"
           label="Select column"
-          class="w-full"
           :model-value="newCardParent"
           @update:model-value="$emit('update:new-card-parent', $event)"
+          block
         />
         <input
           type="text"

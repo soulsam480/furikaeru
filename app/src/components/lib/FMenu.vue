@@ -12,6 +12,7 @@ const props = defineProps<{
   sm?: boolean;
   color?: string;
   flat?: boolean;
+  block?: boolean;
 }>();
 const emit = defineEmits(['update:modelValue', 'input']);
 
@@ -50,7 +51,7 @@ function handleClick(option: string | Record<'label' | 'value', any>, e: MouseEv
 }
 </script>
 <template>
-  <div class="relative f-menu" v-click-outside="() => (isMenu = false)">
+  <div class="relative f-menu" :class="{ 'w-full': block }" v-click-outside="() => (isMenu = false)">
     <div>
       <FButton
         :label="!!modelValue ? buttonLabel : label"
@@ -61,14 +62,15 @@ function handleClick(option: string | Record<'label' | 'value', any>, e: MouseEv
         :color="color"
         :flat="flat"
         v-bind="$attrs"
+        :block="block"
       />
     </div>
 
     <transition
-      enter-active-class="transition ease-out duration-100"
+      enter-active-class="transition ease-in duration-100"
       enter-from-class="transform opacity-0 scale-95"
       enter-to-class="transform opacity-100 scale-100"
-      leave-active-class="transition ease-in duration-75"
+      leave-active-class="transition duration-200 ease-out"
       leave-from-class="transform opacity-100 scale-100"
       leave-to-class="transform opacity-0 scale-95"
     >
@@ -76,7 +78,7 @@ function handleClick(option: string | Record<'label' | 'value', any>, e: MouseEv
         class="origin-top-right absolute z-50 right-0 min-w-32 mt-2 rounded-md bg-white shadow-lg"
         style="display: none"
         v-show="isMenu"
-        v-bind="$attrs"
+        :class="{ 'w-full': block }"
       >
         <ul
           tabindex="-1"

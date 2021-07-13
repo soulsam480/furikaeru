@@ -142,7 +142,7 @@ function handleBoardNameChange(e: string) {
 }
 
 function handleCardAddition(id: string) {
-  if (isNewCardModal && !newCardParent.value) return;
+  if (isNewCardModal.value && !newCardParent.value) return;
   if (!newCardName.value) return;
   const card: Card = {
     id: v4(),
