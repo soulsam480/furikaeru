@@ -170,12 +170,17 @@ function handleStart(e: any) {
       name: 'flip-list',
     }"
     :animation="300"
+    :disabled="!!isEdit"
   >
     <template #item="{ element }">
       <div
         v-bind="$attrs"
-        class="board-grid__column__item block px-3 py-2 shadow-md cursor-move my-2 relative rounded-md"
-        :class="[`bg-${color}-400`, { 'filter blur-sm': isFocusMode && element.user_id !== userId }]"
+        class="board-grid__column__item block px-3 py-2 shadow-md my-2 relative rounded-md"
+        :class="[
+          `bg-${color}-400`,
+          { 'filter blur-sm': isFocusMode && element.user_id !== userId },
+          `${!!isEdit ? 'no-drop' : 'cursor-move'}`,
+        ]"
       >
         <!-- <transition
             enter-active-class="transition ease-out duration-400"
@@ -318,4 +323,8 @@ function handleStart(e: any) {
 /* .ease-custom {
   transition-timing-function: cubic-bezier(0.61, -0.53, 0.43, 1.43);
 } */
+
+.no-drop {
+  cursor: no-drop;
+}
 </style>
