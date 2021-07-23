@@ -2,20 +2,26 @@
 import FMenu from 'src/components/lib/FMenu.vue';
 import FModal from 'src/components/lib/FModal.vue';
 import FButton from 'src/components/lib/FButton.vue';
+import { ref } from 'vue';
 
 defineProps<{
   options: (string | { [x in 'label' | 'value']: any })[] | null;
-  newCardName: string;
   newCardParent: string;
   isModal: boolean;
 }>();
 
-defineEmits<{
-  (e: 'add'): void;
-  (e: 'update:new-card-name', val: string): void;
+const emits = defineEmits<{
+  (e: 'add', val: string): void;
   (e: 'update:new-card-parent', val: string): void;
   (e: 'update:is-modal', val: boolean): void;
 }>();
+
+const newCardName = ref('');
+
+function handleSave(val: string) {
+  emits('add', val);
+  newCardName.value = '';
+}
 </script>
 <template>
   <FModal
@@ -50,11 +56,10 @@ defineEmits<{
             transition-colors
           "
           placeholder="New card title"
-          @keyup.enter="$emit('add')"
-          :value="newCardName"
-          @input="$emit('update:new-card-name', $event.target.value)"
+          @keyup.enter="handleSave(newCardName)"
+          v-model="newCardName"
         />
-        <FButton label="Save" sm @click="$emit('add')" />
+        <FButton label="Save" sm @click="handleSave(newCardName)" />
       </div>
     </template>
   </FModal>

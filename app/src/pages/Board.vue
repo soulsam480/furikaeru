@@ -37,7 +37,6 @@ const board = ref<BoardModel>();
 const isEditColumnName = ref<string | null>(null);
 const isEditColumnColor = ref<string | null>(null);
 const isEditBoardName = ref<string | null>(null);
-const newCardName = ref('');
 const sortBy = ref('');
 const isCommentsExpand = ref(false);
 const isFocusMode = ref(false);
@@ -143,12 +142,12 @@ function handleBoardNameChange(e: string) {
   updateBoardEmit(parsedBoardId.value, board.value as BoardModel);
 }
 
-function handleCardAddition(id: string, top = true) {
+function handleCardAddition(id: string, content: string, top = true) {
   if (isNewCardModal.value && !newCardParent.value) return;
-  if (!newCardName.value) return;
+  if (!content) return;
   const card: Card = {
     id: v4(),
-    title: newCardName.value,
+    title: content,
     votes: {},
     user_id: getUserId.value as string,
     comments: {},
@@ -164,7 +163,6 @@ function handleCardAddition(id: string, top = true) {
   }
   updateBoardEmit(parsedBoardId.value, board.value as BoardModel);
 
-  newCardName.value = '';
   newCardParent.value = '';
   isNewCard.value = null;
   isBottomNewCard.value = null;
@@ -257,10 +255,9 @@ onBeforeUnmount(() => {
   <div class="board">
     <NewCardModal
       :options="columnOptions"
-      v-model:new-card-name="newCardName"
       v-model:new-card-parent="newCardParent"
       v-model:is-modal="isNewCardModal"
-      @add="handleCardAddition(newCardParent)"
+      @add="handleCardAddition(newCardParent, $event)"
     />
 
     <transition name="fade">
@@ -298,7 +295,7 @@ onBeforeUnmount(() => {
         </div>
       </div>
       <div v-else class="flex items-center">
-        <EditContent :content="board.title" @save="handleBoardNameChange" @cancel="isEditBoardName = null" />
+        <EditContent is="input" :content="board.title" @save="handleBoardNameChange" @cancel="isEditBoardName = null" />
       </div>
     </div>
 
@@ -343,6 +340,7 @@ onBeforeUnmount(() => {
           </div>
           <div v-else class="flex items-center">
             <EditContent
+              is="input"
               :content="column.name"
               @save="handleColumnNameChange($event, column.id)"
               @cancel="isEditColumnName = null"
@@ -364,34 +362,11 @@ onBeforeUnmount(() => {
         />
 
         <div class="w-full flex py-2 items-start" v-if="isNewCard === column.id">
-          <textarea
-            class="rounded-md border-none flex-grow py-1 mr-1 focus:shadow-none min-h-8"
-            :class="`bg-${column.color || 'cyan'}-100`"
-            v-model="newCardName"
-            placeholder="New card title"
-            @keyup.enter="handleCardAddition(column.id)"
+          <edit-content
+            @save="handleCardAddition(column.id, $event)"
+            @cancel="isNewCard = null"
+            :color="column.color || 'cyan'"
           />
-          <div class="flex-none flex">
-            <FButton
-              @click="handleCardAddition(column.id)"
-              :disabled="!newCardName"
-              title="Save"
-              flat
-              icon="ion:checkmark"
-              sm
-              class="dark:text-white dark:hover:text-black"
-              :color="column.color || 'cyan'"
-            />
-            <FButton
-              @click="(isNewCard = null), (newCardName = '')"
-              title="Cancel"
-              class="dark:text-white dark:hover:text-black"
-              flat
-              icon="ion:close"
-              sm
-              :color="column.color || 'cyan'"
-            />
-          </div>
         </div>
         <Draggable
           :list="column.data"
@@ -420,35 +395,11 @@ onBeforeUnmount(() => {
           v-if="column.data.length > 0"
         />
         <div class="w-full flex py-2 items-start" v-if="isBottomNewCard === column.id && column.data.length > 0">
-          <textarea
-            type="text"
-            class="rounded-md border-none flex-grow py-1 mr-1 focus:shadow-none min-h-8"
-            :class="`bg-${column.color || 'cyan'}-100`"
-            v-model="newCardName"
-            placeholder="New card title"
-            @keyup.enter="handleCardAddition(column.id, false)"
+          <edit-content
+            @save="handleCardAddition(column.id, $event, false)"
+            @cancel="isBottomNewCard = null"
+            :color="column.color || 'cyan'"
           />
-          <div class="flex-none flex">
-            <FButton
-              @click="handleCardAddition(column.id, false)"
-              :disabled="!isBottomNewCard"
-              title="Save"
-              flat
-              icon="ion:checkmark"
-              sm
-              class="dark:text-white dark:hover:text-black"
-              :color="column.color || 'cyan'"
-            />
-            <FButton
-              @click="(isBottomNewCard = null), (newCardName = '')"
-              title="Cancel"
-              class="dark:text-white dark:hover:text-black"
-              flat
-              icon="ion:close"
-              sm
-              :color="column.color || 'cyan'"
-            />
-          </div>
         </div>
       </div>
     </div>
