@@ -71,8 +71,10 @@ function handleDarkMode() {
       transition-colors
       duration-400
       ease-in-out
-      border-b-[0.5px] border-cyan-200
-      shadow-md shadow-cyan-200
+      border-b-[0.5px]
+      dark:border-cyan-200
+      border-cyan-400
+      shadow-lg shadow-cyan-300
       bg-white
       dark:bg-cool-gray-800
     "
@@ -100,11 +102,6 @@ function handleDarkMode() {
             <img src="/icon-48.png" alt="Furikaeru logo" class="sm:block hidden mr-1" style="width: 30px" />
             furikaeru
           </div>
-          <!-- <div class="hidden sm:block sm:ml-6">
-            <div class="flex space-x-4 items-center" v-if="isLoggedIn">
-             
-            </div>
-          </div> -->
         </div>
         <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
           <!-- Profile dropdown -->
