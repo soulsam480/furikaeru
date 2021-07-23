@@ -21,9 +21,9 @@ const emit = defineEmits<{
 const newVal = ref(props.content || '');
 
 function handleSave(e: KeyboardEvent) {
-  if (props.is === 'textarea' && !e.ctrlKey) return;
+  if (props.is === 'textarea' && e && !e.ctrlKey) return;
 
-  if (newVal.value === props.content) return;
+  if (!!props.content ? props.content === newVal.value : !newVal.value) return;
   emit('save', newVal.value);
 }
 
@@ -55,7 +55,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleClose));
   <div class="flex-none flex">
     <f-button
       @click="handleSave"
-      :disabled="newVal === content"
+      :disabled="!!content ? content === newVal : !newVal"
       title="Save"
       class="dark:text-white dark:hover:text-black"
       flat
