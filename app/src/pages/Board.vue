@@ -41,6 +41,7 @@ const sortBy = ref('');
 const isCommentsExpand = ref(false);
 const isFocusMode = ref(false);
 const isNewCard = ref<string | null>(null);
+const isBottomNewCard = ref<string | null>(null);
 const isNewCardModal = ref(false);
 const newCardParent = ref('');
 const getUserId = computed(() => {
@@ -141,7 +142,7 @@ function handleBoardNameChange(e: string) {
   updateBoardEmit(parsedBoardId.value, board.value as BoardModel);
 }
 
-function handleCardAddition(id: string) {
+function handleCardAddition(id: string, top = true) {
   if (isNewCardModal.value && !newCardParent.value) return;
   if (!newCardName.value) return;
   const card: Card = {
@@ -154,13 +155,18 @@ function handleCardAddition(id: string) {
 
   const idx = board.value?.data.findIndex((el) => el.id === id);
   if (idx !== undefined && idx !== -1) {
-    board.value?.data[idx].data.push({ ...card });
+    if (!top) {
+      board.value?.data[idx].data.push({ ...card });
+    } else {
+      board.value?.data[idx].data.unshift({ ...card });
+    }
   }
   updateBoardEmit(parsedBoardId.value, board.value as BoardModel);
 
   newCardName.value = '';
   newCardParent.value = '';
   isNewCard.value = null;
+  isBottomNewCard.value = null;
 
   if (isNewCardModal.value) isNewCardModal.value = false;
 }
@@ -401,6 +407,49 @@ onBeforeUnmount(() => {
           :is-comments-expand="isCommentsExpand"
           :is-focus-mode="isFocusMode"
         />
+        <FButton
+          @click="isBottomNewCard = column.id"
+          block
+          icon="ion:add"
+          class="text-xs"
+          title="Add a new card"
+          center
+          label="Add"
+          sm
+          :color="column.color || 'cyan'"
+          v-if="column.data.length > 0"
+        />
+        <div class="w-full flex py-2" v-if="isBottomNewCard === column.id && column.data.length > 0">
+          <input
+            type="text"
+            class="rounded-md border-none flex-grow py-1 mr-1 focus:shadow-none"
+            :class="`bg-${column.color || 'cyan'}-100`"
+            v-model="newCardName"
+            placeholder="New card title"
+            @keyup.enter="handleCardAddition(column.id, false)"
+          />
+          <div class="flex-none flex">
+            <FButton
+              @click="handleCardAddition(column.id, false)"
+              :disabled="!isBottomNewCard"
+              title="Save"
+              flat
+              icon="ion:checkmark"
+              sm
+              class="dark:text-white dark:hover:text-black"
+              :color="column.color || 'cyan'"
+            />
+            <FButton
+              @click="(isBottomNewCard = null), (newCardName = '')"
+              title="Cancel"
+              class="dark:text-white dark:hover:text-black"
+              flat
+              icon="ion:close"
+              sm
+              :color="column.color || 'cyan'"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -410,19 +459,22 @@ onBeforeUnmount(() => {
   cursor: no-drop;
 }
 .board-grid {
-  &__column {
-    &__item {
-      :hover > & {
-        &__edit {
-          visibility: visible;
-          transition-property: display;
-          transition-timing-function: ease-in-out;
-          transition-delay: 400ms;
-        }
-      }
+  &__column__item {
+    :hover > & {
       &__edit {
-        visibility: hidden;
+        visibility: visible;
+        transition-property: display;
+        transition-timing-function: ease-in-out;
+        transition-delay: 400ms;
       }
+    }
+
+    &__edit {
+      @media (max-width: 600px) {
+        visibility: visible;
+      }
+
+      visibility: hidden;
     }
   }
 }
