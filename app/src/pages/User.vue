@@ -88,11 +88,11 @@ async function createBoard(type: string) {
 </script>
 <template>
   <div>
-    <FBanner text="Furikaeru is in active development. Bugs and frequent changes are expected." class="my-2" />
+    <f-banner text="Furikaeru is in active development. Bugs and frequent changes are expected." class="my-2" />
     <div class="flex justify-between pt-3">
       <div class="text-3xl font-semibold dark:text-white">My boards</div>
-      <FMenu :options="boardTypes" @input="createBoard" label="Add new" sm option-key="value" icon="ion:add-outline" />
+      <f-menu :options="boardTypes" @input="createBoard" label="Add new" sm option-key="value" icon="ion:add-outline" />
     </div>
-    <UserCards />
+    <user-cards />
   </div>
 </template>

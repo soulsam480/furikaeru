@@ -198,16 +198,16 @@ onMounted(async () => {
 </script>
 <template>
   <div class="board">
-    <Transition name="fade">
-      <FBanner
+    <transition name="fade">
+      <f-banner
         v-if="!isConnected"
         text="You are not connected. Changes won't be saved."
         class="mb-4 mt-1"
         type="danger"
       />
-    </Transition>
+    </transition>
 
-    <BoardContext
+    <board-context
       :board="board || {}"
       :uid="getUserId"
       @remove="handleBoardRemove(board.id)"
@@ -220,7 +220,7 @@ onMounted(async () => {
           {{ board?.title }}
         </div>
         <div class="flex-none">
-          <FButton
+          <f-button
             title="Edit board title"
             flat
             @click="isEditBoardName = board.id"
@@ -232,7 +232,7 @@ onMounted(async () => {
         </div>
       </div>
       <div v-else class="flex items-center">
-        <EditContent :content="board.title" @save="handleBoardNameChange" @cancel="isEditBoardName = null" />
+        <edit-content :content="board.title" @save="handleBoardNameChange" @cancel="isEditBoardName = null" />
       </div>
     </div>
 
@@ -242,7 +242,7 @@ onMounted(async () => {
           <div class="flex" v-if="isEditColumnName !== column.id">
             <div class="text-lg flex-grow break-word dark:text-white">{{ column.name }}</div>
             <div class="flex-none flex">
-              <FButton
+              <f-button
                 title="Edit column title"
                 @click="isEditColumnName = column.id"
                 flat
@@ -251,7 +251,7 @@ onMounted(async () => {
                 sm
                 :color="column.color || 'cyan'"
               />
-              <FMenu
+              <f-menu
                 :options="COLORS"
                 sm
                 icon="ion:color-palette-outline"
@@ -272,11 +272,11 @@ onMounted(async () => {
                     </div>
                   </div>
                 </template>
-              </FMenu>
+              </f-menu>
             </div>
           </div>
           <div v-else class="flex items-center">
-            <EditContent
+            <edit-content
               :content="column.name"
               @save="handleColumnNameChange($event, column.id)"
               @cancel="isEditColumnName = null"
@@ -285,7 +285,7 @@ onMounted(async () => {
           </div>
         </div>
 
-        <FButton
+        <f-button
           @click="isNewCard = column.id"
           block
           icon="ion:add"
@@ -307,7 +307,7 @@ onMounted(async () => {
             :class="`bg-${column.color || 'cyan'}-100`"
           />
           <div class="flex-none flex">
-            <FButton
+            <f-button
               @click="handleCardAddition(column.id)"
               :disabled="!newCardName"
               title="Save"
@@ -316,7 +316,7 @@ onMounted(async () => {
               sm
               class="dark:text-white dark:hover:text-black"
             />
-            <FButton
+            <f-button
               @click="(isNewCard = null), (newCardName = '')"
               title="Cancel"
               class="dark:text-white dark:hover:text-black"
@@ -327,7 +327,7 @@ onMounted(async () => {
             />
           </div>
         </div>
-        <Draggable
+        <draggable
           :list="column.data"
           :enabled="enabled"
           group="board"

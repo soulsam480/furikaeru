@@ -24,7 +24,7 @@ function handleSave(val: string) {
 }
 </script>
 <template>
-  <FModal
+  <f-modal
     title="Add new card"
     width="300px"
     title-size="20px"
@@ -34,7 +34,7 @@ function handleSave(val: string) {
   >
     <template #body>
       <div class="py-2 flex flex-col space-y-2 items-end">
-        <FMenu
+        <f-menu
           :options="options"
           option-key="value"
           label="Select column"
@@ -62,5 +62,5 @@ function handleSave(val: string) {
         <FButton label="Save" sm @click="handleSave(newCardName)" />
       </div>
     </template>
-  </FModal>
+  </f-modal>
 </template>

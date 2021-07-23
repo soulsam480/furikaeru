@@ -53,7 +53,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleClose));
     v-model="newVal"
   />
   <div class="flex-none flex">
-    <FButton
+    <f-button
       @click="handleSave"
       :disabled="newVal === content"
       title="Save"
@@ -63,7 +63,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleClose));
       sm
       :color="color"
     />
-    <FButton
+    <f-button
       @click="$emit('cancel')"
       title="Cancel"
       flat

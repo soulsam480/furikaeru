@@ -42,7 +42,7 @@ function handleFocusMode() {
 </script>
 <template>
   <div class="flex space-x-1 justify-end mb-2">
-    <FButton
+    <f-button
       title="Remove board"
       v-if="board.user === uid"
       @click="$emit('remove')"
@@ -50,7 +50,7 @@ function handleFocusMode() {
       size="17px"
       sm
     />
-    <FMenu
+    <f-menu
       :options="SortOptions"
       option-key="value"
       v-model="sortBy"
@@ -59,7 +59,7 @@ function handleFocusMode() {
       icon="ion:filter-circle-outline"
       @input="$emit('sort', $event)"
     />
-    <FButton
+    <f-button
       @click="handleFocusMode"
       icon="ion:radio-button-on-outline"
       size="17px"
@@ -68,14 +68,14 @@ function handleFocusMode() {
       :color="isFocus ? 'green' : 'cyan'"
       v-if="board.is_public"
     />
-    <FButton @click="handleCommentCollapse" sm :title="`${!isExpand ? 'Expand' : 'Collapse'} comments`">
+    <f-button @click="handleCommentCollapse" sm :title="`${!isExpand ? 'Expand' : 'Collapse'} comments`">
       <template #icon>
         <FIcon icon="ion:contract-outline" size="17px" v-show="isExpand" />
         <FIcon icon="ion:expand-outline" size="17px" v-show="!isExpand" />
       </template>
-    </FButton>
+    </f-button>
 
-    <FButton
+    <f-button
       title="Copy public URL"
       v-if="board.is_public"
       @click="
@@ -86,7 +86,7 @@ function handleFocusMode() {
       size="17px"
       sm
     />
-    <FButton
+    <f-button
       title="Share board"
       v-if="board.is_public && !!isShare"
       @click="shareBoard(`https://furikaeru.sambitsahoo.com/${generateRoute(board)}`, board.title)"

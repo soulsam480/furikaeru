@@ -47,7 +47,7 @@ const iconName = computed(() => {
 <template>
   <div class="px-2 py-1 w-full border border-1 flex items-center space-x-2 rounded-md" :class="bgColor">
     <div class="flex-none" v-if="!noicon">
-      <Icon :icon="icon ? icon : iconName" :size="size || '18px'" />
+      <icon :icon="icon ? icon : iconName" :size="size || '18px'" />
     </div>
     <div class="flex-grow">
       <slot>

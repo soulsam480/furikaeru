@@ -92,7 +92,7 @@ onMounted(async () => {
         <div class="flex">
           <div class="text-lg truncate flex-grow" :title="board.title">{{ board.title }}</div>
           <div class="flex-none">
-            <FMenu
+            <f-menu
               :options="boardContext(board.is_public)"
               option-key="value"
               sm
@@ -106,8 +106,8 @@ onMounted(async () => {
         <div class="text-gray-500 text-xs pt-1">Updated: {{ getDDMMYY(board.updated_at) }}</div>
 
         <div class="flex items-center pt-2 space-x-2">
-          <FButton title="View board" @click="viewBoard(board)" icon="ion:eye-outline" size="17px" sm />
-          <FButton
+          <f-button title="View board" @click="viewBoard(board)" icon="ion:eye-outline" size="17px" sm />
+          <f-button
             title="Share board"
             v-if="board.is_public && !!isShare"
             @click="shareBoard(`https://furikaeru.sambitsahoo.com/${generateRoute(board)}`, board.title)"
@@ -115,7 +115,7 @@ onMounted(async () => {
             size="17px"
             sm
           />
-          <FButton
+          <f-button
             title="Copy public URL"
             v-if="board.is_public"
             @click="

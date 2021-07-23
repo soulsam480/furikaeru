@@ -68,7 +68,7 @@ onMounted(async () => {
                 <b class="text-cyan-500">Furikaeru</b>
                 !
               </div>
-              <FBanner
+              <f-banner
                 noicon
                 text="Furikaeru is in active development. Bugs and frequent changes are expected."
                 class="my-2"
@@ -76,19 +76,19 @@ onMounted(async () => {
             </div>
 
             <div class="pb-3">
-              <FBanner class="mb-2" noicon>
+              <f-banner class="mb-2" noicon>
                 You are currently in
                 <b class="text-cyan-600">anonymous</b>
                 &nbsp;mode.
-              </FBanner>
+              </f-banner>
               <div class="text-sm text-gray-500">
                 You can still view/edit public boards. Login/signup to create a board.
               </div>
             </div>
             <div class="text-xl">Login with</div>
             <div class="flex space-x-2 justify-center">
-              <FButton icon="ion:logo-google" size="25px" class="!px-2" @click="login('google')" />
-              <FButton icon="ion:logo-facebook" size="25px" class="!px-2" @click="login('fb')" />
+              <f-button icon="ion:logo-google" size="25px" class="!px-2" @click="login('google')" />
+              <f-button icon="ion:logo-facebook" size="25px" class="!px-2" @click="login('fb')" />
             </div>
             <div class="text-sm text-gray-500">To prevent spamming, only passwordless login is available.</div>
           </div>

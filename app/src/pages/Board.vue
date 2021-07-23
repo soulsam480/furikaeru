@@ -255,7 +255,7 @@ onBeforeUnmount(() => {
 </script>
 <template>
   <div class="board">
-    <NewCardModal
+    <new-card-modal
       :options="columnOptions"
       v-model:new-card-parent="newCardParent"
       v-model:is-modal="isNewCardModal"
@@ -271,7 +271,7 @@ onBeforeUnmount(() => {
       />
     </transition>
 
-    <BoardContext
+    <board-context
       :board="board || {}"
       :uid="getUserId"
       @remove="handleBoardRemove(board.id)"
@@ -285,7 +285,7 @@ onBeforeUnmount(() => {
           {{ board?.title }}
         </div>
         <div class="flex-none">
-          <FButton
+          <f-button
             title="Edit board title"
             flat
             @click="isEditBoardName = board.id"
@@ -297,7 +297,12 @@ onBeforeUnmount(() => {
         </div>
       </div>
       <div v-else class="flex items-center">
-        <EditContent is="input" :content="board.title" @save="handleBoardNameChange" @cancel="isEditBoardName = null" />
+        <edit-content
+          is="input"
+          :content="board.title"
+          @save="handleBoardNameChange"
+          @cancel="isEditBoardName = null"
+        />
       </div>
     </div>
 
@@ -307,7 +312,7 @@ onBeforeUnmount(() => {
           <div class="flex items-center space-x-1" v-if="isEditColumnName !== column.id">
             <div class="text-lg flex-grow break-word dark:text-white">{{ column.name }}</div>
             <div class="flex-none flex">
-              <FButton
+              <f-button
                 title="Edit column title"
                 @click="handleEditColumnName(column.id)"
                 flat
@@ -316,7 +321,7 @@ onBeforeUnmount(() => {
                 sm
                 :color="column.color || 'cyan'"
               />
-              <FMenu
+              <f-menu
                 :options="COLORS"
                 sm
                 icon="ion:color-palette-outline"
@@ -337,11 +342,11 @@ onBeforeUnmount(() => {
                     </div>
                   </div>
                 </template>
-              </FMenu>
+              </f-menu>
             </div>
           </div>
           <div v-else class="flex items-center">
-            <EditContent
+            <edit-content
               is="input"
               :content="column.name"
               @save="handleColumnNameChange($event, column.id)"
@@ -351,7 +356,7 @@ onBeforeUnmount(() => {
           </div>
         </div>
 
-        <FButton
+        <f-button
           @click="isNewCard = column.id"
           block
           icon="ion:add"
@@ -370,7 +375,7 @@ onBeforeUnmount(() => {
             :color="column.color || 'cyan'"
           />
         </div>
-        <Draggable
+        <draggable
           :list="column.data"
           group="board"
           v-bind="$attrs"
@@ -384,7 +389,7 @@ onBeforeUnmount(() => {
           :is-comments-expand="isCommentsExpand"
           :is-focus-mode="isFocusMode"
         />
-        <FButton
+        <f-button
           @click="isBottomNewCard = column.id"
           block
           icon="ion:add"
