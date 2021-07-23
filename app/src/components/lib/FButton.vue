@@ -47,7 +47,7 @@ defineEmits(['click']);
   >
     <span v-if="icon || $slots.icon">
       <slot name="icon">
-        <Icon v-if="icon" :icon="icon" :size="icon && sm && !size ? '15px' : size" />
+        <icon v-if="icon" :icon="icon" :size="icon && sm && !size ? '15px' : size" />
       </slot>
     </span>
 

@@ -53,7 +53,7 @@ function handleClick(option: string | Record<'label' | 'value', any>, e: MouseEv
 <template>
   <div class="relative f-menu" :class="{ 'w-full': block }" v-click-outside="() => (isMenu = false)">
     <div>
-      <FButton
+      <f-button
         :label="!!modelValue ? buttonLabel : label"
         :sm="sm"
         :icon="icon || 'ion:chevron-down-outline'"

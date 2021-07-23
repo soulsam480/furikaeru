@@ -5,6 +5,7 @@ import Icon from 'src/components/lib/FIcon.vue';
 import type { Card, Comment } from 'src/utils/types';
 import EditContent from 'src/components/App/EditContent.vue';
 import FButton from 'src/components/lib/FButton.vue';
+import NewComment from 'src/components/NewComment.vue';
 
 const props = defineProps<{
   list: Card[];
@@ -21,7 +22,6 @@ const emits = defineEmits(['upvote', 'change', 'move', 'end']);
 
 const isEdit = ref<string | null>(null);
 const isComments = ref<string[]>([]);
-const newComment = ref('');
 const sortedList = ref<Card[]>(props.list);
 const movedEl = ref<Card | null>(null);
 
@@ -81,17 +81,16 @@ function handleRemoveCard(id: string) {
   emits('end');
 }
 
-function handleAddComment(id: string) {
-  if (!newComment) return;
+function handleAddComment(id: string, val: string) {
+  if (!val) return;
   const cardIndex = props.list.findIndex((el) => el.id === id);
   const createIndex = `${props.userId?.split('-')[4]}--${new Date().valueOf()}`;
   if (cardIndex !== -1) {
     props.list[cardIndex].comments[createIndex] = {
-      text: newComment.value,
+      text: val,
       likes: 0,
     };
   }
-  newComment.value = '';
   emits('end');
 }
 
@@ -170,12 +169,17 @@ function handleStart(e: any) {
       name: 'flip-list',
     }"
     :animation="300"
+    :disabled="!!isEdit"
   >
     <template #item="{ element }">
       <div
         v-bind="$attrs"
-        class="board-grid__column__item block px-3 py-2 shadow-md cursor-move my-2 relative rounded-md"
-        :class="[`bg-${color}-400`, { 'filter blur-sm': isFocusMode && element.user_id !== userId }]"
+        class="board-grid__column__item block px-3 py-2 shadow-md my-2 relative rounded-md"
+        :class="[
+          `bg-${color}-400`,
+          { 'filter blur-sm': isFocusMode && element.user_id !== userId },
+          `${!!isEdit ? 'no-drop' : 'cursor-move'}`,
+        ]"
       >
         <!-- <transition
             enter-active-class="transition ease-out duration-400"
@@ -189,7 +193,7 @@ function handleStart(e: any) {
           <div class="flex space-x-1 items-start" v-if="isEdit !== element.id">
             <div class="text-lg py-[2px] flex-grow break-word board-grid__column__item__title">{{ element.title }}</div>
             <div class="flex board-grid__column__item__edit transition-all ease-in-out">
-              <FButton
+              <f-button
                 :color="color"
                 icon="ion:pencil"
                 title="Edit card title"
@@ -198,7 +202,7 @@ function handleStart(e: any) {
                 sm
                 flat
               />
-              <FButton
+              <f-button
                 :color="color"
                 icon="ion:trash-outline"
                 title="Remove card"
@@ -210,7 +214,7 @@ function handleStart(e: any) {
             </div>
           </div>
           <div v-else class="flex items-center w-full">
-            <EditContent
+            <edit-content
               :content="element.title"
               @save="(element.title = $event), handleTitleChange()"
               @cancel="isEdit = null"
@@ -220,7 +224,7 @@ function handleStart(e: any) {
         </div>
 
         <div class="flex space-x-2 justify-end items-center pb-1">
-          <FButton
+          <f-button
             :color="color"
             title="Comment"
             @click="toggleComments(element.id)"
@@ -230,7 +234,7 @@ function handleStart(e: any) {
             id="comment"
           />
           <span class="text-xs">{{ calcComments(element.comments) }}</span>
-          <FButton
+          <f-button
             :color="color"
             title="Up vote"
             @click="$emit('upvote', { cid: element.id })"
@@ -246,28 +250,7 @@ function handleStart(e: any) {
           :class="`bg-${color}-300`"
           v-show="isComments.includes(element.id)"
         >
-          <div class="flex items-center pt-2">
-            <div class="flex-grow mr-1">
-              <input
-                type="text"
-                class="rounded-md border-none w-full py-1 focus:shadow-none"
-                :class="`bg-${color}-50`"
-                v-model="newComment"
-                @keyup.enter="handleAddComment(element.id)"
-                placeholder="Add a comment"
-              />
-            </div>
-            <div class="flex-none">
-              <FButton
-                :color="color"
-                icon="ion:checkmark"
-                :disabled="!newComment"
-                sm
-                @click="handleAddComment(element.id)"
-                title="Save"
-              />
-            </div>
-          </div>
+          <new-comment :color="color" @save="handleAddComment(element.id, $event)" />
 
           <div class="pt-2">
             <div class="py-1 px-2" v-for="comment in parseComments(element.comments)" :key="comment[0]">
@@ -276,7 +259,7 @@ function handleStart(e: any) {
                   {{ comment[1].text }}
                 </div>
                 <div class="flex-none flex items-center justify-end">
-                  <FButton
+                  <f-button
                     :color="color"
                     title="Remove comment"
                     @click="handleRemoveComment(element.id, comment[0])"
@@ -286,7 +269,7 @@ function handleStart(e: any) {
                     class="px-1 py-0 mr-1"
                     size="12px"
                   />
-                  <FButton
+                  <f-button
                     :color="color"
                     v-else
                     title="Up vote"
@@ -318,4 +301,8 @@ function handleStart(e: any) {
 /* .ease-custom {
   transition-timing-function: cubic-bezier(0.61, -0.53, 0.43, 1.43);
 } */
+
+.no-drop {
+  cursor: no-drop;
+}
 </style>

@@ -71,25 +71,21 @@ function handleDarkMode() {
       transition-colors
       duration-400
       ease-in-out
-      border-b-[0.5px] border-cyan-200
-      shadow-md shadow-cyan-200
+      border-b-[0.5px]
+      dark:border-cyan-200
+      border-cyan-400
+      shadow-lg shadow-cyan-300
       bg-white
       dark:bg-cool-gray-800
     "
     :class="{ '!bg-cyan-400 dark:bg-cyan-400 rounded-b-md': isNav }"
   >
-    <KeyboardShortcutsModal v-model="isShortcuts" />
+    <keyboard-shortcuts-modal v-model="isShortcuts" />
 
     <div class="max-w-7xl mx-auto px-2">
       <div class="relative flex items-center justify-between h-14">
         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
-          <FButton
-            icon="ion:menu-outline"
-            sm
-            aria-controls="mobile-menu"
-            :aria-expanded="isNav"
-            @click="setNav"
-          ></FButton>
+          <f-button icon="ion:menu-outline" sm aria-controls="mobile-menu" :aria-expanded="isNav" @click="setNav" />
         </div>
         <div class="flex-1 flex items-center ml-10 sm:ml-0 sm:items-stretch justify-start">
           <div
@@ -100,17 +96,12 @@ function handleDarkMode() {
             <img src="/icon-48.png" alt="Furikaeru logo" class="sm:block hidden mr-1" style="width: 30px" />
             furikaeru
           </div>
-          <!-- <div class="hidden sm:block sm:ml-6">
-            <div class="flex space-x-4 items-center" v-if="isLoggedIn">
-             
-            </div>
-          </div> -->
         </div>
         <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
           <!-- Profile dropdown -->
           <div class="ml-3 relative">
             <div class="flex space-x-1 items-center">
-              <FButton
+              <f-button
                 v-if="!isLoggedIn"
                 sm
                 icon="ion:shield-half-outline"
@@ -118,7 +109,7 @@ function handleDarkMode() {
                 label="&nbsp;Anonymous"
               />
 
-              <FButton
+              <f-button
                 v-else
                 @click="isContext = !isContext"
                 v-click-outside="() => (isContext = false)"
@@ -129,25 +120,25 @@ function handleDarkMode() {
                 size="17px"
               />
 
-              <FButton sm @click="handleDarkMode" title="Toggle dark mode">
+              <f-button sm @click="handleDarkMode" title="Toggle dark mode">
                 <template #icon>
                   <Icon v-show="isDark === 'light'" icon="ion:contrast-outline" size="17px" />
                   <Icon v-show="isDark === 'dark'" icon="ion:sunny-outline" size="17px" />
                 </template>
-              </FButton>
+              </f-button>
 
-              <FButton
+              <f-button
                 icon="mdi:apple-keyboard-command"
                 sm
                 @click="isShortcuts = !isShortcuts"
                 title="View shortcuts"
               />
 
-              <FButton sm class="hidden sm:block">
+              <f-button sm class="hidden sm:block">
                 <a target="_blank" href="https://github.com/soulsam480/furikaeru">
                   <Icon icon="ion:logo-github" size="17px" />
                 </a>
-              </FButton>
+              </f-button>
             </div>
             <transition
               enter-active-class="transition ease-out duration-100"
@@ -209,7 +200,7 @@ function handleDarkMode() {
           class="hover:bg-cyan-400 block text-black px-3 py-2 rounded-md font-medium"
           href="https://github.com/soulsam480/furikaeru"
         >
-          <Icon icon="ion:logo-github" size="20px" />
+          <icon icon="ion:logo-github" size="20px" />
           &nbsp; GitHub
         </a>
       </div>

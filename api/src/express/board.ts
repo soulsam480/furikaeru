@@ -5,8 +5,9 @@ import { ERROR_MESSAGES } from 'src/utils/constants';
 import { RequestWithUser } from 'src/utils/types';
 
 const boardRouter = Router();
+boardRouter.use(authMiddleware);
 
-boardRouter.post('/', authMiddleware, async (req: RequestWithUser, res) => {
+boardRouter.post('/', async (req: RequestWithUser, res) => {
   const { userId, body } = req;
   try {
     const createdBoard = await Board.create({
@@ -24,12 +25,12 @@ boardRouter.post('/', authMiddleware, async (req: RequestWithUser, res) => {
   }
 });
 
-boardRouter.get('/', authMiddleware, async (req: RequestWithUser, res) => {
+boardRouter.get('/', async (req: RequestWithUser, res) => {
   const { userId } = req;
   try {
     const userBoards = await Board.find({ where: { user: { id: userId } }, order: { updated_at: 'DESC' } });
 
-    res.send(userBoards);
+    res.send([...userBoards.map((el) => ({ ...el, data: undefined }))]);
   } catch (error) {
     console.log(error);
 
@@ -37,7 +38,7 @@ boardRouter.get('/', authMiddleware, async (req: RequestWithUser, res) => {
   }
 });
 
-boardRouter.get('/:id', authMiddleware, async (req: RequestWithUser, res) => {
+boardRouter.get('/:id', async (req: RequestWithUser, res) => {
   const {
     userId,
     params: { id },
@@ -58,7 +59,7 @@ boardRouter.get('/:id', authMiddleware, async (req: RequestWithUser, res) => {
   }
 });
 
-boardRouter.patch('/:id', authMiddleware, async (req: RequestWithUser, res) => {
+boardRouter.patch('/:id', async (req: RequestWithUser, res) => {
   const {
     userId,
     params: { id },
@@ -75,7 +76,7 @@ boardRouter.patch('/:id', authMiddleware, async (req: RequestWithUser, res) => {
   }
 });
 
-boardRouter.delete('/:id', authMiddleware, async (req: RequestWithUser, res) => {
+boardRouter.delete('/:id', async (req: RequestWithUser, res) => {
   const {
     userId,
     params: { id },

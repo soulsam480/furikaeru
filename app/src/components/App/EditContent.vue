@@ -2,19 +2,28 @@
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 import FButton from 'src/components/lib/FButton.vue';
 
-const props = defineProps<{
-  content: string;
-  color?: string;
+const props = withDefaults(
+  defineProps<{
+    content?: string;
+    color?: string;
+    is?: 'input' | 'textarea';
+  }>(),
+  {
+    is: 'textarea',
+  },
+);
+
+const emit = defineEmits<{
+  (e: 'save', val: string): void;
+  (e: 'cancel'): void;
 }>();
-const emit = defineEmits({
-  save: String,
-  cancel: null,
-});
 
-const newVal = ref(props.content);
+const newVal = ref(props.content || '');
 
-function handleSave() {
-  if (newVal.value === props.content) return;
+function handleSave(e: KeyboardEvent) {
+  if (props.is === 'textarea' && e && !e.ctrlKey) return;
+
+  if (!!props.content ? props.content === newVal.value : !newVal.value) return;
   emit('save', newVal.value);
 }
 
@@ -28,29 +37,40 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleClose));
 </script>
 <template>
   <input
+    v-if="is === 'input'"
     type="text"
     class="rounded-md border-none flex-grow py-1 focus:shadow-none mr-1"
     :class="`bg-${color || 'cyan'}-100`"
-    v-model="newVal"
     @keyup.enter="handleSave"
+    v-model="newVal"
   />
-  <FButton
-    @click="handleSave"
-    :disabled="newVal === content"
-    title="Save"
-    class="dark:text-white dark:hover:text-black"
-    flat
-    icon="ion:checkmark"
-    sm
-    :color="color"
+  <textarea
+    v-else
+    type="text"
+    class="rounded-md border-none flex-grow p-2 focus:shadow-none mr-1 !min-h-8 leading-none"
+    :class="`bg-${color || 'cyan'}-100`"
+    @keyup.enter="handleSave"
+    v-model="newVal"
   />
-  <FButton
-    @click="$emit('cancel')"
-    title="Cancel"
-    flat
-    icon="ion:close"
-    class="dark:text-white dark:hover:text-black"
-    sm
-    :color="color"
-  />
+  <div class="flex-none flex">
+    <f-button
+      @click="handleSave"
+      :disabled="!!content ? content === newVal : !newVal"
+      title="Save"
+      class="dark:text-white dark:hover:text-black"
+      flat
+      icon="ion:checkmark"
+      sm
+      :color="color"
+    />
+    <f-button
+      @click="$emit('cancel')"
+      title="Cancel"
+      flat
+      icon="ion:close"
+      class="dark:text-white dark:hover:text-black"
+      sm
+      :color="color"
+    />
+  </div>
 </template>

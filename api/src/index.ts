@@ -22,7 +22,6 @@ async function main() {
     cors({
       origin: [...CORS_ORIGINS],
       credentials: true,
-      preflightContinue: true,
     }),
   );
   app.use(express.json());

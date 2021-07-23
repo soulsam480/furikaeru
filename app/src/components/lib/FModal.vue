@@ -96,7 +96,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleKeyDown));
                     {{ title }}
                   </div>
                   <div class="flex-none">
-                    <FIcon
+                    <f-icon
                       icon="ion:close-circle-outline"
                       class="
                         cursor-pointer

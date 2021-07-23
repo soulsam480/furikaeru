@@ -11,7 +11,7 @@ defineEmits<{
 }>();
 </script>
 <template>
-  <FModal
+  <f-modal
     title="Shortcuts"
     width="300px"
     title-size="20px"
@@ -23,30 +23,30 @@ defineEmits<{
         <div class="text-base">Global</div>
         <div class="flex items-center space-x-4">
           <div class="flex-none flex items-center">
-            <FIcon icon="vaadin:alt" size="18px" />
+            <f-icon icon="vaadin:alt" size="18px" />
             &nbsp; +&nbsp;
-            <FIcon icon="mdi:alpha-s-box" size="24px" />
+            <f-icon icon="mdi:alpha-s-box" size="24px" />
           </div>
           <div class="flex-grow">View shortcuts</div>
         </div>
         <div class="flex items-center space-x-4">
           <div class="flex-none flex items-center">
-            <FIcon icon="vaadin:alt" size="18px" />
+            <f-icon icon="vaadin:alt" size="18px" />
             &nbsp; +&nbsp;
-            <FIcon icon="mdi:alpha-q-box" size="24px" />
+            <f-icon icon="mdi:alpha-q-box" size="24px" />
           </div>
           <div class="flex-grow">Toggle dark mode</div>
         </div>
         <div class="text-base">Scoped</div>
         <div class="flex items-center space-x-4">
           <div class="flex-none flex items-center">
-            <FIcon icon="vaadin:alt" size="18px" />
+            <f-icon icon="vaadin:alt" size="18px" />
             &nbsp; +&nbsp;
-            <FIcon icon="mdi:alpha-n-box" size="24px" />
+            <f-icon icon="mdi:alpha-n-box" size="24px" />
           </div>
           <div class="flex-grow">Create a new card</div>
         </div>
       </div>
     </template>
-  </FModal>
+  </f-modal>
 </template>
