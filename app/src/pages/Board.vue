@@ -23,12 +23,13 @@ import FMenu from 'src/components/lib/FMenu.vue';
 import FBanner from 'src/components/lib/FBanner.vue';
 import NewCardModal from 'src/components/NewCardModal.vue';
 import { useAlert, useKeyBindings } from 'src/utils/composables';
+import { generateRoute } from 'src/utils/helpers';
 
 const { on, emit, io, isConnected } = useIo();
 const {
   params: { id: bid },
 } = useRoute();
-const { push } = useRouter();
+const { push, replace } = useRouter();
 const { isLoggedIn, getUser, showLoader, hideLoader, getLoader } = useUser();
 const { set } = useAlert();
 useKeyBindings(BINDINGS, true);
@@ -139,6 +140,7 @@ function handleColumnNameChange(e: string, id: string) {
 function handleBoardNameChange(e: string) {
   isEditBoardName.value = null;
   (board.value as BoardModel).title = e;
+  replace(`/${generateRoute(board.value as BoardModel)}/`);
   updateBoardEmit(parsedBoardId.value, board.value as BoardModel);
 }
 
