@@ -7,6 +7,7 @@ const BINDINGS: KeyBinding[] = [
     handler: () => (isNewCardModal.value = !isNewCardModal.value),
   },
 ];
+
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import Draggable from 'src/components/App/Draggable.vue';
 import type { BoardModel, Card, KeyBinding } from 'src/utils/types';
@@ -362,10 +363,9 @@ onBeforeUnmount(() => {
           :color="column.color || 'cyan'"
         />
 
-        <div class="w-full flex py-2" v-if="isNewCard === column.id">
-          <input
-            type="text"
-            class="rounded-md border-none flex-grow py-1 mr-1 focus:shadow-none"
+        <div class="w-full flex py-2 items-start" v-if="isNewCard === column.id">
+          <textarea
+            class="rounded-md border-none flex-grow py-1 mr-1 focus:shadow-none min-h-8"
             :class="`bg-${column.color || 'cyan'}-100`"
             v-model="newCardName"
             placeholder="New card title"
@@ -419,10 +419,10 @@ onBeforeUnmount(() => {
           :color="column.color || 'cyan'"
           v-if="column.data.length > 0"
         />
-        <div class="w-full flex py-2" v-if="isBottomNewCard === column.id && column.data.length > 0">
-          <input
+        <div class="w-full flex py-2 items-start" v-if="isBottomNewCard === column.id && column.data.length > 0">
+          <textarea
             type="text"
-            class="rounded-md border-none flex-grow py-1 mr-1 focus:shadow-none"
+            class="rounded-md border-none flex-grow py-1 mr-1 focus:shadow-none min-h-8"
             :class="`bg-${column.color || 'cyan'}-100`"
             v-model="newCardName"
             placeholder="New card title"

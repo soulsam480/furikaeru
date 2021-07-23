@@ -13,7 +13,9 @@ const emit = defineEmits({
 
 const newVal = ref(props.content);
 
-function handleSave() {
+function handleSave(e: KeyboardEvent) {
+  if (!e.ctrlKey) return;
+
   if (newVal.value === props.content) return;
   emit('save', newVal.value);
 }
@@ -27,9 +29,9 @@ onMounted(() => window.addEventListener('keydown', handleClose));
 onBeforeUnmount(() => window.removeEventListener('keydown', handleClose));
 </script>
 <template>
-  <input
+  <textarea
     type="text"
-    class="rounded-md border-none flex-grow py-1 focus:shadow-none mr-1"
+    class="rounded-md border-none flex-grow py-1 focus:shadow-none mr-1 !min-h-8"
     :class="`bg-${color || 'cyan'}-100`"
     v-model="newVal"
     @keyup.enter="handleSave"
