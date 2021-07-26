@@ -7,6 +7,7 @@ import type { UserResponse } from 'src/store/user';
 import FBanner from 'src/components/lib/FBanner.vue';
 import AppFooter from 'src/components/App/Footer.vue';
 import FButton from 'src/components/lib/FButton.vue';
+import { Head } from '@vueuse/head';
 
 const { setLogin, showLoader, hideLoader } = useUser();
 
@@ -57,6 +58,10 @@ onMounted(async () => {
 </script>
 <template>
   <div>
+    <Head>
+      <title>Login/ Signup | Furikaeru</title>
+    </Head>
+
     <div class="mt-20 flex flex-row justify-center">
       <div class="login sm:w-4/5 lg:w-2/5 w-full">
         <div class="login_card bg-gray-100 px-10 pt-5 p-b-10 rounded-xl">

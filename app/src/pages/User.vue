@@ -9,6 +9,7 @@ import FBanner from 'src/components/lib/FBanner.vue';
 import FMenu from 'src/components/lib/FMenu.vue';
 import { useAlert, useLoadingBar } from 'src/utils/composables';
 import { generateRoute } from 'src/utils/helpers';
+import { Head } from '@vueuse/head';
 
 const { getUser } = useUser();
 const { set } = useAlert();
@@ -93,6 +94,9 @@ async function createBoard(type: string) {
 </script>
 <template>
   <div>
+    <Head>
+      <title>Home | Furikaeru</title>
+    </Head>
     <f-banner text="Furikaeru is in active development. Bugs and frequent changes are expected." class="my-2" />
     <div class="flex justify-between pt-3">
       <div class="text-3xl font-semibold dark:text-white">My boards</div>

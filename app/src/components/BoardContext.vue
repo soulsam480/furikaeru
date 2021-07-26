@@ -89,8 +89,8 @@ function handleDragToggle() {
 
     <f-button size="17px" sm title="Toggle drag" :color="noDrag ? 'red' : 'cyan'" @click="handleDragToggle">
       <template #icon>
-        <FIcon icon="ic:outline-do-not-touch" size="17px" v-show="noDrag" />
-        <FIcon icon="ic:outline-touch-app" size="17px" v-show="!noDrag" />
+        <FIcon icon="ic:outline-do-not-touch" size="17px" v-show="!noDrag" />
+        <FIcon icon="ic:outline-touch-app" size="17px" v-show="noDrag" />
       </template>
     </f-button>
 
@@ -103,8 +103,8 @@ function handleDragToggle() {
       v-if="board.is_public"
     >
       <template #icon>
-        <FIcon icon="ion:radio-button-on-outline" size="17px" v-show="isFocus" />
-        <FIcon icon="ion:radio-button-off-outline" size="17px" v-show="!isFocus" />
+        <FIcon icon="ion:radio-button-on-outline" size="17px" v-show="!isFocus" />
+        <FIcon icon="ion:radio-button-off-outline" size="17px" v-show="isFocus" />
       </template>
     </f-button>
 

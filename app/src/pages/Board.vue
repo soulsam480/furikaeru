@@ -24,6 +24,7 @@ import FBanner from 'src/components/lib/FBanner.vue';
 import NewCardModal from 'src/components/NewCardModal.vue';
 import { useAlert, useKeyBindings } from 'src/utils/composables';
 import { generateRoute } from 'src/utils/helpers';
+import { Head } from '@vueuse/head';
 
 const { on, emit, io, isConnected } = useIo();
 const {
@@ -147,6 +148,7 @@ function handleBoardNameChange(e: string) {
 
 function handleCardAddition(id: string, content: string, top = true) {
   if (isNewCardModal.value && !newCardParent.value) return;
+
   if (!content) return;
   const card: Card = {
     id: v4(),
@@ -256,6 +258,10 @@ onBeforeUnmount(() => {
 </script>
 <template>
   <div class="board pb-10">
+    <Head>
+      <title>{{ board?.title }} | Furikaeru</title>
+    </Head>
+
     <new-card-modal
       :options="columnOptions"
       v-model:new-card-parent="newCardParent"
