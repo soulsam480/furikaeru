@@ -255,7 +255,7 @@ onBeforeUnmount(() => {
 });
 </script>
 <template>
-  <div class="board">
+  <div class="board pb-10">
     <new-card-modal
       :options="columnOptions"
       v-model:new-card-parent="newCardParent"
@@ -420,6 +420,7 @@ onBeforeUnmount(() => {
 .not-draggable {
   cursor: no-drop;
 }
+
 .board-grid {
   &__column__item {
     :hover > & {
