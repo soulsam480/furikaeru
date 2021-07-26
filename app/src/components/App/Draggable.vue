@@ -14,6 +14,7 @@ const props = defineProps<{
   sort: string;
   cId: string;
   isCommentsExpand: boolean;
+  noDrag: boolean;
   isFocusMode?: boolean;
   color?: string;
 }>();
@@ -169,7 +170,7 @@ function handleStart(e: any) {
       name: 'flip-list',
     }"
     :animation="300"
-    :disabled="!!isEdit"
+    :disabled="noDrag || !!isEdit"
   >
     <template #item="{ element }">
       <div
@@ -178,7 +179,7 @@ function handleStart(e: any) {
         :class="[
           `bg-${color}-400`,
           { 'filter blur-sm': isFocusMode && element.user_id !== userId },
-          `${!!isEdit ? 'no-drop' : 'cursor-move'}`,
+          `${noDrag || !!isEdit ? 'no-drop' : 'cursor-move'}`,
         ]"
       >
         <!-- <transition

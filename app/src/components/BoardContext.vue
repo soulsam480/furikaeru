@@ -11,7 +11,7 @@ defineProps<{
   board: BoardModel;
   uid: string;
 }>();
-const emits = defineEmits(['remove', 'sort', 'expand', 'focus-mode']);
+const emits = defineEmits(['remove', 'sort', 'expand', 'focus-mode', 'toggle-drag']);
 
 const SortOptions = [
   {
@@ -29,6 +29,7 @@ const { set } = useAlert();
 const sortBy = ref('');
 const isExpand = ref(false);
 const isFocus = ref(false);
+const noDrag = ref(false);
 
 function handleCommentCollapse() {
   isExpand.value = !isExpand.value;
@@ -39,9 +40,34 @@ function handleFocusMode() {
   isFocus.value = !isFocus.value;
   emits('focus-mode');
 }
+
+function handleDragToggle() {
+  noDrag.value = !noDrag.value;
+  emits('toggle-drag');
+}
 </script>
 <template>
-  <div class="flex space-x-1 justify-end mb-2">
+  <div
+    class="
+      flex
+      space-x-1
+      justify-end
+      mb-2
+      sticky
+      top-[57px]
+      z-50
+      sm:(static
+      !bg-transparent
+      top-[unset])
+      p-1
+      bg-white
+      dark:bg-cool-gray-800
+      rounded-t-none rounded
+      transition-colors
+      duration-400
+      ease-in-out
+    "
+  >
     <f-button
       title="Remove board"
       v-if="board.user === uid"
@@ -50,6 +76,7 @@ function handleFocusMode() {
       size="17px"
       sm
     />
+
     <f-menu
       :options="SortOptions"
       option-key="value"
@@ -59,15 +86,28 @@ function handleFocusMode() {
       icon="ion:filter-circle-outline"
       @input="$emit('sort', $event)"
     />
+
+    <f-button size="17px" sm title="Toggle drag" :color="noDrag ? 'red' : 'cyan'" @click="handleDragToggle">
+      <template #icon>
+        <FIcon icon="ic:outline-do-not-touch" size="17px" v-show="noDrag" />
+        <FIcon icon="ic:outline-touch-app" size="17px" v-show="!noDrag" />
+      </template>
+    </f-button>
+
     <f-button
       @click="handleFocusMode"
-      icon="ion:radio-button-on-outline"
       size="17px"
       sm
       title="Toggle focus mode"
       :color="isFocus ? 'green' : 'cyan'"
       v-if="board.is_public"
-    />
+    >
+      <template #icon>
+        <FIcon icon="ion:radio-button-on-outline" size="17px" v-show="isFocus" />
+        <FIcon icon="ion:radio-button-off-outline" size="17px" v-show="!isFocus" />
+      </template>
+    </f-button>
+
     <f-button @click="handleCommentCollapse" sm :title="`${!isExpand ? 'Expand' : 'Collapse'} comments`">
       <template #icon>
         <FIcon icon="ion:contract-outline" size="17px" v-show="isExpand" />
@@ -86,6 +126,7 @@ function handleFocusMode() {
       size="17px"
       sm
     />
+
     <f-button
       title="Share board"
       v-if="board.is_public && !!isShare"

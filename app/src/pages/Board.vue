@@ -41,6 +41,7 @@ const isEditBoardName = ref<string | null>(null);
 const sortBy = ref('');
 const isCommentsExpand = ref(false);
 const isFocusMode = ref(false);
+const noDrag = ref(false);
 const isNewCard = ref<string | null>(null);
 const isBottomNewCard = ref<string | null>(null);
 const isNewCardModal = ref(false);
@@ -278,7 +279,9 @@ onBeforeUnmount(() => {
       @sort="sortBy = $event"
       @expand="isCommentsExpand = !isCommentsExpand"
       @focus-mode="isFocusMode = !isFocusMode"
+      @toggle-drag="noDrag = !noDrag"
     />
+
     <div class="mb-4">
       <div class="flex" v-if="isEditBoardName !== board?.id">
         <div class="text-2xl font-semibold flex-grow sm:mr-1 sm:flex-none break-word dark:text-white">
@@ -388,6 +391,7 @@ onBeforeUnmount(() => {
           :color="column.color || 'cyan'"
           :is-comments-expand="isCommentsExpand"
           :is-focus-mode="isFocusMode"
+          :no-drag="noDrag"
         />
         <f-button
           @click="isBottomNewCard = column.id"
