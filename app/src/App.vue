@@ -14,10 +14,10 @@ import { useIo } from 'src/utils/createWs';
 import { getAlerts, removeAlert, setAlerts } from 'src/utils/composables';
 
 const { getLoader } = useUser();
+const { isConnected } = useIo();
 
 const loadingBar = ref<ComponentPublicInstance<{}, FLoadingBarExpose> | null>(null);
 const isBarLoader = ref(false);
-const { isConnected } = useIo();
 
 watch(
   () => isConnected.value,
@@ -81,7 +81,7 @@ checkDarkMode();
   <div>
     <div class="fixed bottom-0 left-1/2 transform -translate-x-1/2 list-group z-50">
       <transition-group name="list" tag="div" class="flex flex-col justify-center items-center">
-        <FAlert
+        <f-alert
           v-for="alert in getAlerts"
           :key="alert.id"
           :icon="alert.icon"
@@ -93,15 +93,15 @@ checkDarkMode();
       </transition-group>
     </div>
 
-    <Navbar />
+    <navbar />
 
     <div class="relative">
       <transition name="fade">
-        <FLoadingBar ref="loadingBar" v-show="isBarLoader" />
+        <f-loading-bar ref="loadingBar" v-show="isBarLoader" />
       </transition>
     </div>
 
-    <FLoader v-if="getLoader" />
+    <f-loader v-if="getLoader" />
 
     <div class="max-w-7xl mx-auto px-2 py-3">
       <router-view />

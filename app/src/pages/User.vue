@@ -7,11 +7,14 @@ import UserCards from 'src/components/UserCards.vue';
 import { useRouter } from 'vue-router';
 import FBanner from 'src/components/lib/FBanner.vue';
 import FMenu from 'src/components/lib/FMenu.vue';
-import { useAlert } from 'src/utils/composables';
+import { useAlert, useLoadingBar } from 'src/utils/composables';
+import { generateRoute } from 'src/utils/helpers';
+import { Head } from '@vueuse/head';
 
 const { getUser } = useUser();
 const { set } = useAlert();
 const { push } = useRouter();
+const { start, stop } = useLoadingBar();
 
 const boardTypes = [
   {
@@ -78,9 +81,12 @@ async function createBoard(type: string) {
   };
 
   try {
+    start();
     const { data: result } = await furiCreateBoard({ ...data });
     set({ type: 'success', message: 'Board created successfully!' });
-    push(type === 'public' ? `/${result.id}/` : `/board/${result.id}/`);
+    stop();
+
+    push(type === 'public' ? `/${generateRoute(result)}/` : `/board/${generateRoute(result)}/`);
   } catch (error) {
     console.log(JSON.parse(JSON.stringify(error)));
   }
@@ -88,6 +94,9 @@ async function createBoard(type: string) {
 </script>
 <template>
   <div>
+    <Head>
+      <title>Home | Furikaeru</title>
+    </Head>
     <f-banner text="Furikaeru is in active development. Bugs and frequent changes are expected." class="my-2" />
     <div class="flex justify-between pt-3">
       <div class="text-3xl font-semibold dark:text-white">My boards</div>

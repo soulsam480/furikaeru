@@ -45,7 +45,7 @@ export function useLoadingBar() {
  * @param isSetup automatically enable/disable inside setup
  * @returns an object containing on/off switches for the key bindings
  */
-export function useKeyBindings(bindings: KeyBinding[], inSetup?: boolean): KeyBindingSwitches {
+export function useKeyBindings(bindings: KeyBinding[], inSetup: boolean = true): KeyBindingSwitches {
   const systemKeys = ['Control', 'Alt', 'Shift'];
   let handlers: ((e: KeyboardEvent) => void)[] = [];
 

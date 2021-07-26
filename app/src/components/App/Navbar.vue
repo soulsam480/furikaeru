@@ -67,7 +67,7 @@ function handleDarkMode() {
     class="
       sticky
       top-0
-      z-20
+      z-100
       transition-colors
       duration-400
       ease-in-out

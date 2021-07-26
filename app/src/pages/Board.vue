@@ -24,6 +24,7 @@ import FBanner from 'src/components/lib/FBanner.vue';
 import NewCardModal from 'src/components/NewCardModal.vue';
 import { useAlert, useKeyBindings } from 'src/utils/composables';
 import { generateRoute } from 'src/utils/helpers';
+import { Head } from '@vueuse/head';
 
 const { on, emit, io, isConnected } = useIo();
 const {
@@ -41,6 +42,7 @@ const isEditBoardName = ref<string | null>(null);
 const sortBy = ref('');
 const isCommentsExpand = ref(false);
 const isFocusMode = ref(false);
+const noDrag = ref(false);
 const isNewCard = ref<string | null>(null);
 const isBottomNewCard = ref<string | null>(null);
 const isNewCardModal = ref(false);
@@ -146,6 +148,7 @@ function handleBoardNameChange(e: string) {
 
 function handleCardAddition(id: string, content: string, top = true) {
   if (isNewCardModal.value && !newCardParent.value) return;
+
   if (!content) return;
   const card: Card = {
     id: v4(),
@@ -254,7 +257,11 @@ onBeforeUnmount(() => {
 });
 </script>
 <template>
-  <div class="board">
+  <div class="board pb-10">
+    <Head>
+      <title>{{ board?.title }} | Furikaeru</title>
+    </Head>
+
     <new-card-modal
       :options="columnOptions"
       v-model:new-card-parent="newCardParent"
@@ -278,7 +285,9 @@ onBeforeUnmount(() => {
       @sort="sortBy = $event"
       @expand="isCommentsExpand = !isCommentsExpand"
       @focus-mode="isFocusMode = !isFocusMode"
+      @toggle-drag="noDrag = !noDrag"
     />
+
     <div class="mb-4">
       <div class="flex" v-if="isEditBoardName !== board?.id">
         <div class="text-2xl font-semibold flex-grow sm:mr-1 sm:flex-none break-word dark:text-white">
@@ -388,6 +397,7 @@ onBeforeUnmount(() => {
           :color="column.color || 'cyan'"
           :is-comments-expand="isCommentsExpand"
           :is-focus-mode="isFocusMode"
+          :no-drag="noDrag"
         />
         <f-button
           @click="isBottomNewCard = column.id"
@@ -416,6 +426,7 @@ onBeforeUnmount(() => {
 .not-draggable {
   cursor: no-drop;
 }
+
 .board-grid {
   &__column__item {
     :hover > & {

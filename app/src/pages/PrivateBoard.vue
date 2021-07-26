@@ -1,7 +1,16 @@
 <script setup lang="ts">
+const COLORS = ['red', 'green', 'purple', 'indigo', 'amber', 'lime', 'cyan'];
+const BINDINGS: KeyBinding[] = [
+  {
+    key: 'n',
+    modifier: 'Alt',
+    handler: () => (isNewCardModal.value = !isNewCardModal.value),
+  },
+];
+
 import { computed, onMounted, ref } from 'vue';
 import Draggable from 'src/components/App/Draggable.vue';
-import type { BoardModel, Card } from 'src/utils/types';
+import type { BoardModel, Card, KeyBinding } from 'src/utils/types';
 import { useRoute, useRouter } from 'vue-router';
 import { useUser } from 'src/store/user';
 import { v4 } from 'uuid';
@@ -12,30 +21,44 @@ import BoardContext from 'src/components/BoardContext.vue';
 import FMenu from 'src/components/lib/FMenu.vue';
 import { useIo } from 'src/utils/createWs';
 import FBanner from 'src/components/lib/FBanner.vue';
-import { useAlert } from 'src/utils/composables';
+import { useAlert, useKeyBindings } from 'src/utils/composables';
+import { Head } from '@vueuse/head';
+import NewCardModal from 'src/components/NewCardModal.vue';
+import { generateRoute } from 'src/utils/helpers';
 
 const {
   params: { id: routeBid },
 } = useRoute();
-const { push } = useRouter();
+const { push, replace } = useRouter();
 const { getUser, showLoader, hideLoader } = useUser();
 const { set } = useAlert();
 const { isConnected } = useIo();
+useKeyBindings(BINDINGS);
 
-const COLORS = ['red', 'green', 'purple', 'indigo', 'amber', 'lime', 'cyan'];
 const board = ref<BoardModel>();
 const enabled = ref(true);
 const isEditColumnName = ref<string | null>(null);
 const isEditBoardName = ref<string | null>(null);
 const newCardName = ref('');
 const sortBy = ref('');
+const noDrag = ref(false);
 const isCommentsExpand = ref(false);
 const isNewCard = ref<string | null>(null);
+const newCardParent = ref('');
+const isNewCardModal = ref(false);
+const isBottomNewCard = ref<string | null>(null);
 const getUserId = computed(() => getUser.value.id as string);
 const bid = computed(() => {
   const id = routeBid as string;
   if (id.includes('--')) return id.split('--')[1];
   return id;
+});
+const columnOptions = computed(() => {
+  if (!board.value) return [];
+  return (board.value as BoardModel).data.map((col) => ({
+    label: col.name,
+    value: col.id,
+  }));
 });
 
 async function getPrivateBoard() {
@@ -43,6 +66,7 @@ async function getPrivateBoard() {
     const { data } = await getBoard(bid.value);
     board.value = { ...data };
   } catch (error) {
+    set({ message: 'Something wrong happened !', type: 'danger' });
     console.log(error);
   }
 }
@@ -67,6 +91,7 @@ async function updateBoardEmit(id: string, board: BoardModel, type: 'board' | 't
     await updateBoard(id, data);
     await getPrivateBoard();
   } catch (error) {
+    set({ message: 'Something wrong happened !', type: 'danger' });
     console.log(error);
   }
 }
@@ -126,6 +151,8 @@ function handleColumnNameChange(e: string, id: string) {
 function handleBoardNameChange(e: string) {
   isEditBoardName.value = null;
   (board.value as BoardModel).title = e;
+
+  replace(`/board/${generateRoute(board.value as BoardModel)}/`);
   updateBoardEmit(bid.value, board.value as BoardModel, 'title');
 }
 
@@ -137,11 +164,13 @@ function handleColumnTheme(id: string, color: string) {
   updateBoardEmit(bid.value, board.value as BoardModel, 'board');
 }
 
-function handleCardAddition(id: string) {
-  if (!newCardName.value) return;
+function handleCardAddition(id: string, content: string, top = true) {
+  if (isNewCardModal.value && !newCardParent.value) return;
+
+  if (!content) return;
   const card: Card = {
     id: v4(),
-    title: newCardName.value,
+    title: content,
     votes: {},
     user_id: getUserId.value as string,
     comments: {},
@@ -149,12 +178,19 @@ function handleCardAddition(id: string) {
 
   const idx = board.value?.data.findIndex((el) => el.id === id);
   if (idx !== undefined && idx !== -1) {
-    board.value?.data[idx].data.push({ ...card });
+    if (!top) {
+      board.value?.data[idx].data.push({ ...card });
+    } else {
+      board.value?.data[idx].data.unshift({ ...card });
+    }
   }
   updateBoardEmit(bid.value, board.value as BoardModel, 'board');
 
-  newCardName.value = '';
+  newCardParent.value = '';
   isNewCard.value = null;
+  isBottomNewCard.value = null;
+
+  if (isNewCardModal.value) isNewCardModal.value = false;
 }
 
 async function handleBoardRemove(id: string) {
@@ -197,7 +233,11 @@ onMounted(async () => {
 });
 </script>
 <template>
-  <div class="board">
+  <div class="board pb-10">
+    <Head>
+      <title>{{ board?.title }} | Furikaeru</title>
+    </Head>
+
     <transition name="fade">
       <f-banner
         v-if="!isConnected"
@@ -207,13 +247,22 @@ onMounted(async () => {
       />
     </transition>
 
+    <new-card-modal
+      :options="columnOptions"
+      v-model:new-card-parent="newCardParent"
+      v-model:is-modal="isNewCardModal"
+      @add="handleCardAddition(newCardParent, $event)"
+    />
+
     <board-context
       :board="board || {}"
       :uid="getUserId"
       @remove="handleBoardRemove(board.id)"
       @sort="sortBy = $event"
       @expand="isCommentsExpand = !isCommentsExpand"
+      @toggle-drag="noDrag = !noDrag"
     />
+
     <div class="mb-4">
       <div class="flex" v-if="isEditBoardName !== board?.id">
         <div class="text-2xl font-semibold flex-grow sm:mr-1 sm:flex-none break-word dark:text-white">
@@ -232,7 +281,12 @@ onMounted(async () => {
         </div>
       </div>
       <div v-else class="flex items-center">
-        <edit-content :content="board.title" @save="handleBoardNameChange" @cancel="isEditBoardName = null" />
+        <edit-content
+          is="input"
+          :content="board.title"
+          @save="handleBoardNameChange"
+          @cancel="isEditBoardName = null"
+        />
       </div>
     </div>
 
@@ -277,6 +331,7 @@ onMounted(async () => {
           </div>
           <div v-else class="flex items-center">
             <edit-content
+              is="input"
               :content="column.name"
               @save="handleColumnNameChange($event, column.id)"
               @cancel="isEditColumnName = null"
@@ -297,36 +352,14 @@ onMounted(async () => {
           :color="column.color || 'cyan'"
         />
 
-        <div class="w-full flex py-2" v-if="isNewCard === column.id">
-          <input
-            type="text"
-            class="rounded-md border-none flex-grow py-1 mr-1 focus:shadow-none"
-            v-model="newCardName"
-            placeholder="New card title"
-            @keyup.enter="handleCardAddition(column.id)"
-            :class="`bg-${column.color || 'cyan'}-100`"
+        <div class="w-full flex py-2 items-start" v-if="isNewCard === column.id">
+          <edit-content
+            @save="handleCardAddition(column.id, $event)"
+            @cancel="isNewCard = null"
+            :color="column.color || 'cyan'"
           />
-          <div class="flex-none flex">
-            <f-button
-              @click="handleCardAddition(column.id)"
-              :disabled="!newCardName"
-              title="Save"
-              flat
-              icon="ion:checkmark"
-              sm
-              class="dark:text-white dark:hover:text-black"
-            />
-            <f-button
-              @click="(isNewCard = null), (newCardName = '')"
-              title="Cancel"
-              class="dark:text-white dark:hover:text-black"
-              flat
-              icon="ion:close"
-              sm
-              :color="column.color || 'cyan'"
-            />
-          </div>
         </div>
+
         <draggable
           :list="column.data"
           :enabled="enabled"
@@ -340,7 +373,29 @@ onMounted(async () => {
           :color="column.color || 'cyan'"
           @move="handleSortedMove"
           :is-comments-expand="isCommentsExpand"
+          :no-drag="noDrag"
         />
+
+        <f-button
+          @click="isBottomNewCard = column.id"
+          block
+          icon="ion:add"
+          class="text-xs"
+          title="Add a new card"
+          center
+          label="Add"
+          sm
+          :color="column.color || 'cyan'"
+          v-if="column.data.length > 0"
+        />
+
+        <div class="w-full flex py-2 items-start" v-if="isBottomNewCard === column.id && column.data.length > 0">
+          <edit-content
+            @save="handleCardAddition(column.id, $event, false)"
+            @cancel="isBottomNewCard = null"
+            :color="column.color || 'cyan'"
+          />
+        </div>
       </div>
     </div>
   </div>

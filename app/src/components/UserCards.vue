@@ -58,12 +58,16 @@ async function getBoards() {
 }
 
 async function handleBoardRemove(id: string) {
+  start();
+
   try {
     await deleteBoard(id);
     set({ type: 'success', message: 'Board removed.' });
     await getBoards();
   } catch (error) {
     console.log(error);
+  } finally {
+    stop();
   }
 }
 
