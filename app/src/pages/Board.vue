@@ -9,19 +9,24 @@ const BINDINGS: KeyBinding[] = [
 ];
 
 import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue';
-const Draggable = defineAsyncComponent(() => import('src/components/App/Draggable.vue'));
+import AsyncLoader from 'src/components/AsyncLoader.vue';
+const Draggable = defineAsyncComponent({
+  loader: () => import('src/components/App/Draggable.vue'),
+  loadingComponent: AsyncLoader,
+  delay: 0,
+});
 import type { BoardModel, Card, KeyBinding } from 'src/utils/types';
 import { useIo } from 'src/utils/createWs';
 import { useRoute, useRouter } from 'vue-router';
 import { useUser } from 'src/store/user';
 import { v4 } from 'uuid';
 import FButton from 'src/components/lib/FButton.vue';
-const EditContent = defineAsyncComponent(() => import('src/components/App/EditContent.vue'));
-const BoardContext = defineAsyncComponent(() => import('src/components/BoardContext.vue'));
+import EditContent from 'src/components/App/EditContent.vue';
+import BoardContext from 'src/components/BoardContext.vue';
 import { deleteBoard, updateBoard } from 'src/utils/boardService';
 import FMenu from 'src/components/lib/FMenu.vue';
 import FBanner from 'src/components/lib/FBanner.vue';
-const NewCardModal = defineAsyncComponent(() => import('src/components/NewCardModal.vue'));
+import NewCardModal from 'src/components/NewCardModal.vue';
 import { useAlert, useKeyBindings } from 'src/utils/composables';
 import { generateRoute } from 'src/utils/helpers';
 import { Head } from '@vueuse/head';
@@ -270,9 +275,9 @@ onBeforeUnmount(() => {
 </script>
 <template>
   <div class="board pb-10">
-    <Head>
+    <head>
       <title>{{ board?.title }} | Furikaeru</title>
-    </Head>
+    </head>
 
     <new-card-modal
       :options="columnOptions"
@@ -282,7 +287,7 @@ onBeforeUnmount(() => {
     />
 
     <transition name="fade">
-      <FBanner
+      <f-banner
         v-if="!isConnected"
         text="You are not connected. Changes won't be saved."
         class="mb-4 mt-1"

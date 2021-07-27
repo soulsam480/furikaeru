@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, toRef, watch } from 'vue';
 import { shareBoard, copyLink, generateRoute } from 'src/utils/helpers';
 import FButton from 'src/components/lib/FButton.vue';
 import type { BoardModel } from 'src/utils/types';
@@ -30,10 +30,19 @@ const isShare = navigator.share;
 
 const { set } = useAlert();
 const sortBy = ref('');
-const maxVote = ref(props.board.max_vote);
+const maxVote = ref<number>();
 const isExpand = ref(false);
 const isFocus = ref(false);
 const noDrag = ref(false);
+
+watch(
+  () => props.board.max_vote,
+  (val) => {
+    if (!!val) {
+      maxVote.value = val;
+    }
+  },
+);
 
 function handleCommentCollapse() {
   isExpand.value = !isExpand.value;
@@ -58,18 +67,20 @@ function handleDragToggle() {
       justify-end
       mb-2
       sticky
-      top-[57px]
+      top-[56px]
       z-50
       sm:(static
       !bg-transparent
       top-[unset])
-      p-1
       bg-white
       dark:bg-cool-gray-800
       rounded-t-none rounded
       transition-colors
       duration-400
       ease-in-out
+      flex-wrap
+      items-baseline
+      p-1
     "
   >
     <f-button
@@ -79,6 +90,7 @@ function handleDragToggle() {
       icon="ion:trash-outline"
       size="17px"
       sm
+      class="mt-1"
     />
 
     <f-menu
@@ -86,9 +98,10 @@ function handleDragToggle() {
       :options="maxVoteOptions"
       option-key="value"
       sm
-      icon="ion:rocket-outline"
       @input="$emit('max-vote', $event)"
       v-if="board.is_public"
+      noicon
+      class="mt-1"
     />
 
     <f-menu
@@ -99,12 +112,20 @@ function handleDragToggle() {
       :label="sortBy ? `Sort by ${sortBy}` : 'No sort'"
       icon="ion:filter-circle-outline"
       @input="$emit('sort', $event)"
+      class="mt-1"
     />
 
-    <f-button size="17px" sm title="Toggle drag" :color="noDrag ? 'red' : 'cyan'" @click="handleDragToggle">
+    <f-button
+      size="17px"
+      sm
+      title="Toggle drag"
+      :color="noDrag ? 'red' : 'cyan'"
+      @click="handleDragToggle"
+      class="mt-1"
+    >
       <template #icon>
-        <FIcon icon="ic:outline-do-not-touch" size="17px" v-show="!noDrag" />
-        <FIcon icon="ic:outline-touch-app" size="17px" v-show="noDrag" />
+        <f-icon icon="ic:outline-do-not-touch" size="17px" v-show="!noDrag" />
+        <f-icon icon="ic:outline-touch-app" size="17px" v-show="noDrag" />
       </template>
     </f-button>
 
@@ -115,21 +136,23 @@ function handleDragToggle() {
       title="Toggle focus mode"
       :color="isFocus ? 'green' : 'cyan'"
       v-if="board.is_public"
+      class="mt-1"
     >
       <template #icon>
-        <FIcon icon="ion:radio-button-on-outline" size="17px" v-show="!isFocus" />
-        <FIcon icon="ion:radio-button-off-outline" size="17px" v-show="isFocus" />
+        <f-icon icon="ion:radio-button-on-outline" size="17px" v-show="!isFocus" />
+        <f-icon icon="ion:radio-button-off-outline" size="17px" v-show="isFocus" />
       </template>
     </f-button>
 
-    <f-button @click="handleCommentCollapse" sm :title="`${!isExpand ? 'Expand' : 'Collapse'} comments`">
+    <f-button @click="handleCommentCollapse" class="mt-1" sm :title="`${!isExpand ? 'Expand' : 'Collapse'} comments`">
       <template #icon>
-        <FIcon icon="ion:contract-outline" size="17px" v-show="isExpand" />
-        <FIcon icon="ion:expand-outline" size="17px" v-show="!isExpand" />
+        <f-icon icon="ion:contract-outline" size="17px" v-show="isExpand" />
+        <f-icon icon="ion:expand-outline" size="17px" v-show="!isExpand" />
       </template>
     </f-button>
 
     <f-button
+      class="mt-1"
       title="Copy public URL"
       v-if="board.is_public"
       @click="
@@ -142,6 +165,7 @@ function handleDragToggle() {
     />
 
     <f-button
+      class="mt-1"
       title="Share board"
       v-if="board.is_public && !!isShare"
       @click="shareBoard(`https://furikaeru.sambitsahoo.com/${generateRoute(board)}`, board.title)"

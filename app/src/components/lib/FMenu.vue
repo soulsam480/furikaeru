@@ -13,6 +13,7 @@ const props = defineProps<{
   color?: string;
   flat?: boolean;
   block?: boolean;
+  noicon?: boolean;
 }>();
 const emit = defineEmits<{
   (e: 'update:modelValue', val: string | number): void;
@@ -66,7 +67,7 @@ function handleClick(option: string | number | Record<'label' | 'value', any>, e
       <f-button
         :label="!!modelValue ? buttonLabel : label"
         :sm="sm"
-        :icon="icon || 'ion:chevron-down-outline'"
+        :icon="noicon ? undefined : icon || 'ion:chevron-down-outline'"
         :size="size || '17px'"
         @click="isMenu = !isMenu"
         :color="color"

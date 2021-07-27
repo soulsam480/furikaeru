@@ -9,7 +9,12 @@ const BINDINGS: KeyBinding[] = [
 ];
 
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
-const Draggable = defineAsyncComponent(() => import('src/components/App/Draggable.vue'));
+import AsyncLoader from 'src/components/AsyncLoader.vue';
+const Draggable = defineAsyncComponent({
+  loader: () => import('src/components/App/Draggable.vue'),
+  loadingComponent: AsyncLoader,
+  delay: 0,
+});
 import type { BoardModel, Card, KeyBinding } from 'src/utils/types';
 import { useRoute, useRouter } from 'vue-router';
 import { useUser } from 'src/store/user';
