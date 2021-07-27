@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted } from '@vue/runtime-core';
+import { onBeforeUnmount, onMounted } from 'vue';
 import FIcon from 'src/components/lib/FIcon.vue';
 
 defineProps<{

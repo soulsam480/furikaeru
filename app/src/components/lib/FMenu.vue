@@ -3,8 +3,8 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import FButton from 'src/components/lib/FButton.vue';
 
 const props = defineProps<{
-  options: (string | { [x in 'label' | 'value']: any })[];
-  modelValue?: string;
+  options: (string | number | { [x in 'label' | 'value']: any })[];
+  modelValue?: string | number;
   optionKey?: 'label' | 'value';
   label?: string;
   icon?: string;
@@ -13,22 +13,34 @@ const props = defineProps<{
   color?: string;
   flat?: boolean;
   block?: boolean;
+  noicon?: boolean;
 }>();
-const emit = defineEmits(['update:modelValue', 'input']);
+const emit = defineEmits<{
+  (e: 'update:modelValue', val: string | number): void;
+  (e: 'input', val: string | number, eVal: any): void;
+}>();
 
 const isMenu = ref(false);
-const selectedOption = ref<Record<'label' | 'value', any> | string>('');
 
-function getOptionVal(option: string | Record<'label' | 'value', any>, optionKey?: 'label' | 'value'): string {
+function getOptionVal(
+  option: string | number | Record<'label' | 'value', any>,
+  optionKey?: 'label' | 'value',
+): string | number {
   if (typeof option !== 'object') return option;
   if (!optionKey) throw new Error('optionKey prop is required for Object type option.');
   return option[optionKey];
 }
 
-const buttonLabel = computed((): any => {
-  if (!selectedOption.value) return null;
-  if (typeof selectedOption.value === 'string') return selectedOption.value;
-  return selectedOption.value.label;
+const buttonLabel = computed(() => {
+  if (!!props.modelValue) {
+    if (typeof props.options[0] == 'object') {
+      const objVal = props.options.find((el) => getOptionVal(el, props.optionKey) === props.modelValue);
+      if (typeof objVal === 'object') return objVal.label;
+      return null;
+    }
+    return props.modelValue;
+  }
+  return null;
 });
 
 function handleClose(e: KeyboardEvent) {
@@ -40,9 +52,8 @@ function handleClose(e: KeyboardEvent) {
 onMounted(() => window.addEventListener('keydown', handleClose));
 onBeforeUnmount(() => window.removeEventListener('keydown', handleClose));
 
-function handleClick(option: string | Record<'label' | 'value', any>, e: MouseEvent) {
+function handleClick(option: string | number | Record<'label' | 'value', any>, e: MouseEvent) {
   const val = getOptionVal(option, props.optionKey);
-  selectedOption.value = option;
 
   emit('update:modelValue', val);
   emit('input', val, e);
@@ -56,7 +67,7 @@ function handleClick(option: string | Record<'label' | 'value', any>, e: MouseEv
       <f-button
         :label="!!modelValue ? buttonLabel : label"
         :sm="sm"
-        :icon="icon || 'ion:chevron-down-outline'"
+        :icon="noicon ? undefined : icon || 'ion:chevron-down-outline'"
         :size="size || '17px'"
         @click="isMenu = !isMenu"
         :color="color"
@@ -116,7 +127,7 @@ function handleClick(option: string | Record<'label' | 'value', any>, e: MouseEv
               v-for="option in options"
               :key="getOptionVal(option, optionKey)"
               @click="handleClick(option, $event)"
-              :title="getOptionVal(option, optionKey)"
+              :title="getOptionVal(option, optionKey).toString()"
               :class="[
                 modelValue === getOptionVal(option, optionKey) ? `bg-${color || 'cyan'}-300` : '',
                 `hover:bg-${color || 'cyan'}-300`,
