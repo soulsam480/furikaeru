@@ -8,22 +8,22 @@ const BINDINGS: KeyBinding[] = [
   },
 ];
 
-import { computed, onMounted, ref } from 'vue';
-import Draggable from 'src/components/App/Draggable.vue';
+import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
+const Draggable = defineAsyncComponent(() => import('src/components/App/Draggable.vue'));
 import type { BoardModel, Card, KeyBinding } from 'src/utils/types';
 import { useRoute, useRouter } from 'vue-router';
 import { useUser } from 'src/store/user';
 import { v4 } from 'uuid';
 import FButton from 'src/components/lib/FButton.vue';
-import EditContent from 'src/components/App/EditContent.vue';
+const EditContent = defineAsyncComponent(() => import('src/components/App/EditContent.vue'));
 import { deleteBoard, getBoard, updateBoard } from 'src/utils/boardService';
-import BoardContext from 'src/components/BoardContext.vue';
+const BoardContext = defineAsyncComponent(() => import('src/components/BoardContext.vue'));
 import FMenu from 'src/components/lib/FMenu.vue';
 import { useIo } from 'src/utils/createWs';
 import FBanner from 'src/components/lib/FBanner.vue';
 import { useAlert, useKeyBindings } from 'src/utils/composables';
 import { Head } from '@vueuse/head';
-import NewCardModal from 'src/components/NewCardModal.vue';
+const NewCardModal = defineAsyncComponent(() => import('src/components/NewCardModal.vue'));
 import { generateRoute } from 'src/utils/helpers';
 
 const {

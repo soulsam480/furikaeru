@@ -7,11 +7,11 @@ import FMenu from 'src/components/lib/FMenu.vue';
 import FIcon from 'src/components/lib/FIcon.vue';
 import { useAlert } from 'src/utils/composables';
 
-defineProps<{
+const props = defineProps<{
   board: BoardModel;
   uid: string;
 }>();
-const emits = defineEmits(['remove', 'sort', 'expand', 'focus-mode', 'toggle-drag']);
+const emits = defineEmits(['remove', 'sort', 'expand', 'focus-mode', 'toggle-drag', 'max-vote']);
 
 const SortOptions = [
   {
@@ -23,10 +23,14 @@ const SortOptions = [
     value: 'vote',
   },
 ];
+
+const maxVoteOptions = [...[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((val) => ({ label: `Max vote ${val}`, value: val }))];
+
 const isShare = navigator.share;
 
 const { set } = useAlert();
 const sortBy = ref('');
+const maxVote = ref(props.board.max_vote);
 const isExpand = ref(false);
 const isFocus = ref(false);
 const noDrag = ref(false);
@@ -75,6 +79,16 @@ function handleDragToggle() {
       icon="ion:trash-outline"
       size="17px"
       sm
+    />
+
+    <f-menu
+      v-model="maxVote"
+      :options="maxVoteOptions"
+      option-key="value"
+      sm
+      icon="ion:rocket-outline"
+      @input="$emit('max-vote', $event)"
+      v-if="board.is_public"
     />
 
     <f-menu

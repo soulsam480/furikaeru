@@ -8,20 +8,20 @@ const BINDINGS: KeyBinding[] = [
   },
 ];
 
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
-import Draggable from 'src/components/App/Draggable.vue';
+import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue';
+const Draggable = defineAsyncComponent(() => import('src/components/App/Draggable.vue'));
 import type { BoardModel, Card, KeyBinding } from 'src/utils/types';
 import { useIo } from 'src/utils/createWs';
 import { useRoute, useRouter } from 'vue-router';
 import { useUser } from 'src/store/user';
 import { v4 } from 'uuid';
 import FButton from 'src/components/lib/FButton.vue';
-import EditContent from 'src/components/App/EditContent.vue';
-import BoardContext from 'src/components/BoardContext.vue';
-import { deleteBoard } from 'src/utils/boardService';
+const EditContent = defineAsyncComponent(() => import('src/components/App/EditContent.vue'));
+const BoardContext = defineAsyncComponent(() => import('src/components/BoardContext.vue'));
+import { deleteBoard, updateBoard } from 'src/utils/boardService';
 import FMenu from 'src/components/lib/FMenu.vue';
 import FBanner from 'src/components/lib/FBanner.vue';
-import NewCardModal from 'src/components/NewCardModal.vue';
+const NewCardModal = defineAsyncComponent(() => import('src/components/NewCardModal.vue'));
 import { useAlert, useKeyBindings } from 'src/utils/composables';
 import { generateRoute } from 'src/utils/helpers';
 import { Head } from '@vueuse/head';
@@ -109,7 +109,7 @@ function upVote(e: { cid: string; coid: string }) {
     return console.log('not found');
   }
 
-  if (card.votes[getUserId.value as string] === 5) return;
+  if (card.votes[getUserId.value as string] === board.value?.max_vote) return;
   card = vote(card, getUserId.value as string);
 
   column?.data.splice(
@@ -183,6 +183,17 @@ async function handleBoardRemove(id: string) {
     push('/');
   } catch (error) {
     set({ type: 'danger', message: error });
+  }
+}
+
+async function handleBoardMaxVote(id: string, max_vote: number) {
+  try {
+    await updateBoard(id, { max_vote });
+    emit('get:board', { id: parsedBoardId.value });
+
+    set({ type: 'success', message: 'Updated !' });
+  } catch (error) {
+    set({ type: 'danger', message: 'Unable to update board !' });
   }
 }
 
@@ -282,11 +293,12 @@ onBeforeUnmount(() => {
     <board-context
       :board="board || {}"
       :uid="getUserId"
-      @remove="handleBoardRemove(board.id)"
+      @remove="handleBoardRemove(board?.id)"
       @sort="sortBy = $event"
       @expand="isCommentsExpand = !isCommentsExpand"
       @focus-mode="isFocusMode = !isFocusMode"
       @toggle-drag="noDrag = !noDrag"
+      @max-vote="handleBoardMaxVote(board?.id, $event)"
     />
 
     <div class="mb-4">

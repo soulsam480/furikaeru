@@ -37,6 +37,7 @@ export interface BoardModel {
   is_public: boolean;
   created_at: number;
   updated_at: number;
+  max_vote: number;
 }
 
 export type FLoadingBarExpose = {
