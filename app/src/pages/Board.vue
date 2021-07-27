@@ -109,6 +109,7 @@ function upVote(e: { cid: string; coid: string }) {
     return console.log('not found');
   }
 
+  if (card.votes[getUserId.value as string] === 5) return;
   card = vote(card, getUserId.value as string);
 
   column?.data.splice(
