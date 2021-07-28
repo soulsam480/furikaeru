@@ -23,7 +23,7 @@ import { v4 } from 'uuid';
 import FButton from 'src/components/lib/FButton.vue';
 import EditContent from 'src/components/App/EditContent.vue';
 import BoardContext from 'src/components/BoardContext.vue';
-import { deleteBoard, updateBoard } from 'src/utils/boardService';
+import { updateBoard } from 'src/utils/boardService';
 import FMenu from 'src/components/lib/FMenu.vue';
 import FBanner from 'src/components/lib/FBanner.vue';
 import NewCardModal from 'src/components/NewCardModal.vue';
@@ -183,7 +183,7 @@ function handleCardAddition(id: string, content: string, top = true) {
 
 async function handleBoardRemove(id: string) {
   try {
-    await deleteBoard(id);
+    await updateBoard(id, { is_deleted: true });
     set({ type: 'success', message: 'Board removed successfully !' });
     push('/');
   } catch (error) {

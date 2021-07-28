@@ -26,3 +26,7 @@ export async function getBoard(id: string) {
 export async function getAllBoards() {
   return await furiApi.get<BoardModel[]>('/board');
 }
+
+export async function getArchivedBoards() {
+  return await furiApi.get<BoardModel[]>('/board/archive');
+}

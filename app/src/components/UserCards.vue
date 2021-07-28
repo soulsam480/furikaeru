@@ -1,15 +1,19 @@
 <script setup lang="ts">
 import type { BoardModel } from 'src/utils/types';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { getDDMMYY, copyLink, shareBoard, generateRoute } from 'src/utils/helpers';
 import FButton from 'src/components/lib/FButton.vue';
-import { deleteBoard, getAllBoards, updateBoard } from 'src/utils/boardService';
+import { deleteBoard, getAllBoards, getArchivedBoards, updateBoard } from 'src/utils/boardService';
 import FMenu from 'src/components/lib/FMenu.vue';
 import { useAlert, useLoadingBar } from 'src/utils/composables';
-import ConfirmModal from './App/ConfirmModal.vue';
+import ConfirmModal from 'src/components/App/ConfirmModal.vue';
 
-const { push } = useRouter();
+const props = defineProps<{
+  isArchive: boolean;
+}>();
+
+const { push, currentRoute } = useRouter();
 const { set } = useAlert();
 const { start, stop } = useLoadingBar();
 
@@ -17,11 +21,16 @@ const boards = ref<BoardModel[]>([]);
 
 const isShare = navigator.share;
 
-const boardContext = (type: boolean) => [
-  {
-    label: type ? 'Make private' : 'Make public',
-    value: 'changetype',
-  },
+const boardContext = (type: boolean, archive: boolean) => [
+  !archive
+    ? {
+        label: type ? 'Make private' : 'Make public',
+        value: 'changetype',
+      }
+    : {
+        label: 'Restore',
+        value: 'restore',
+      },
   {
     label: 'Delete',
     value: 'delete',
@@ -39,6 +48,10 @@ async function handleBoardContext(type: string, id?: string, is_public?: boolean
 
     case 'changetype':
       await handleChangeType(id as string, !is_public);
+      break;
+
+    case 'restore':
+      await handleBoardRestore('yes', id as string);
       break;
   }
 }
@@ -61,13 +74,46 @@ async function getBoards() {
   }
 }
 
+async function getAllArchivedBoards() {
+  start();
+  try {
+    const { data }: { data: BoardModel[] } = await getArchivedBoards();
+    boards.value = [...data];
+  } catch (error) {
+    console.log(error);
+  } finally {
+    stop();
+  }
+}
+
 async function handleBoardRemove(type: string, id: string) {
   if (type === 'yes') {
     start();
     try {
-      await deleteBoard(id);
-      set({ type: 'success', message: 'Board removed.' });
-      await getBoards();
+      if (props.isArchive) {
+        await deleteBoard(id as string);
+        await getAllArchivedBoards();
+      } else {
+        await updateBoard(id, { is_deleted: true, is_public: false });
+        await getBoards();
+      }
+      set({ type: 'success', message: `Board ${!props.isArchive ? 'archived' : 'deleted'}.` });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      stop();
+    }
+  }
+  deleteBoardId.value = '';
+}
+
+async function handleBoardRestore(type: string, id: string) {
+  if (type === 'yes') {
+    start();
+    try {
+      await updateBoard(id, { is_deleted: false });
+      set({ type: 'success', message: 'Board restored.' });
+      await getAllArchivedBoards();
     } catch (error) {
       console.log(error);
     } finally {
@@ -92,8 +138,24 @@ async function handleChangeType(id: string, is_public: boolean) {
   }
 }
 
+watch(
+  () => props.isArchive,
+  async (val) => {
+    if (val) {
+      await getAllArchivedBoards();
+      return;
+    } else {
+      await getBoards();
+    }
+  },
+);
+
 onMounted(async () => {
-  await getBoards();
+  if (!props.isArchive) {
+    await getBoards();
+  } else {
+    await getAllArchivedBoards();
+  }
 });
 </script>
 <template>
@@ -114,7 +176,7 @@ onMounted(async () => {
           <div class="text-lg truncate flex-grow" :title="board.title">{{ board.title }}</div>
           <div class="flex-none">
             <f-menu
-              :options="boardContext(board.is_public)"
+              :options="boardContext(board.is_public, board.is_deleted)"
               option-key="value"
               sm
               icon="ion:ellipsis-vertical-outline"
