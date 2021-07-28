@@ -61,6 +61,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleKeyDown));
           items-center
           flex
           f-modal
+          backdrop-filter backdrop-blur-sm
         "
       >
         <div class="relative w-full my-6 sm:mx-auto mx-2 max-w-3xl">

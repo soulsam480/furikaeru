@@ -7,6 +7,7 @@ import FButton from 'src/components/lib/FButton.vue';
 import { deleteBoard, getAllBoards, updateBoard } from 'src/utils/boardService';
 import FMenu from 'src/components/lib/FMenu.vue';
 import { useAlert, useLoadingBar } from 'src/utils/composables';
+import ConfirmModal from './App/ConfirmModal.vue';
 
 const { push } = useRouter();
 const { set } = useAlert();
@@ -27,10 +28,13 @@ const boardContext = (type: boolean) => [
   },
 ];
 
+const isConfirmModal = ref(false);
+const deleteBoardId = ref('');
+
 async function handleBoardContext(type: string, id?: string, is_public?: boolean) {
   switch (type) {
     case 'delete':
-      await handleBoardRemove(id as string);
+      await handleConfirmModal(id as string);
       break;
 
     case 'changetype':
@@ -57,18 +61,25 @@ async function getBoards() {
   }
 }
 
-async function handleBoardRemove(id: string) {
-  start();
-
-  try {
-    await deleteBoard(id);
-    set({ type: 'success', message: 'Board removed.' });
-    await getBoards();
-  } catch (error) {
-    console.log(error);
-  } finally {
-    stop();
+async function handleBoardRemove(type: string, id: string) {
+  if (type === 'yes') {
+    start();
+    try {
+      await deleteBoard(id);
+      set({ type: 'success', message: 'Board removed.' });
+      await getBoards();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      stop();
+    }
   }
+  deleteBoardId.value = '';
+}
+
+function handleConfirmModal(id: string) {
+  deleteBoardId.value = id;
+  isConfirmModal.value = true;
 }
 
 async function handleChangeType(id: string, is_public: boolean) {
@@ -87,6 +98,12 @@ onMounted(async () => {
 </script>
 <template>
   <div>
+    <confirm-modal
+      v-model:is-modal="isConfirmModal"
+      @yes="handleBoardRemove('yes', deleteBoardId)"
+      @no="handleBoardRemove('no', deleteBoardId)"
+    />
+
     <div class="grid sm:grid-cols-4 grid-cols-1 gap-2 py-3">
       <div
         v-for="board in boards"

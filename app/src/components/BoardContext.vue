@@ -6,6 +6,7 @@ import type { BoardModel } from 'src/utils/types';
 import FMenu from 'src/components/lib/FMenu.vue';
 import FIcon from 'src/components/lib/FIcon.vue';
 import { useAlert } from 'src/utils/composables';
+import ConfirmModal from './App/ConfirmModal.vue';
 
 const props = defineProps<{
   board: BoardModel;
@@ -34,6 +35,7 @@ const maxVote = ref<number>();
 const isExpand = ref(false);
 const isFocus = ref(false);
 const noDrag = ref(false);
+const isConfirmModal = ref(false);
 
 watch(
   () => props.board.max_vote,
@@ -83,10 +85,12 @@ function handleDragToggle() {
       p-1
     "
   >
+    <confirm-modal v-model:is-modal="isConfirmModal" @yes="$emit('remove')" />
+
     <f-button
       title="Remove board"
       v-if="board.user === uid"
-      @click="$emit('remove')"
+      @click="isConfirmModal = true"
       icon="ion:trash-outline"
       size="17px"
       sm
@@ -102,6 +106,7 @@ function handleDragToggle() {
       v-if="board.is_public"
       noicon
       class="mt-1"
+      :disabled="board.user !== uid"
     />
 
     <f-menu
