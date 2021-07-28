@@ -201,7 +201,7 @@ function handleCardAddition(id: string, content: string, top = true) {
 async function handleBoardRemove(id: string) {
   try {
     await updateBoard(id, { is_deleted: true });
-    set({ type: 'success', message: 'Board removed successfully !' });
+    set({ type: 'success', message: 'Board archived successfully !' });
     push('/');
   } catch (error) {
     set({ type: 'danger', message: error });
