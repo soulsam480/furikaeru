@@ -48,7 +48,7 @@ const buttonColors = computed(() => {
   >
     <span v-if="icon || $slots.icon">
       <slot name="icon">
-        <icon v-if="icon" :icon="icon" :size="icon && sm && !size ? '15px' : size" />
+        <icon v-if="icon" :icon="icon" :size="icon && sm && !size ? '15px' : size || '17px'" />
       </slot>
     </span>
 

@@ -5,14 +5,14 @@ import FButton from 'src/components/lib/FButton.vue';
 import { ref } from 'vue';
 
 defineProps<{
-  options: (string | { [x in 'label' | 'value']: any })[] | null;
+  options: (string | number | { [x in 'label' | 'value']: any })[] | null;
   newCardParent: string;
   isModal: boolean;
 }>();
 
 const emits = defineEmits<{
   (e: 'add', val: string): void;
-  (e: 'update:new-card-parent', val: string): void;
+  (e: 'update:new-card-parent', val: string | number): void;
   (e: 'update:is-modal', val: boolean): void;
 }>();
 

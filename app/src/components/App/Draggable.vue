@@ -6,6 +6,7 @@ import type { Card, Comment } from 'src/utils/types';
 import EditContent from 'src/components/App/EditContent.vue';
 import FButton from 'src/components/lib/FButton.vue';
 import NewComment from 'src/components/NewComment.vue';
+import ConfirmModal from './ConfirmModal.vue';
 
 const props = defineProps<{
   list: Card[];
@@ -25,6 +26,8 @@ const isEdit = ref<string | null>(null);
 const isComments = ref<string[]>([]);
 const sortedList = ref<Card[]>(props.list);
 const movedEl = ref<Card | null>(null);
+const isConfirmModal = ref(false);
+const deleteCardId = ref('');
 
 //TODO: Anti pattern but have to do it
 watch(
@@ -74,12 +77,21 @@ function handleTitleChange() {
   (isEdit.value = null), emits('end');
 }
 
-function handleRemoveCard(id: string) {
-  const cardIndex = props.list.findIndex((el) => el.id === id);
-  if (cardIndex !== -1) {
-    props.list.splice(cardIndex, 1);
+function handleRemoveCard(type: string, id: string) {
+  if (type === 'yes') {
+    const cardIndex = props.list.findIndex((el) => el.id === id);
+    if (cardIndex !== -1) {
+      props.list.splice(cardIndex, 1);
+    }
+    emits('end');
   }
-  emits('end');
+
+  deleteCardId.value = '';
+}
+
+function handleConfirmModal(id: string) {
+  deleteCardId.value = id;
+  isConfirmModal.value = true;
 }
 
 function handleAddComment(id: string, val: string) {
@@ -151,6 +163,12 @@ function handleStart(e: any) {
 }
 </script>
 <template>
+  <confirm-modal
+    @yes="handleRemoveCard('yes', deleteCardId)"
+    @no="handleRemoveCard('no', deleteCardId)"
+    v-model:is-modal="isConfirmModal"
+  />
+
   <vuedraggable
     class="board-grid__column flex flex-col"
     @change="$emit('change')"
@@ -220,7 +238,7 @@ function handleStart(e: any) {
                 :color="color"
                 icon="ion:trash-outline"
                 title="Remove card"
-                @click="handleRemoveCard(element.id)"
+                @click="handleConfirmModal(element.id)"
                 v-if="element.user_id === userId"
                 sm
                 flat
