@@ -35,6 +35,9 @@ export class Board extends BaseEntity {
   @Column('integer', { default: 5, nullable: true })
   max_vote: number;
 
+  @Column('boolean', { default: false, nullable: true })
+  is_deleted: boolean;
+
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
