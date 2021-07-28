@@ -102,6 +102,7 @@ function handleDragToggle() {
       v-if="board.is_public"
       noicon
       class="mt-1"
+      :disabled="board.user !== uid"
     />
 
     <f-menu

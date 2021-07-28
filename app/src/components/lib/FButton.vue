@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import { computed } from '@vue/runtime-core';
 import Icon from 'src/components/lib/FIcon.vue';
 
-defineProps<{
+const props = defineProps<{
   label?: any;
   icon?: string;
   size?: string;
@@ -10,23 +11,28 @@ defineProps<{
   center?: boolean;
   block?: boolean;
   flat?: boolean;
+  // 'red', 'green', 'purple', 'indigo', 'cyan', 'amber', 'lime'
   color?: string;
+  disabled?: boolean;
 }>();
 
 defineEmits(['click']);
+
+const buttonColors = computed(() => {
+  return props.disabled && props.flat
+    ? `hover:bg-red-300`
+    : props.disabled
+    ? `bg-${props.color || 'cyan'}-500`
+    : props.invert
+    ? `bg-${props.color || 'cyan'}-200 hover:bg-${props.color || 'cyan'}-300`
+    : props.flat
+    ? `hover:bg-${props.color || 'cyan'}-300`
+    : `bg-${props.color || 'cyan'}-300 hover:bg-${props.color || 'cyan'}-400`;
+});
 </script>
 <template>
   <button
-    class="
-      flex
-      items-center
-      text-sm
-      rounded-md
-      space-x-1
-      focus:outline-none
-      disabled:(cursor-not-allowed
-      hover:bg-red-100)
-    "
+    class="flex items-center text-sm rounded-md space-x-1 focus:outline-none disabled:(cursor-not-allowed)"
     :class="[
       {
         'px-2 py-[6px]': sm,
@@ -34,16 +40,11 @@ defineEmits(['click']);
         'justify-center': center,
         'w-full': block,
       },
-      `${
-        invert
-          ? `bg-${color || 'cyan'}-200 hover:bg-${color || 'cyan'}-300`
-          : flat
-          ? `hover:bg-${color || 'cyan'}-300`
-          : `bg-${color || 'cyan'}-300 hover:bg-${color || 'cyan'}-400`
-      }`,
+      buttonColors,
     ]"
     type="button"
     @click="$emit('click')"
+    :disabled="disabled"
   >
     <span v-if="icon || $slots.icon">
       <slot name="icon">

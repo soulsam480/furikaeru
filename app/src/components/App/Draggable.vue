@@ -193,7 +193,20 @@ function handleStart(e: any) {
         <div class="pb-2">
           <div class="flex space-x-1 items-start" v-if="isEdit !== element.id">
             <div class="text-lg py-[2px] flex-grow break-word board-grid__column__item__title">{{ element.title }}</div>
-            <div class="flex board-grid__column__item__edit transition-all ease-in-out">
+            <div
+              class="
+                flex
+                board-grid__column__item__edit
+                transition-all
+                ease-in-out
+                absolute
+                right-3
+                shadow
+                rounded-md
+                z-10
+              "
+              :class="`bg-${color}-400`"
+            >
               <f-button
                 :color="color"
                 icon="ion:pencil"
@@ -214,7 +227,7 @@ function handleStart(e: any) {
               />
             </div>
           </div>
-          <div v-else class="flex items-center w-full">
+          <div v-else class="flex items-start w-full">
             <edit-content
               :content="element.title"
               @save="(element.title = $event), handleTitleChange()"

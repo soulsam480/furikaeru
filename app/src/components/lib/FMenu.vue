@@ -14,6 +14,7 @@ const props = defineProps<{
   flat?: boolean;
   block?: boolean;
   noicon?: boolean;
+  disabled?: boolean;
 }>();
 const emit = defineEmits<{
   (e: 'update:modelValue', val: string | number): void;
@@ -74,6 +75,7 @@ function handleClick(option: string | number | Record<'label' | 'value', any>, e
         :flat="flat"
         v-bind="$attrs"
         :block="block"
+        :disabled="disabled"
       />
     </div>
 
