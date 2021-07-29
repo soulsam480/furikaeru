@@ -10,11 +10,16 @@ import FMenu from 'src/components/lib/FMenu.vue';
 import { useAlert, useLoadingBar } from 'src/utils/composables';
 import { generateRoute } from 'src/utils/helpers';
 import { Head } from '@vueuse/head';
+import FButton from 'src/components/lib/FButton.vue';
+import { ref } from 'vue';
+import FIcon from 'src/components/lib/FIcon.vue';
 
 const { getUser } = useUser();
 const { set } = useAlert();
 const { push } = useRouter();
 const { start, stop } = useLoadingBar();
+
+const isArchivePage = ref(false);
 
 const boardTypes = [
   {
@@ -88,20 +93,37 @@ async function createBoard(type: string) {
 
     push(type === 'public' ? `/${generateRoute(result)}/` : `/board/${generateRoute(result)}/`);
   } catch (error) {
-    console.log(JSON.parse(JSON.stringify(error)));
+    console.log(error);
   }
 }
 </script>
 <template>
   <div>
-    <Head>
+    <head>
       <title>Home | Furikaeru</title>
-    </Head>
+    </head>
     <f-banner text="Furikaeru is in active development. Bugs and frequent changes are expected." class="my-2" />
     <div class="flex justify-between pt-3">
       <div class="text-3xl font-semibold dark:text-white">My boards</div>
-      <f-menu :options="boardTypes" @input="createBoard" label="Add new" sm option-key="value" icon="ion:add-outline" />
+      <div class="flex space-x-2 items-center">
+        <f-button
+          sm
+          label="Trash"
+          icon="ion:archive-outline"
+          :color="isArchivePage ? 'red' : 'cyan'"
+          @click="isArchivePage = !isArchivePage"
+        ></f-button>
+
+        <f-menu
+          :options="boardTypes"
+          @input="createBoard"
+          label="Add new"
+          sm
+          option-key="value"
+          icon="ion:add-outline"
+        />
+      </div>
     </div>
-    <user-cards />
+    <user-cards :is-archive="isArchivePage" />
   </div>
 </template>

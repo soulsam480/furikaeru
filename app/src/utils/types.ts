@@ -38,6 +38,7 @@ export interface BoardModel {
   created_at: number;
   updated_at: number;
   max_vote: number;
+  is_deleted: boolean;
 }
 
 export type FLoadingBarExpose = {

@@ -28,7 +28,26 @@ boardRouter.post('/', async (req: RequestWithUser, res) => {
 boardRouter.get('/', async (req: RequestWithUser, res) => {
   const { userId } = req;
   try {
-    const userBoards = await Board.find({ where: { user: { id: userId } }, order: { updated_at: 'DESC' } });
+    const userBoards = await Board.find({
+      where: { user: { id: userId }, is_deleted: false },
+      order: { updated_at: 'DESC' },
+    });
+
+    res.send([...userBoards.map((el) => ({ ...el, data: undefined }))]);
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).send(ERROR_MESSAGES.iss);
+  }
+});
+
+boardRouter.get('/archive', async (req: RequestWithUser, res) => {
+  const { userId } = req;
+  try {
+    const userBoards = await Board.find({
+      where: { user: { id: userId }, is_deleted: true },
+      order: { updated_at: 'DESC' },
+    });
 
     res.send([...userBoards.map((el) => ({ ...el, data: undefined }))]);
   } catch (error) {

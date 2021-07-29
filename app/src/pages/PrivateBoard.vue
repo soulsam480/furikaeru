@@ -21,7 +21,7 @@ import { useUser } from 'src/store/user';
 import { v4 } from 'uuid';
 import FButton from 'src/components/lib/FButton.vue';
 const EditContent = defineAsyncComponent(() => import('src/components/App/EditContent.vue'));
-import { deleteBoard, getBoard, updateBoard } from 'src/utils/boardService';
+import { getBoard, updateBoard } from 'src/utils/boardService';
 const BoardContext = defineAsyncComponent(() => import('src/components/BoardContext.vue'));
 import FMenu from 'src/components/lib/FMenu.vue';
 import { useIo } from 'src/utils/createWs';
@@ -200,8 +200,8 @@ function handleCardAddition(id: string, content: string, top = true) {
 
 async function handleBoardRemove(id: string) {
   try {
-    await deleteBoard(id);
-    set({ type: 'success', message: 'Board removed successfully !' });
+    await updateBoard(id, { is_deleted: true });
+    set({ type: 'success', message: 'Board archived successfully !' });
     push('/');
   } catch (error) {
     set({ type: 'danger', message: error });
