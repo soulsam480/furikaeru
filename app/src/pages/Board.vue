@@ -275,9 +275,9 @@ onBeforeUnmount(() => {
 </script>
 <template>
   <div class="board pb-10">
-    <head>
+    <Head>
       <title>{{ board?.title }} | Furikaeru</title>
-    </head>
+    </Head>
 
     <new-card-modal
       :options="columnOptions"

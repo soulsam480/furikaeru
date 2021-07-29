@@ -99,9 +99,9 @@ async function createBoard(type: string) {
 </script>
 <template>
   <div>
-    <head>
+    <Head>
       <title>Home | Furikaeru</title>
-    </head>
+    </Head>
     <f-banner text="Furikaeru is in active development. Bugs and frequent changes are expected." class="my-2" />
     <div class="flex justify-between pt-3">
       <div class="text-3xl font-semibold dark:text-white">My boards</div>
