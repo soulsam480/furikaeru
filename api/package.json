@@ -1,6 +1,6 @@
 {
   "name": "api",
-  "version": "0.0.1-beta",
+  "version": "0.0.1",
   "description": "A small node backend boilerplate.",
   "author": "soulsam480 <soulsam480@hotmail.com>",
   "license": "MIT",
