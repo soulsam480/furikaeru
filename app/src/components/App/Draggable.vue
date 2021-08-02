@@ -34,14 +34,20 @@ const deleteCardId = ref('');
 watch(
   () => [props.sort, props.list],
   () => {
+    if (!props.sort) return (sortedList.value = props.list);
+
     if (props.sort === 'vote') {
       sortedList.value = props.list.slice().sort((a, b) => {
         const aVotes = Object.keys(a.votes).length > 0 ? Object.values(a.votes).reduce((acc, val) => acc + val) : 0;
         const bVotes = Object.keys(b.votes).length > 0 ? Object.values(b.votes).reduce((acc, val) => acc + val) : 0;
         return bVotes > aVotes ? 1 : -1;
       });
-    } else {
-      sortedList.value = props.list;
+    } else if (props.sort === 'comment') {
+      sortedList.value = props.list.slice().sort((a, b) => {
+        const aComments = Object.keys(a.comments).length;
+        const bComments = Object.keys(b.comments).length;
+        return bComments > aComments ? 1 : -1;
+      });
     }
   },
   {
