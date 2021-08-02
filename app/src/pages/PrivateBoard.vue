@@ -174,7 +174,7 @@ function handleCardAddition(id: string, content: string, top = true) {
 
   if (!content) return;
   const card: Card = {
-    id: v4(),
+    id: v4().split('-')[0],
     title: content,
     votes: {},
     user_id: getUserId.value as string,

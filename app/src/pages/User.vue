@@ -37,13 +37,13 @@ async function createBoard(type: string) {
     title: 'Example board',
     data: [
       {
-        id: uuid(),
+        id: uuid().split('-')[0],
         name: 'This is a column',
         color: 'lime',
         owner_id: getUser.value.id as string,
         data: [
           {
-            id: uuid(),
+            id: uuid().split('-')[0],
             title: 'a card',
             votes: {},
             user_id: getUser.value.id as string,
@@ -52,13 +52,13 @@ async function createBoard(type: string) {
         ],
       },
       {
-        id: uuid(),
+        id: uuid().split('-')[0],
         name: 'This is another column',
         color: 'green',
         owner_id: getUser.value.id as string,
         data: [
           {
-            id: uuid(),
+            id: uuid().split('-')[0],
             title: 'another card',
             votes: {},
             user_id: getUser.value.id as string,
@@ -67,13 +67,13 @@ async function createBoard(type: string) {
         ],
       },
       {
-        id: uuid(),
+        id: uuid().split('-')[0],
         name: 'This is another column',
         color: 'amber',
         owner_id: getUser.value.id as string,
         data: [
           {
-            id: uuid(),
+            id: uuid().split('-')[0],
             title: 'another one',
             votes: {},
             user_id: getUser.value.id as string,
@@ -99,9 +99,9 @@ async function createBoard(type: string) {
 </script>
 <template>
   <div>
-    <head>
+    <Head>
       <title>Home | Furikaeru</title>
-    </head>
+    </Head>
     <f-banner text="Furikaeru is in active development. Bugs and frequent changes are expected." class="my-2" />
     <div class="flex justify-between pt-3">
       <div class="text-3xl font-semibold dark:text-white">My boards</div>

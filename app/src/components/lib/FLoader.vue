@@ -10,7 +10,7 @@
       bottom-0
       w-full
       h-screen
-      z-50
+      z-10000
       overflow-hidden
       dark:bg-gray-800
       bg-white
