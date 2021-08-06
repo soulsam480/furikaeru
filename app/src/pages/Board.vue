@@ -70,21 +70,6 @@ const columnOptions = computed(() => {
   }));
 });
 
-//TODO: THis will be changed
-// function blockUserVotes() {
-//   let maxVotes: string | number | null = localStorage.getItem('__mv');
-//   if (!maxVotes) {
-//     localStorage.setItem('__mv', '0');
-//     return true;
-//   }
-//   if (parseInt(maxVotes) === 5) return false;
-
-//   maxVotes = parseInt(maxVotes);
-//   maxVotes++;
-//   localStorage.setItem('__mv', `${maxVotes}`);
-//   return true;
-// }
-
 function vote(card: Card, uid: string): Card {
   const { votes } = card;
   const userVoted = Object.keys(votes).includes(uid);
@@ -114,7 +99,7 @@ function upVote(e: { cid: string; coid: string }) {
     return console.log('not found');
   }
 
-  if (card.votes[getUserId.value as string] === board.value?.max_vote) return;
+  if (card.votes[getUserId.value as string] >= (board.value as BoardModel).max_vote) return;
   card = vote(card, getUserId.value as string);
 
   column?.data.splice(
@@ -157,7 +142,7 @@ function handleCardAddition(id: string, content: string, top = true) {
 
   if (!content) return;
   const card: Card = {
-    id: v4(),
+    id: v4().split('-')[0],
     title: content,
     votes: {},
     user_id: getUserId.value as string,
@@ -416,6 +401,7 @@ onBeforeUnmount(() => {
           :is-comments-expand="isCommentsExpand"
           :is-focus-mode="isFocusMode"
           :no-drag="noDrag"
+          :max-vote="board?.max_vote"
         />
         <f-button
           @click="isBottomNewCard = column.id"

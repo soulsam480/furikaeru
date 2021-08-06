@@ -23,6 +23,10 @@ const SortOptions = [
     label: 'by Vote',
     value: 'vote',
   },
+  {
+    label: 'by Comment',
+    value: 'comment',
+  },
 ];
 
 const maxVoteOptions = [...[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((val) => ({ label: `Max vote ${val}`, value: val }))];

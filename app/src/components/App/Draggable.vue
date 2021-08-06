@@ -2,11 +2,11 @@
 import { ref, watch } from 'vue';
 import vuedraggable from 'vuedraggable';
 import Icon from 'src/components/lib/FIcon.vue';
-import type { Card, Comment } from 'src/utils/types';
+import type { Card, Comment, Vote } from 'src/utils/types';
 import EditContent from 'src/components/App/EditContent.vue';
 import FButton from 'src/components/lib/FButton.vue';
 import NewComment from 'src/components/NewComment.vue';
-import ConfirmModal from './ConfirmModal.vue';
+import ConfirmModal from 'src/components/App/ConfirmModal.vue';
 
 const props = defineProps<{
   list: Card[];
@@ -18,6 +18,7 @@ const props = defineProps<{
   noDrag: boolean;
   isFocusMode?: boolean;
   color?: string;
+  maxVote?: number;
 }>();
 
 const emits = defineEmits(['upvote', 'change', 'move', 'end']);
@@ -33,14 +34,20 @@ const deleteCardId = ref('');
 watch(
   () => [props.sort, props.list],
   () => {
+    if (!props.sort) return (sortedList.value = props.list);
+
     if (props.sort === 'vote') {
       sortedList.value = props.list.slice().sort((a, b) => {
         const aVotes = Object.keys(a.votes).length > 0 ? Object.values(a.votes).reduce((acc, val) => acc + val) : 0;
         const bVotes = Object.keys(b.votes).length > 0 ? Object.values(b.votes).reduce((acc, val) => acc + val) : 0;
         return bVotes > aVotes ? 1 : -1;
       });
-    } else {
-      sortedList.value = props.list;
+    } else if (props.sort === 'comment') {
+      sortedList.value = props.list.slice().sort((a, b) => {
+        const aComments = Object.keys(a.comments).length;
+        const bComments = Object.keys(b.comments).length;
+        return bComments > aComments ? 1 : -1;
+      });
     }
   },
   {
@@ -59,7 +66,8 @@ watch(
   },
 );
 
-function calcVotes(votes: Record<string, any>) {
+function calcVotes(votes: Record<string, any> | number) {
+  if (typeof votes === 'number') return votes;
   if (Object.keys(votes).length === 0) return 0;
   return Object.values(votes).reduce((acc, val) => acc + val);
 }
@@ -101,16 +109,34 @@ function handleAddComment(id: string, val: string) {
   if (cardIndex !== -1) {
     props.list[cardIndex].comments[createIndex] = {
       text: val,
-      likes: 0,
+      likes: {},
     };
   }
   emits('end');
 }
 
 function handleCommentUpVote(id: string, coid: string) {
+  const uid = coid.split('--')[0];
+
   const cardIndex = props.list.findIndex((el) => el.id === id);
   if (cardIndex !== -1) {
-    props.list[cardIndex].comments[coid].likes += 1;
+    const comment = props.list[cardIndex].comments[coid];
+
+    // this is layer for backwards compatibility
+    if (typeof comment.likes === 'number') {
+      props.list[cardIndex].comments[coid].likes = { default: comment.likes };
+      emits('end');
+      return;
+    }
+
+    if (!Object.keys(comment.likes).includes(uid)) {
+      (props.list[cardIndex].comments[coid].likes as Vote)[uid] = 1;
+      emits('end');
+      return;
+    }
+
+    if (comment.likes[uid] >= (props.maxVote as number)) return;
+    (props.list[cardIndex].comments[coid].likes as Vote)[uid] += 1;
   }
   emits('end');
 }
@@ -315,7 +341,7 @@ function handleStart(e: any) {
                     <icon icon="ion:rocket-outline" size="10px" />
                     <span>&nbsp;</span>
                   </template>
-                  <span class="text-xs">{{ comment[1].likes }}</span>
+                  <span class="text-xs">{{ calcVotes(comment[1].likes) }}</span>
                 </div>
               </div>
             </div>

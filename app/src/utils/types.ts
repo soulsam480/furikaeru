@@ -7,7 +7,7 @@ export type Vote = {
 
 export type UserComment = {
   text: string;
-  likes: number;
+  likes: number | Vote;
 };
 
 export type Comment = {
