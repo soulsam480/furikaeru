@@ -12,12 +12,15 @@ import { registerToken } from 'src/utils/helpers';
 import { useUser } from 'src/store/user';
 import { useIo } from 'src/utils/createWs';
 import { getAlerts, removeAlert, setAlerts } from 'src/utils/composables';
+import FButton from 'src/components/lib/FButton.vue';
 
 const { getLoader } = useUser();
 const { isConnected } = useIo();
 
 const loadingBar = ref<ComponentPublicInstance<{}, FLoadingBarExpose> | null>(null);
 const isBarLoader = ref(false);
+const readBanner = () => localStorage.getItem('__f-banner');
+const isBanner = ref(readBanner());
 
 watch(
   () => isConnected.value,
@@ -73,6 +76,11 @@ provide(AlertKey, {
   alerts: getAlerts,
 });
 
+function setBanner() {
+  localStorage.setItem('__f-banner', 'false');
+  isBanner.value = readBanner();
+}
+
 authState();
 registerToken();
 checkDarkMode();
@@ -105,6 +113,15 @@ checkDarkMode();
 
     <div class="max-w-7xl mx-auto px-2 py-3">
       <router-view />
+    </div>
+
+    <div class="fixed z-10 mx-2 bottom-5 left-0 right-0 flex items-center justify-center" v-if="!isBanner">
+      <div class="p-2 flex space-x-3 items-center bg-lime-200 border border-lime-400 rounded-md">
+        <div class="flex-grow">We use google analytics for traffic measurement and that's it !</div>
+        <div class="flex-none">
+          <f-button label="no problem !" color="cyan" @click="setBanner" />
+        </div>
+      </div>
     </div>
   </div>
 </template>

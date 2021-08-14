@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import vuedraggable from 'vuedraggable';
+import VueDraggable from 'vuedraggable';
 import Icon from 'src/components/lib/FIcon.vue';
 import type { Card, Comment, Vote } from 'src/utils/types';
 import EditContent from 'src/components/App/EditContent.vue';
@@ -195,7 +195,7 @@ function handleStart(e: any) {
     v-model:is-modal="isConfirmModal"
   />
 
-  <vuedraggable
+  <VueDraggable
     class="board-grid__column flex flex-col"
     @change="$emit('change')"
     :list="sortedList"
@@ -350,7 +350,7 @@ function handleStart(e: any) {
         <!-- </transition> -->
       </div>
     </template>
-  </vuedraggable>
+  </VueDraggable>
 </template>
 <style>
 .ghost {

@@ -6,7 +6,7 @@ const COLORS = ['red', 'green', 'purple', 'indigo', 'cyan', 'amber', 'lime'];
 function generateSafeList(dat: string[]) {
   return [
     ...dat.map((val) => [500, 400, 300, 50, 200, 100].map((r) => `bg-${val}-${r}`)),
-    ...dat.map((val) => [300].map((r) => `hover:bg-${val}-${r}`)),
+    ...dat.map((val) => [300, 400].map((r) => `hover:bg-${val}-${r}`)),
   ];
 }
 
