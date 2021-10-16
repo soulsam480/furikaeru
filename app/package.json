@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "typecheck": "vue-tsc --noEmit --skipLibCheck"
+    "typecheck": "vue-tsc --noEmit --skipLibCheck",
+    "dts": "vue-tsc --project tsconfig.types.json --declaration --emitDeclarationOnly --declarationDir types"
   },
   "dependencies": {
     "@iconify/iconify": "^2.0.4",
