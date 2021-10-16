@@ -3,6 +3,8 @@ import { UserResponse, useUser } from 'src/store/user';
 import { v4 } from 'uuid';
 import { useRouter } from 'vue-router';
 
+type Tokens = { accessToken: string; refreshToken: string };
+
 export async function authState() {
   const { setLogin, getUser, isLoggedIn, showLoader, hideLoader } = useUser();
   const __token = localStorage.getItem('__token');
@@ -13,18 +15,16 @@ export async function authState() {
     try {
       const {
         data: { accessToken },
-      } = await axios({
+      } = await axios.get<Tokens>('/auth/token', {
         baseURL: import.meta.env.VITE_API,
-        url: '/auth/token',
         headers: {
           'refresh-token': `Bearer ${__token}`,
         },
       });
 
       if (accessToken) {
-        const { data }: { data: UserResponse } = await axios({
+        const { data } = await axios.get<UserResponse>('/auth/user', {
           baseURL: import.meta.env.VITE_API,
-          url: '/auth/user',
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -48,9 +48,8 @@ export async function authState() {
       try {
         const {
           data: { accessToken, refreshToken },
-        } = await axios({
+        } = await axios.get<UserResponse>('/auth/token', {
           baseURL: import.meta.env.VITE_API,
-          url: '/auth/token',
           headers: {
             'refresh-token': `Bearer ${__token}`,
           },

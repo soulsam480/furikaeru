@@ -5,37 +5,38 @@
 
 > A look back
 
-A small app for discussing retro while being `Anonymous`. Create public/private boards with a simple `kanban` baord interface and `realtime` changes. Built with a smooth and approachable UI, Furi is is more than an app for discussing retro.
+A small app for discussing retro while being `Anonymous`. Create public/private boards with a simple `kanban` baord interface and `realtime` changes. Built with a smooth and approachable UI, Furi is is more than an app for discussing retro. See releases [here](https://github.com/soulsam480/furikaeru/releases)
 
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/soulsam480/furikaeru)
 
 ### Status
 
 - Hosted -> https://furikaeru.sambitsahoo.com
-- Development -> public alpha
-- Roadmap board -> [Don't spam please!](https://furikaeru.sambitsahoo.com/62b79a16-a97f-41c4-a6f6-8b7256be10d9/)
+- Development -> v0.0.1 (Might be the last release of Furikaeru)
+- Roadmap board -> [Don't spam please!](https://furikaeru.sambitsahoo.com/Furi_feature_board--c32276c9-d259-409a-9663-b5fdbbbcf997)
 
 #### Features
 Current:
-- Create/delete Boards (public only for now)
+- Create/delete Boards
 - Add/Edit/remove Cards
 - Vote on cards
-- Comment/vote comment on cards
-- Edit Board title/ Column title
+- Comment on cards
 - Column color customization
 - Private boards
-- Error handling
+- Board archive/restore
+- Focus mode
+- Keyboard shortcuts
 
 Projected:
 - Add comment edit
-- Add more in the public [roadmap board](https://furikaeru.sambitsahoo.com/62b79a16-a97f-41c4-a6f6-8b7256be10d9/)
+- Add more in the public [feature board](https://furikaeru.sambitsahoo.com/Furi_feature_board--c32276c9-d259-409a-9663-b5fdbbbcf997)
 
 #### Furi component library
 At the heart of `Furikaeru`, there is a standalone `vue 3` component library. There are only a few components, which are being used repeatedly throughout the app. It was designed on the basis of the project needs but has room for customisations. To view or use the components have a look [here](./app/src/components/lib).
 #### Stack
 
 API:
-- SQLite 3
+- Postgres
 - TypeORM
 - Expressjs
 - SocketIo
@@ -50,6 +51,7 @@ APP:
 - SocketIo client
 - Iconify
 - Purge icons
+- TypeScript
 
 #### Run it lcally
 > You need to have yarn installed as this repo is a `Yarn Workspace`.

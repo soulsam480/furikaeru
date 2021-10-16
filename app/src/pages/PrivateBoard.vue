@@ -40,11 +40,10 @@ const { set } = useAlert();
 const { isConnected } = useIo();
 useKeyBindings(BINDINGS);
 
-const board = ref<BoardModel>();
+const board = ref<BoardModel>(null as any);
 const enabled = ref(true);
 const isEditColumnName = ref<string | null>(null);
 const isEditBoardName = ref<string | null>(null);
-const newCardName = ref('');
 const sortBy = ref('');
 const noDrag = ref(false);
 const isCommentsExpand = ref(false);
@@ -60,6 +59,7 @@ const bid = computed(() => {
 });
 const columnOptions = computed(() => {
   if (!board.value) return [];
+
   return (board.value as BoardModel).data.map((col) => ({
     label: col.name,
     value: col.id,
@@ -204,7 +204,7 @@ async function handleBoardRemove(id: string) {
     set({ type: 'success', message: 'Board archived successfully !' });
     push('/');
   } catch (error) {
-    set({ type: 'danger', message: error });
+    set({ type: 'danger', message: error as string });
   }
 }
 
@@ -317,14 +317,14 @@ onMounted(async () => {
                 flat
                 :color="column.color || 'cyan'"
                 class="dark:text-white dark:hover:text-black"
-                @input="handleColumnTheme(column.id, $event)"
+                @input="handleColumnTheme(column.id, $event as string)"
               >
                 <template #option="{ option }">
                   <div class="flex items-center space-x-2">
                     <div
                       class="p-3 flex-none rounded-sm cursor-pointer"
                       :class="`palette--${option}`"
-                      :title="option"
+                      :title="(option as string)"
                     ></div>
                     <div class="flex-grow capitalize">
                       {{ option }}
