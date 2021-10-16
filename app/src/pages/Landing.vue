@@ -40,7 +40,6 @@ async function catchRedirect() {
 
   try {
     const data = await getUserData();
-    console.log(data);
 
     localStorage.setItem('__token', data.refreshToken);
     setToken(data.accessToken);
