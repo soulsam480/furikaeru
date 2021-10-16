@@ -1,75 +1,119 @@
 import axios from 'axios';
 import { UserResponse, useUser } from 'src/store/user';
 import { v4 } from 'uuid';
-import { useRouter } from 'vue-router';
+import { ref } from 'vue';
+import { Router, useRouter } from 'vue-router';
+import { furiApi, getToken, setToken } from './helpers';
 
 type Tokens = { accessToken: string; refreshToken: string };
 
-export async function authState() {
-  const { setLogin, getUser, isLoggedIn, showLoader, hideLoader } = useUser();
-  const __token = localStorage.getItem('__token');
+export async function getUserData() {
+  try {
+    const { data } = await furiApi.get<UserResponse>('/auth/user');
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
 
-  if (!!__token) {
-    showLoader();
-    const { push, currentRoute } = useRouter();
-    try {
-      const {
-        data: { accessToken },
-      } = await axios.get<Tokens>('/auth/token', {
-        baseURL: import.meta.env.VITE_API,
-        headers: {
-          'refresh-token': `Bearer ${__token}`,
-        },
-      });
+export function setUUID() {
+  const uuid = localStorage.getItem('__uuid');
+  if (!uuid) {
+    localStorage.setItem('__uuid', v4());
+  }
+}
 
-      if (accessToken) {
-        const { data } = await axios.get<UserResponse>('/auth/user', {
-          baseURL: import.meta.env.VITE_API,
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        if (!data) return setLogin(null), localStorage.removeItem('__token');
-        setLogin(data);
+function intervalRef(op: 'get' | 'set' = 'get', val?: number) {
+  const watcher = localStorage.getItem('__watcher');
+  if (op === 'get') return !!watcher ? parseInt(watcher) : null;
 
-        if (currentRoute.value.name !== 'PublicBoard') await push('/user');
-        hideLoader();
-      }
-    } catch (error) {
-      console.log(error);
+  localStorage.setItem('__watcher', `${val}`);
+}
 
-      setLogin(null);
-      localStorage.removeItem('__token');
-      await push('/');
-      hideLoader();
-    }
+export async function getTokens() {
+  try {
+    const {
+      data: { accessToken, refreshToken },
+    } = await axios.get<Tokens>('/auth/token', {
+      baseURL: import.meta.env.VITE_API,
+      headers: {
+        'refresh-token': `Bearer ${getToken()}`,
+      },
+    });
 
-    setInterval(async () => {
+    setToken(accessToken);
+    localStorage.setItem('__token', refreshToken);
+
+    return { accessToken, refreshToken };
+  } catch (error) {
+    console.log(error);
+    setToken(null);
+
+    throw new Error('failed to get token');
+  }
+}
+
+export function tokenWatcher(router: Router) {
+  const interval = setInterval(async () => {
+    localStorage.removeItem('__watcher');
+
+    if (!!getToken()) {
       try {
-        const {
-          data: { accessToken, refreshToken },
-        } = await axios.get<UserResponse>('/auth/token', {
-          baseURL: import.meta.env.VITE_API,
-          headers: {
-            'refresh-token': `Bearer ${__token}`,
-          },
-        });
-        localStorage.setItem('__token', refreshToken);
-        setLogin({ ...getUser.value, accessToken, refreshToken });
+        await getTokens();
+      } catch (error) {
+        console.log(error);
+
+        useUser().setLogin(null);
+        setToken(null);
+        router.push('/');
+      }
+    } else {
+      intervalRef() && clearInterval(intervalRef() as number);
+    }
+  }, 846000);
+
+  intervalRef('set', interval);
+}
+
+export function refreshUser() {
+  const isAuth = ref(false);
+  const { setLogin, showLoader, hideLoader } = useUser();
+  const router = useRouter();
+
+  return {
+    isAuth,
+    auth: async () => {
+      if (!getToken()) return;
+
+      showLoader();
+      isAuth.value = true;
+
+      try {
+        await getTokens();
+
+        const data = await getUserData();
+
+        localStorage.setItem('__token', data.refreshToken);
+        setToken(data.accessToken);
+        delete (data as any).accessToken;
+        delete (data as any).refreshToken;
+        setLogin(data);
+        setUUID();
+
+        tokenWatcher(router);
       } catch (error) {
         console.log(error);
 
         setLogin(null);
-        localStorage.removeItem('__token');
-        push('/');
-      }
-    }, 846000);
-  }
+        setToken(null);
+        if (!!intervalRef()) clearInterval(intervalRef() as number);
 
-  if (!isLoggedIn.value) {
-    const uuid = localStorage.getItem('__uuid');
-    if (!uuid) {
-      localStorage.setItem('__uuid', v4());
-    }
-  }
+        await router.push('/');
+      } finally {
+        isAuth.value = false;
+
+        hideLoader();
+      }
+    },
+  };
 }

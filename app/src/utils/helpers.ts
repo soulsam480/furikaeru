@@ -1,24 +1,46 @@
-import { watch } from 'vue';
-// readonly, ref, Ref,
-import Axios from 'axios';
+import Axios, { AxiosError } from 'axios';
 import { useUser } from 'src/store/user';
 import { BoardModel } from 'src/utils/types';
+import { getTokens } from './authState';
+
+const HEADER_NAME = 'access-token';
 
 export const furiApi = Axios.create({
   baseURL: import.meta.env.VITE_API,
 });
 
-export function registerToken() {
-  const { $state } = useUser();
+furiApi.interceptors.response.use(undefined, async (err: AxiosError) => {
+  // return if not 401 or no token
+  if (err.response?.status !== 401 || !getToken()) return Promise.reject(err);
 
-  watch(
-    () => $state.user,
-    (val) => {
-      (furiApi.defaults.headers as Record<string, any>)['access-token'] = `Bearer ${val.accessToken}`;
-    },
-    { immediate: true },
-  );
-}
+  try {
+    useUser().showLoader();
+
+    //get tokens
+    await getTokens();
+
+    useUser().hideLoader();
+
+    // recover config
+    const config = err.config;
+    delete (config.headers as any)[HEADER_NAME];
+
+    // retry the call
+    return furiApi.request(config);
+  } catch (error) {
+    Promise.reject(err);
+  }
+});
+
+export const getToken = () => localStorage.getItem('__token');
+
+export const setToken = (token: string | null) => {
+  if (!token) {
+    localStorage.removeItem('__token');
+  }
+
+  (furiApi.defaults.headers as Record<string, any>)[HEADER_NAME] = !!token ? `Bearer ${token}` : null;
+};
 
 export function getDDMMYY(time: number) {
   const date = new Date();

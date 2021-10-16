@@ -30,7 +30,7 @@ export const useUser = defineStore({
         this.isLoggedin = false;
         return;
       }
-      localStorage.setItem('__token', user.refreshToken as string);
+
       this.user = { ...user };
       this.isLoggedin = true;
     },

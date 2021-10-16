@@ -1,4 +1,4 @@
-import { useUser } from 'src/store/user';
+import { getToken } from 'src/utils/helpers';
 import { createRouter, RouteRecordRaw, createWebHashHistory, createWebHistory } from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
@@ -29,22 +29,20 @@ const Router = createRouter({
   history: import.meta.env.PROD ? createWebHistory() : createWebHashHistory(),
 });
 
-Router.beforeEach((to, from, next) => {
-  const { isLoggedIn } = useUser();
-
+Router.beforeEach((to, _, next) => {
   if (to.name === 'PublicBoard') return next();
 
   if (['Landing'].includes(to.name as string)) {
-    if (isLoggedIn.value) {
-      return next('/user');
-    }
+    if (!!getToken()) return next('/user');
+
     return next();
   }
 
-  if (!isLoggedIn.value) {
+  if (!getToken()) {
     return next('/');
   }
 
   next();
 });
+
 export { Router };
