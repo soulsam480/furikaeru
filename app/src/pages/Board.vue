@@ -40,7 +40,7 @@ const { isLoggedIn, getUser, showLoader, hideLoader, getLoader } = useUser();
 const { set } = useAlert();
 useKeyBindings(BINDINGS, true);
 
-const board = ref<BoardModel>();
+const board = ref<BoardModel>(null as any);
 const isEditColumnName = ref<string | null>(null);
 const isEditColumnColor = ref<string | null>(null);
 const isEditBoardName = ref<string | null>(null);
@@ -169,10 +169,12 @@ function handleCardAddition(id: string, content: string, top = true) {
 async function handleBoardRemove(id: string) {
   try {
     await updateBoard(id, { is_deleted: true, is_public: false });
+
     set({ type: 'success', message: 'Board archived successfully !' });
+
     push('/');
   } catch (error) {
-    set({ type: 'danger', message: error });
+    set({ type: 'danger', message: error as string });
   }
 }
 
@@ -340,14 +342,14 @@ onBeforeUnmount(() => {
                 flat
                 :color="column.color || 'cyan'"
                 class="dark:text-white dark:hover:text-black"
-                @input="handleColumnTheme(column.id, $event)"
+                @input="handleColumnTheme(column.id, $event as string)"
               >
                 <template #option="{ option }">
                   <div class="flex items-center space-x-2">
                     <div
                       class="p-3 flex-none rounded-sm cursor-pointer"
                       :class="`palette--${option}`"
-                      :title="option"
+                      :title="(option as string)"
                     ></div>
                     <div class="flex-grow capitalize">
                       {{ option }}

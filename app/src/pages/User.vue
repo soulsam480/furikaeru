@@ -12,7 +12,6 @@ import { generateRoute } from 'src/utils/helpers';
 import { Head } from '@vueuse/head';
 import FButton from 'src/components/lib/FButton.vue';
 import { ref } from 'vue';
-import FIcon from 'src/components/lib/FIcon.vue';
 
 const { getUser } = useUser();
 const { set } = useAlert();
@@ -32,7 +31,7 @@ const boardTypes = [
   },
 ];
 
-async function createBoard(type: string) {
+async function createBoard(type: string | number) {
   const data: { title: string; data: BoardColumn[]; is_public: boolean } = {
     title: 'Example board',
     data: [

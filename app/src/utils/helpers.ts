@@ -10,10 +10,11 @@ export const furiApi = Axios.create({
 
 export function registerToken() {
   const { $state } = useUser();
+
   watch(
     () => $state.user,
     (val) => {
-      furiApi.defaults.headers['access-token'] = `Bearer ${val.accessToken}`;
+      (furiApi.defaults.headers as Record<string, any>)['access-token'] = `Bearer ${val.accessToken}`;
     },
     { immediate: true },
   );
