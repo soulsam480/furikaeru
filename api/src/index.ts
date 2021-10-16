@@ -10,6 +10,7 @@ import { createConnection } from 'typeorm';
 import 'reflect-metadata';
 import { authRouter } from 'src/express';
 import cors from 'cors';
+import morgan from 'morgan';
 import { CORS_ORIGINS } from 'src/utils/constants';
 import { createHomeSocket } from 'src/sockets';
 import { boardRouter } from 'src/express/board';
@@ -24,6 +25,7 @@ async function main() {
       credentials: true,
     }),
   );
+  app.use(morgan('short'));
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(passportInstance.initialize());
@@ -40,7 +42,7 @@ async function main() {
     },
   });
 
-  await createConnection({
+  createConnection({
     type: 'postgres',
     database: process.env.PGRES_DB,
     username: process.env.PGRES_USER,
@@ -49,7 +51,7 @@ async function main() {
     port: 5432,
     entities: [join(__dirname, './entities/*')],
     migrations: [join(__dirname, './migrations/*')],
-    logger: /*process.env.PROD ? undefined : */ 'advanced-console',
+    logger: /*process.env.PROD ? undefined : */ process.env.PROD ? 'simple-console' : 'advanced-console',
     logging: /*process.env.PROD ? false :*/ true,
     synchronize: false,
   })

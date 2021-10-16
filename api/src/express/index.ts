@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { sign, verify } from 'jsonwebtoken';
 import passport from 'passport';
 import { User } from 'src/entities/user';
+import { authMiddleware } from 'src/middlewares/authMiddleware';
 import { createTokens } from 'src/services/auth';
 import { ERROR_MESSAGES } from 'src/utils/constants';
 import { RequestWithUser } from 'src/utils/types';
@@ -58,17 +59,9 @@ authRouter.get('/token', async (request, response) => {
   }
 });
 
-authRouter.get('/user', async (req, res) => {
-  const accessToken = req.headers['authorization'] as string;
-
-  const token = accessToken.split('Bearer ')[1];
-
-  if (typeof accessToken !== 'string' || !token) return res.status(401).send(ERROR_MESSAGES.unauthorized);
-
+authRouter.get('/user', authMiddleware, async (req: RequestWithUser, res) => {
   try {
-    const data = <{ userId: string }>verify(token, process.env.ACCESS_TOKEN_SECRET as string);
-
-    const user = await User.findOne({ id: data.userId });
+    const user = await User.findOne({ id: req.userId });
 
     if (!user) return res.status(404).send(ERROR_MESSAGES.user_not_found);
 

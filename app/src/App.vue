@@ -7,8 +7,7 @@ import Navbar from 'src/components/App/Navbar.vue';
 import FLoadingBar from 'src/components/lib/FLoadingBar.vue';
 import FLoader from 'src/components/lib/FLoader.vue';
 import FAlert from 'src/components/lib/FAlert.vue';
-import { authState } from 'src/utils/authState';
-import { registerToken } from 'src/utils/helpers';
+import { refreshUser } from 'src/utils/authState';
 import { useUser } from 'src/store/user';
 import { useIo } from 'src/utils/createWs';
 import { getAlerts, removeAlert, setAlerts } from 'src/utils/composables';
@@ -81,8 +80,8 @@ function setBanner() {
   isBanner.value = readBanner();
 }
 
-authState();
-registerToken();
+const { auth, isAuth } = refreshUser();
+auth();
 checkDarkMode();
 </script>
 <template>
@@ -101,7 +100,7 @@ checkDarkMode();
       </transition-group>
     </div>
 
-    <navbar />
+    <navbar v-if="!isAuth" />
 
     <div class="relative">
       <transition name="fade">
@@ -111,7 +110,7 @@ checkDarkMode();
 
     <f-loader v-if="getLoader" />
 
-    <div class="max-w-7xl mx-auto px-2 py-3">
+    <div class="max-w-7xl mx-auto px-2 py-3" v-if="!isAuth">
       <router-view />
     </div>
 

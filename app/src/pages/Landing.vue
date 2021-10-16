@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import Axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
 import { useUser } from 'src/store/user';
-import type { UserResponse } from 'src/store/user';
 import FBanner from 'src/components/lib/FBanner.vue';
 import AppFooter from 'src/components/App/Footer.vue';
 import FButton from 'src/components/lib/FButton.vue';
 import { Head } from '@vueuse/head';
+import { setToken } from 'src/utils/helpers';
+import { getUserData, setUUID, tokenWatcher } from 'src/utils/authState';
 
 const { setLogin, showLoader, hideLoader } = useUser();
 
 const url = import.meta.env.VITE_API;
 const { query } = useRoute();
-const { push } = useRouter();
+const router = useRouter();
 
 function login(type: 'google' | 'fb') {
   switch (type) {
@@ -34,17 +34,23 @@ async function catchRedirect() {
   if (!Object.keys(query)) return;
   if (!query.auth_success) return;
   showLoader();
-  const { auth_success } = query;
-  try {
-    const { data } = await Axios.get<UserResponse>('/auth/user', {
-      baseURL: import.meta.env.VITE_API,
-      headers: {
-        Authorization: `Bearer ${auth_success}`,
-      },
-    });
 
-    setLogin({ ...data });
-    await push('/user');
+  const { auth_success } = query;
+  setToken(auth_success as string);
+
+  try {
+    const data = await getUserData();
+    console.log(data);
+
+    localStorage.setItem('__token', data.refreshToken);
+    setToken(data.accessToken);
+
+    setLogin(data);
+    setUUID();
+
+    tokenWatcher(router);
+
+    await router.push('/user');
     hideLoader();
   } catch (error) {
     console.log(error);
@@ -100,6 +106,7 @@ onMounted(async () => {
         </div>
       </div>
     </div>
+
     <app-footer />
   </div>
 </template>
