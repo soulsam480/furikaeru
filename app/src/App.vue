@@ -94,7 +94,7 @@ checkDarkMode();
           :key="alert.id"
           :icon="alert.icon"
           :message="alert.message"
-          :id="alert.id"
+          :id="alert.id as string"
           :type="alert.type"
           class="list-item"
         />

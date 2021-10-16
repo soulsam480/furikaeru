@@ -5,7 +5,7 @@ import FButton from 'src/components/lib/FButton.vue';
 import { ref } from 'vue';
 
 defineProps<{
-  options: (string | number | { [x in 'label' | 'value']: any })[] | null;
+  options: (string | number | { [x in 'label' | 'value']: any })[];
   newCardParent: string;
   isModal: boolean;
 }>();

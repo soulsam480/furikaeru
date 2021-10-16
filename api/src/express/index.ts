@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { sign, verify } from 'jsonwebtoken';
-import { authenticate } from 'passport';
+import passport from 'passport';
 import { User } from 'src/entities/user';
 import { createTokens } from 'src/services/auth';
 import { ERROR_MESSAGES } from 'src/utils/constants';
@@ -8,9 +8,9 @@ import { RequestWithUser } from 'src/utils/types';
 
 export const authRouter = Router();
 
-authRouter.get('/google', authenticate('google', { scope: ['profile', 'email'] }));
+authRouter.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
-authRouter.get('/google/redirect', authenticate('google'), (req: RequestWithUser, res) => {
+authRouter.get('/google/redirect', passport.authenticate('google'), (req: RequestWithUser, res) => {
   const uid = req?.user?.id;
   const token = sign({ userId: uid }, process.env.ACCESS_TOKEN_SECRET as string, {
     expiresIn: '15min',
@@ -23,9 +23,9 @@ authRouter.get('/google/redirect', authenticate('google'), (req: RequestWithUser
   res.redirect(redirectUrl);
 });
 
-authRouter.get('/fb', authenticate('facebook', { scope: ['public_profile', 'email'] }));
+authRouter.get('/fb', passport.authenticate('facebook', { scope: ['public_profile', 'email'] }));
 
-authRouter.get('/fb/redirect', authenticate('facebook'), (req: RequestWithUser, res) => {
+authRouter.get('/fb/redirect', passport.authenticate('facebook'), (req: RequestWithUser, res) => {
   const uid = req?.user?.id;
   const token = sign({ userId: uid }, process.env.ACCESS_TOKEN_SECRET as string, {
     expiresIn: '15min',

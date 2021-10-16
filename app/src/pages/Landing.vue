@@ -36,13 +36,13 @@ async function catchRedirect() {
   showLoader();
   const { auth_success } = query;
   try {
-    const { data }: { data: UserResponse } = await Axios({
+    const { data } = await Axios.get<UserResponse>('/auth/user', {
       baseURL: import.meta.env.VITE_API,
-      url: '/auth/user',
       headers: {
         Authorization: `Bearer ${auth_success}`,
       },
     });
+
     setLogin({ ...data });
     await push('/user');
     hideLoader();

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from '@vue/runtime-core';
+import { computed } from 'vue';
 import Icon from 'src/components/lib/FIcon.vue';
 
 const props = defineProps<{

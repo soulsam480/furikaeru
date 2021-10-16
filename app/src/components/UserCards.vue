@@ -40,7 +40,7 @@ const boardContext = (type: boolean, archive: boolean) => [
 const isConfirmModal = ref(false);
 const deleteBoardId = ref('');
 
-async function handleBoardContext(type: string, id?: string, is_public?: boolean) {
+async function handleBoardContext(type: string | number, id?: string, is_public?: boolean) {
   switch (type) {
     case 'delete':
       await handleConfirmModal(id as string);
