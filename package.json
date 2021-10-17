@@ -18,7 +18,8 @@
   "devDependencies": {
     "concurrently": "^6.2.0",
     "husky": "^6.0.0",
-    "lint-staged": "^11.0.0"
+    "lint-staged": "^11.0.0",
+    "typescript": "^4.4.4"
   },
   "lint-staged": {},
   "husky": {
