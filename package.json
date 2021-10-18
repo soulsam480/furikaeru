@@ -13,12 +13,14 @@
     "build:api": "cd api && npm run build",
     "build:app": "cd app && npm run build",
     "build": "concurrently --kill-others-on-fail \"npm run build:api\"  \"npm run build:app\"",
-    "start:app": "cd app && npm run serve"
+    "start:app": "cd app && npm run serve",
+    "changelog": "npx auto-changelog --output CHANGELOG.md --template keepachangelog --commit-limit false -u --sort-commits date-desc --hide-credit"
   },
   "devDependencies": {
     "concurrently": "^6.2.0",
     "husky": "^6.0.0",
-    "lint-staged": "^11.0.0"
+    "lint-staged": "^11.0.0",
+    "typescript": "^4.4.4"
   },
   "lint-staged": {},
   "husky": {
