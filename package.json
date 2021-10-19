@@ -14,6 +14,7 @@
     "build:app": "cd app && npm run build",
     "build": "concurrently --kill-others-on-fail \"npm run build:api\"  \"npm run build:app\"",
     "start:app": "cd app && npm run serve",
+    "test:app": "cd app && npm run test",
     "changelog": "npx auto-changelog --output CHANGELOG.md --template keepachangelog --commit-limit false -u --sort-commits date-desc --hide-credit"
   },
   "devDependencies": {

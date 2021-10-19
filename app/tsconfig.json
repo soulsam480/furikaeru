@@ -13,9 +13,9 @@
     "paths": {
       "src/*": ["src/*"]
     },
-    "types": ["vite-plugin-pwa/client"],
+    "types": ["vite-plugin-pwa/client", "@types/jest"],
     "useUnknownInCatchVariables": false
   },
   "exclude": ["node_modules"],
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "__tests__/**/*.ts"]
 }
