@@ -8,7 +8,7 @@
     "build": "vite build",
     "serve": "vite preview",
     "typecheck": "vue-tsc --noEmit --skipLibCheck",
-    "test": "jest __tests__"
+    "test": "jest"
   },
   "dependencies": {
     "@iconify/iconify": "^2.0.4",
@@ -29,14 +29,15 @@
     "@vitejs/plugin-vue": "^1.9.3",
     "@vue/compiler-sfc": "^3.2.20",
     "@vue/test-utils": "^2.0.0-rc.16",
-    "@vue/vue3-jest": "^27.0.0-alpha.1",
-    "jest": "^27.3.0",
+    "jest": "^26",
+    "jest-environment-jsdom": "^27.3.1",
     "sass": "^1.43.2",
-    "ts-jest": "^27.0.7",
+    "ts-jest": "^26",
     "vite": "^2.6.7",
     "vite-plugin-purge-icons": "^0.7.0",
     "vite-plugin-pwa": "^0.11.3",
     "vite-plugin-windicss": "^1.4.11",
+    "vue-jest": "5.0.0-alpha.10",
     "vue-tsc": "^0.28.6",
     "windicss": "^3.1.9",
     "workbox-window": "^6.3.0"

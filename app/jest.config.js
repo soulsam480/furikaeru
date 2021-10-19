@@ -1,10 +1,11 @@
 module.exports = {
+  testEnvironment: 'jest-environment-jsdom',
   moduleFileExtensions: ['js', 'ts', 'json', 'vue'],
   transform: {
     '^.+\\.ts$': 'ts-jest',
-    '^.+\\.vue$': '@vue/vue3-jest',
+    '^.+\\.vue$': 'vue-jest',
   },
-  preset: 'ts-jest',
+  // preset: 'ts-jest/presets/js-with-ts-esm',
   globals: {
     'ts-jest': {
       useESM: true,
