@@ -2,20 +2,32 @@
 import { onBeforeUnmount, onMounted } from 'vue';
 import FIcon from './FIcon.vue';
 
-defineProps<{
+defineProps({
   /**
    * In standard CSS units
    * max: 768px
    */
-  width?: string;
-  title?: string;
+  width: {
+    required: false,
+    type: String,
+  },
+  title: {
+    required: false,
+    type: String,
+  },
   /**
    * In standard CSS units
    * @default: 30px
    */
-  titleSize?: string;
-  modelValue?: boolean;
-}>();
+  titleSize: {
+    required: false,
+    type: String,
+  },
+  modelValue: {
+    required: false,
+    type: Boolean,
+  },
+});
 
 const emits = defineEmits<{
   (e: 'close'): void;

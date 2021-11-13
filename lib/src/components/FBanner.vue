@@ -2,13 +2,18 @@
 import Icon from './FIcon.vue';
 import { computed } from 'vue';
 
-const props = defineProps<{
-  text?: string;
-  icon?: string;
-  size?: string;
-  noicon?: boolean;
-  type?: 'success' | 'danger' | 'warning';
-}>();
+const props = withDefaults(
+  defineProps<{
+    text?: string;
+    icon?: string;
+    size?: string;
+    noicon?: boolean;
+    type?: 'success' | 'danger' | 'warning';
+  }>(),
+  {
+    noicon: false,
+  },
+);
 
 const bgColor = computed(() => {
   switch (props.type) {

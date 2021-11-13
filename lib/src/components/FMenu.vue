@@ -2,20 +2,31 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import FButton from './FButton.vue';
 
-const props = defineProps<{
-  options: (string | number | { [x in 'label' | 'value']: any })[];
-  modelValue?: string | number;
-  optionKey?: 'label' | 'value';
-  label?: string;
-  icon?: string;
-  size?: string;
-  sm?: boolean;
-  color?: string;
-  flat?: boolean;
-  block?: boolean;
-  noicon?: boolean;
-  disabled?: boolean;
-}>();
+const props = withDefaults(
+  defineProps<{
+    options: (string | number | { [x in 'label' | 'value']: any })[];
+    modelValue?: string | number;
+    optionKey?: 'label' | 'value';
+    label?: string;
+    icon?: string;
+    size?: string;
+    sm?: boolean;
+    color?: string;
+    flat?: boolean;
+    block?: boolean;
+    noicon?: boolean;
+    disabled?: boolean;
+  }>(),
+  {
+    sm: false,
+    color: 'cyan',
+    flat: false,
+    block: false,
+    noicon: false,
+    disabled: false,
+  },
+);
+
 const emit = defineEmits<{
   (e: 'update:modelValue', val: string | number): void;
   (e: 'input', val: string | number, eVal: any): void;

@@ -1,6 +1,6 @@
 {
   "name": "furikaeru",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "main": "./dist/furikaeru.umd.js",
   "module": "./dist/furikaeru.es.js",
@@ -16,7 +16,7 @@
   "author": "soulsam480 <soulsam480@hotmail.com>",
   "private": false,
   "scripts": {
-    "dts": "vue-tsc --declaration --emitDeclarationOnly --declarationDir ./dist",
+    "dts": "vue-tsc --declaration --emitDeclarationOnly --declarationDir ./dist --removeComments false",
     "build": "rm -rf dist && vite build && npm run dts"
   },
   "sideEffects": false,

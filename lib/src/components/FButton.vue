@@ -2,19 +2,32 @@
 import { computed } from 'vue';
 import Icon from './FIcon.vue';
 
-const props = defineProps<{
-  label?: any;
-  icon?: string;
-  size?: string;
-  sm?: boolean;
-  invert?: boolean;
-  center?: boolean;
-  block?: boolean;
-  flat?: boolean;
-  // 'red', 'green', 'purple', 'indigo', 'cyan', 'amber', 'lime'
-  color?: string;
-  disabled?: boolean;
-}>();
+const props = withDefaults(
+  defineProps<{
+    label?: any;
+    icon?: string;
+    size?: string;
+    sm?: boolean;
+    invert?: boolean;
+    center?: boolean;
+    block?: boolean;
+    flat?: boolean;
+    /**
+     * @kind 'red', 'green', 'purple', 'indigo', 'cyan', 'amber', 'lime'
+     * @default 'cyan'
+     */
+    color?: string;
+    disabled?: boolean;
+  }>(),
+  {
+    sm: false,
+    invert: false,
+    center: false,
+    block: false,
+    disabled: false,
+    color: 'cyan',
+  },
+);
 
 defineEmits(['click']);
 
