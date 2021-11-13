@@ -15,6 +15,10 @@ A small app for discussing retro while being `Anonymous`. Create public/private 
 - Development -> v0.0.1 (Might be the last release of Furikaeru)
 - Roadmap board -> [Don't spam please!](https://furikaeru.sambitsahoo.com/Furi_feature_board--c32276c9-d259-409a-9663-b5fdbbbcf997)
 
+> __Visit__ [Furi component lib readme](./lib/README.md)
+
+> __npm__ https://www.npmjs.com/package/furikaeru
+
 #### Features
 Current:
 - Create/delete Boards
@@ -32,7 +36,8 @@ Projected:
 - Add more in the public [feature board](https://furikaeru.sambitsahoo.com/Furi_feature_board--c32276c9-d259-409a-9663-b5fdbbbcf997)
 
 #### Furi component library
-At the heart of `Furikaeru`, there is a standalone `vue 3` component library. There are only a few components, which are being used repeatedly throughout the app. It was designed on the basis of the project needs but has room for customisations. To view or use the components have a look [here](./app/src/components/lib).
+At the heart of `Furikaeru`, there is a standalone `vue 3` component library. There are only a few components, which are being used repeatedly throughout the app. It was designed on the basis of the project needs but has room for customisations. To view or use the components have a look [here](./lib).
+
 #### Stack
 
 API:
