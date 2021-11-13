@@ -37,6 +37,7 @@ __install dependencies__
 - "vue": "^3.2.20",
 - "@iconify/json": "^1.1.415",
 - "windicss": "^3.1.9",
+- "click-outside-vue3": "^4.0.1",
 
 __config__
 
@@ -69,3 +70,12 @@ export default defineConfig({
 ```ts
 import 'furikaeru/dist/style.css';
 ```
+- register click-outside directive
+```ts
+import vClickOutside from 'click-outside-vue3';
+
+app.use(vClickOutside);
+```
+
+#### Caution
+even after doing all these, there might be some issues, I'm advising not use this for your projects. Thx
