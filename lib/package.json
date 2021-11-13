@@ -1,0 +1,36 @@
+{
+  "name": "furikaeru",
+  "version": "0.1.0",
+  "license": "MIT",
+  "main": "./dist/furikaeru.umd.js",
+  "module": "./dist/furikaeru.es.js",
+  "typings": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/soulsam480/furikaeru.git",
+    "directory": "app/src/components/lib"
+  },
+  "author": "soulsam480 <soulsam480@hotmail.com>",
+  "private": false,
+  "scripts": {
+    "dts": "vue-tsc --declaration --emitDeclarationOnly --declarationDir ./dist",
+    "build": "rm -rf dist && vite build && npm run dts"
+  },
+  "sideEffects": false,
+  "peerDependencies": {
+    "vue": "^3.2.20"
+  },
+  "dependencies": {
+    "vue": "^3.2.20"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.6",
+    "vue-tsc": "^0.28.10",
+    "@vitejs/plugin-vue": "^1.9.3",
+    "@vue/compiler-sfc": "^3.2.20",
+    "vite": "^2.6.7"
+  }
+}
