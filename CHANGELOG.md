@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Commits
 
+- chore: update readme [`514ac79`](https://github.com/soulsam480/furikaeru/commit/514ac7962472744f3dd31e075ed3bcd9bcb7f077)
+- chore: update changelog [`cef34ee`](https://github.com/soulsam480/furikaeru/commit/cef34ee48ed9d16129dbb9eb2e939836a28f187c)
 - fix: type only boolean props handling [`12745e2`](https://github.com/soulsam480/furikaeru/commit/12745e24329df75af7276c66d59d368ae7655d46)
 - chore: update changelog [`88ca8e9`](https://github.com/soulsam480/furikaeru/commit/88ca8e913b28555febd590787aea3c30624de736)
 - chore: update changelog [`826bc64`](https://github.com/soulsam480/furikaeru/commit/826bc6403dc95a5642f5562c9ea6804b6c5b1e5f)
