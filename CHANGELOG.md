@@ -9,10 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Merged
 
+- feat: added and published furi component lib [`#26`](https://github.com/soulsam480/furikaeru/pull/26)
 - fixes and improvements [`#24`](https://github.com/soulsam480/furikaeru/pull/24)
 
 ### Commits
 
+- chore: update changelog [`826bc64`](https://github.com/soulsam480/furikaeru/commit/826bc6403dc95a5642f5562c9ea6804b6c5b1e5f)
 - ci: add github CI for changelogs [`e4579b0`](https://github.com/soulsam480/furikaeru/commit/e4579b0327bfbd285322d12009e458f032c3b9e8)
 - chore: added changelogs [`665eeb9`](https://github.com/soulsam480/furikaeru/commit/665eeb9c6c9d0ef83e8391e14e93680bc8c66bf2)
 - chore: any catch var in api [`41b96c5`](https://github.com/soulsam480/furikaeru/commit/41b96c5430b2b39a35b12c3d1383d93e80aa2fd7)
