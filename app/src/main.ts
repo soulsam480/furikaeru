@@ -5,6 +5,7 @@ import 'virtual:windi.css';
 import '@purge-icons/generated';
 import { Router } from 'src/router';
 import 'src/styles/index.scss';
+import 'furikaeru/dist/style.css';
 import { createWs } from 'src/utils/createWs';
 //@ts-ignore
 import vClickOutside from 'click-outside-vue3';
