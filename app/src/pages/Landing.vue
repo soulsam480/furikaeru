@@ -2,9 +2,8 @@
 import { onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useUser } from 'src/store/user';
-import FBanner from 'src/components/lib/FBanner.vue';
 import AppFooter from 'src/components/App/Footer.vue';
-import FButton from 'src/components/lib/FButton.vue';
+import { FBanner, FButton } from 'furikaeru';
 import { Head } from '@vueuse/head';
 import { setToken } from 'src/utils/helpers';
 import { getUserData, setUUID, tokenWatcher } from 'src/utils/authState';

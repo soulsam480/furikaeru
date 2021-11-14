@@ -7,8 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "typecheck": "vue-tsc --noEmit --skipLibCheck",
-    "dts": "vue-tsc --project tsconfig.types.json --declaration --emitDeclarationOnly --declarationDir types"
+    "typecheck": "vue-tsc --noEmit --skipLibCheck"
   },
   "dependencies": {
     "@iconify/iconify": "^2.0.4",
@@ -20,7 +19,8 @@
     "uuid": "^8.3.2",
     "vue": "^3.2.20",
     "vue-router": "^4.0.12",
-    "vuedraggable": "^4.1.0"
+    "vuedraggable": "^4.1.0",
+    "furikaeru": "latest"
   },
   "devDependencies": {
     "@iconify/json": "^1.1.415",

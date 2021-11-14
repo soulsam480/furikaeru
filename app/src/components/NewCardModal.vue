@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import FMenu from 'src/components/lib/FMenu.vue';
-import FModal from 'src/components/lib/FModal.vue';
-import FButton from 'src/components/lib/FButton.vue';
+import { FMenu, FModal, FButton } from 'furikaeru';
 import { ref } from 'vue';
 
 defineProps<{

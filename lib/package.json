@@ -11,7 +11,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/soulsam480/furikaeru.git",
-    "directory": "app/src/components/lib"
+    "directory": "lib"
   },
   "author": "soulsam480 <soulsam480@hotmail.com>",
   "private": false,

@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import FModal from 'src/components/lib/FModal.vue';
-import FButton from 'src/components/lib/FButton.vue';
+import { FModal, FButton } from 'furikaeru';
 
 defineProps<{
   isModal: boolean;

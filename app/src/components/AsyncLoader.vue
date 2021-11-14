@@ -1,6 +1,4 @@
-<script setup lang="ts">
-import { ref } from 'vue';
-</script>
+<script setup lang="ts"></script>
 <template>
   <div class="p-4 flex justify-center">
     <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-10 w-10"></div>

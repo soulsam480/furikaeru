@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { ref, toRef, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { shareBoard, copyLink, generateRoute } from 'src/utils/helpers';
-import FButton from 'src/components/lib/FButton.vue';
 import type { BoardModel } from 'src/utils/types';
-import FMenu from 'src/components/lib/FMenu.vue';
-import FIcon from 'src/components/lib/FIcon.vue';
 import { useAlert } from 'src/utils/composables';
 import ConfirmModal from './App/ConfirmModal.vue';
+import { FButton, FMenu, FIcon } from 'furikaeru';
 
 const props = defineProps<{
   board: BoardModel;
