@@ -9,11 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Merged
 
+- feat: add windi helpers for safelists, improve docs, update peer depe… [`#27`](https://github.com/soulsam480/furikaeru/pull/27)
 - feat: added and published furi component lib [`#26`](https://github.com/soulsam480/furikaeru/pull/26)
 - fixes and improvements [`#24`](https://github.com/soulsam480/furikaeru/pull/24)
 
 ### Commits
 
+- build: fix furikaeru dep linking and update build script [`582a76d`](https://github.com/soulsam480/furikaeru/commit/582a76dd1b40c3a192048504c7b0091d2f1fd359)
+- feat: migrate app to furi lib [`3b3aa6b`](https://github.com/soulsam480/furikaeru/commit/3b3aa6b8b62a2e3385a65cde679f3bfe28632e59)
+- feat: add windi helpers for safelists, improve docs, update peer dependencies [`8bd553c`](https://github.com/soulsam480/furikaeru/commit/8bd553cc8eea07a98098dae7d902ee62f4c2c93e)
+- chore: update changelog [`3eb37f3`](https://github.com/soulsam480/furikaeru/commit/3eb37f306648f4324f7518bd9486c6fbdcb0ed56)
 - chore(lib): update readme [`6c244ae`](https://github.com/soulsam480/furikaeru/commit/6c244aee26dca63c37f2ff1a8374eee7e7e1739e)
 - chore: update changelog [`8785a9f`](https://github.com/soulsam480/furikaeru/commit/8785a9f40a3f7d85f5af861ecc07afebbf5bf339)
 - chore: update readme [`514ac79`](https://github.com/soulsam480/furikaeru/commit/514ac7962472744f3dd31e075ed3bcd9bcb7f077)
@@ -26,10 +31,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - chore: any catch var in api [`41b96c5`](https://github.com/soulsam480/furikaeru/commit/41b96c5430b2b39a35b12c3d1383d93e80aa2fd7)
 - chore: make ts global dep [`a127ab8`](https://github.com/soulsam480/furikaeru/commit/a127ab8317874017bd2004864057f4b544e6ec3d)
 
-## [0.2.0](https://github.com/soulsam480/furikaeru/compare/v0.0.1...0.2.0) - 2021-10-16
+## [0.2.0](https://github.com/soulsam480/furikaeru/compare/0.1.1...0.2.0) - 2021-10-16
+
+## [0.1.1](https://github.com/soulsam480/furikaeru/compare/v0.0.1...0.1.1) - 2021-11-14
 
 ### Merged
 
+- feat: added and published furi component lib [`#26`](https://github.com/soulsam480/furikaeru/pull/26)
+- fixes and improvements [`#24`](https://github.com/soulsam480/furikaeru/pull/24)
 - refactor: silent auth and redirect auth [`#23`](https://github.com/soulsam480/furikaeru/pull/23)
 - feat: move to pnpm [`#22`](https://github.com/soulsam480/furikaeru/pull/22)
 - Feat/pnpm migration [`#21`](https://github.com/soulsam480/furikaeru/pull/21)
@@ -38,6 +47,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Commits
 
+- chore(lib): update readme [`6c244ae`](https://github.com/soulsam480/furikaeru/commit/6c244aee26dca63c37f2ff1a8374eee7e7e1739e)
+- chore: update readme [`514ac79`](https://github.com/soulsam480/furikaeru/commit/514ac7962472744f3dd31e075ed3bcd9bcb7f077)
+- chore: update changelog [`cef34ee`](https://github.com/soulsam480/furikaeru/commit/cef34ee48ed9d16129dbb9eb2e939836a28f187c)
+- fix: type only boolean props handling [`12745e2`](https://github.com/soulsam480/furikaeru/commit/12745e24329df75af7276c66d59d368ae7655d46)
+- chore: update changelog [`88ca8e9`](https://github.com/soulsam480/furikaeru/commit/88ca8e913b28555febd590787aea3c30624de736)
+- chore: update changelog [`826bc64`](https://github.com/soulsam480/furikaeru/commit/826bc6403dc95a5642f5562c9ea6804b6c5b1e5f)
+- ci: add github CI for changelogs [`e4579b0`](https://github.com/soulsam480/furikaeru/commit/e4579b0327bfbd285322d12009e458f032c3b9e8)
+- chore: added changelogs [`665eeb9`](https://github.com/soulsam480/furikaeru/commit/665eeb9c6c9d0ef83e8391e14e93680bc8c66bf2)
+- chore: any catch var in api [`41b96c5`](https://github.com/soulsam480/furikaeru/commit/41b96c5430b2b39a35b12c3d1383d93e80aa2fd7)
+- chore: make ts global dep [`a127ab8`](https://github.com/soulsam480/furikaeru/commit/a127ab8317874017bd2004864057f4b544e6ec3d)
 - fix: remove console log [`4703972`](https://github.com/soulsam480/furikaeru/commit/4703972267b2aad47fda8c205b6ddf7079057125)
 - chore: generate dts for lib [`bf2cb6f`](https://github.com/soulsam480/furikaeru/commit/bf2cb6fa7c238acf511f386f2381cf5b286e879c)
 - feat(app): add banner for analytics info [`a89f235`](https://github.com/soulsam480/furikaeru/commit/a89f235884c907321866caae6a7a6d797db1b9c9)
