@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Commits
 
+- fix: import furi stylesheet [`12684b1`](https://github.com/soulsam480/furikaeru/commit/12684b18abe1eb5e128a4af9acef13bdc682a77b)
+- chore: update changelog [`dcadfc0`](https://github.com/soulsam480/furikaeru/commit/dcadfc0a3d054c176b46956840b23f39b07ab11f)
 - build: fix furikaeru dep linking and update build script [`582a76d`](https://github.com/soulsam480/furikaeru/commit/582a76dd1b40c3a192048504c7b0091d2f1fd359)
 - feat: migrate app to furi lib [`3b3aa6b`](https://github.com/soulsam480/furikaeru/commit/3b3aa6b8b62a2e3385a65cde679f3bfe28632e59)
 - feat: add windi helpers for safelists, improve docs, update peer dependencies [`8bd553c`](https://github.com/soulsam480/furikaeru/commit/8bd553cc8eea07a98098dae7d902ee62f4c2c93e)
