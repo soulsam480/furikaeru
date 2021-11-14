@@ -6,3 +6,5 @@ export { default as FLoader } from './components/FLoader.vue';
 export { default as FLoadingBar } from './components/FLoadingBar.vue';
 export { default as FMenu } from './components/FMenu.vue';
 export { default as FModal } from './components/FModal.vue';
+
+export * from './windi';
