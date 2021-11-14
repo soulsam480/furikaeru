@@ -158,6 +158,16 @@ function handleClick(option: string | number | Record<'label' | 'value', any>, e
 </template>
 <style lang="scss" scoped>
 .f-menu {
+  button {
+    @apply cursor-pointer;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
   &__list {
     &::-webkit-scrollbar {
       width: 3px;

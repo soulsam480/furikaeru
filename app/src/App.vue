@@ -4,14 +4,11 @@ import type { ComponentPublicInstance } from 'vue';
 import { AlertKey, FLoadingKey } from 'src/utils/types';
 import type { FLoadingBarExpose } from 'src/utils/types';
 import Navbar from 'src/components/App/Navbar.vue';
-import FLoadingBar from 'src/components/lib/FLoadingBar.vue';
-import FLoader from 'src/components/lib/FLoader.vue';
-import FAlert from 'src/components/lib/FAlert.vue';
 import { refreshUser } from 'src/utils/authState';
 import { useUser } from 'src/store/user';
 import { useIo } from 'src/utils/createWs';
 import { getAlerts, removeAlert, setAlerts } from 'src/utils/composables';
-import FButton from 'src/components/lib/FButton.vue';
+import { FLoadingBar, FLoader, FButton, FAlert } from 'furikaeru';
 
 const { getLoader } = useUser();
 const { isConnected } = useIo();

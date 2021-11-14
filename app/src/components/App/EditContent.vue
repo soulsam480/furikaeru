@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue';
-import FButton from 'src/components/lib/FButton.vue';
+import { FButton } from 'furikaeru';
 
 const props = withDefaults(
   defineProps<{

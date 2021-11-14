@@ -7,14 +7,14 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "typecheck": "vue-tsc --noEmit --skipLibCheck",
-    "dts": "vue-tsc --project tsconfig.types.json --declaration --emitDeclarationOnly --declarationDir types"
+    "typecheck": "vue-tsc --noEmit --skipLibCheck"
   },
   "dependencies": {
     "@iconify/iconify": "^2.0.4",
     "@vueuse/head": "^0.6.0",
     "axios": "^0.23.0",
     "click-outside-vue3": "^4.0.1",
+    "furikaeru": "^0.2.1",
     "pinia": "^2.0.0-rc.10",
     "socket.io-client": "^4.3.1",
     "uuid": "^8.3.2",

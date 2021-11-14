@@ -19,16 +19,15 @@ const bgColor = computed(() => {
   switch (props.type) {
     case 'success':
       return 'bg-green-100 border-green-300 text-green-800';
-      break;
+
     case 'warning':
       return 'bg-amber-100 border-amber-300 text-amber-800';
-      break;
+
     case 'danger':
       return 'bg-red-100 border-red-300 text-red-800';
-      break;
+
     default:
       return 'bg-amber-100 border-amber-300 text-amber-800';
-      break;
   }
 });
 
@@ -36,16 +35,15 @@ const iconName = computed(() => {
   switch (props.type) {
     case 'success':
       return 'ion:checkmark-circle';
-      break;
+
     case 'warning':
       return 'ion:alert-circle';
-      break;
+
     case 'danger':
       return 'ion:ban';
-      break;
+
     default:
       return 'ion:information-circle';
-      break;
   }
 });
 </script>

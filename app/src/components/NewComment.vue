@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import FButton from './lib/FButton.vue';
+import { FButton } from 'furikaeru';
 
 defineProps<{
   color?: string;

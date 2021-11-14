@@ -9,9 +9,9 @@ Due to a vue bug https://github.com/vuejs/vue-next/issues/4783, boolean props ar
 
 #### Features
 - Tree shaked
-- fully typed [@volar](https://github.com/johnsoncodehk/volar)
-- fully customizable -> WindiCSS
-- Icons powered by iconify
+- fully typed [@johnsoncodehk/volar](https://github.com/johnsoncodehk/volar)
+- fully customizable @windicss, @antfu/vite-plugin-windicss
+- Icons powered by @antfu/vite-plugin-purge-icons
 
 #### Based on 
 - Vue 3 
@@ -32,37 +32,26 @@ npm install furikaeru
 
 pnpm add furikaeru
 ```
-__install dependencies__
-- "@iconify/iconify": "^2.0.4",
-- "vue": "^3.2.20",
-- "@iconify/json": "^1.1.415",
-- "windicss": "^3.1.9",
-- "click-outside-vue3": "^4.0.1",
+__install peer dependencies__
+- vue@next
+- @iconify/iconify@latest
+- @iconify/json@latest
+- vite-plugin-purge-icons@latest
+- click-outside-vue3@latest
+- vite-plugin-windicss@latest
+- windicss@latest
 
 __config__
 
 - add to windi config
 ```ts
-// cyan is default color so needed, add others as per requirement
-// used in color prop
-const COLORS = ['red', 'green', 'purple', 'indigo', 'cyan', 'amber', 'lime'];
+// a safelist preset of some of the color classes, use this or import individual configs
+// and extend. see lib/src/windi/index.ts
 
-const BG_COLOR = {
-  key: 'bg',
-  set: [500, 400, 300, 50, 200, 100].map((el) => COLORS.map((c) => `${c}-${el}`)).flat(),
-};
-
-const HOVER_BG_COLOR = {
-  key: 'hover:bg',
-  set: [300, 400].map((r) => COLORS.map((c) => `${c}-${r}`)).flat(),
-};
-
-function generateSafeList(config) {
-  return config.map((el) => el.set.map((s) => `${el.key}-${s}`));
-}
+import { furiWindiSafelist } from 'furikaeru'
 
 export default defineConfig({
-  safelist: generateSafeList([HOVER_BG_COLOR, BG_COLOR]),
+  safelist: [...furiWindiSafelist],
   extract: { include: ['./node_modules/furikaeru/dist/*'] },
 });
 ```

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import FModal from 'src/components/lib/FModal.vue';
-import FIcon from 'src/components/lib/FIcon.vue';
+import { FModal, FIcon } from 'furikaeru';
 
 defineProps<{
   modelValue?: boolean;

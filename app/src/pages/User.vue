@@ -5,12 +5,10 @@ import type { BoardColumn } from 'src/utils/types';
 import { createBoard as furiCreateBoard } from 'src/utils/boardService';
 import UserCards from 'src/components/UserCards.vue';
 import { useRouter } from 'vue-router';
-import FBanner from 'src/components/lib/FBanner.vue';
-import FMenu from 'src/components/lib/FMenu.vue';
+import { FBanner, FMenu, FButton } from 'furikaeru';
 import { useAlert, useLoadingBar } from 'src/utils/composables';
 import { generateRoute } from 'src/utils/helpers';
 import { Head } from '@vueuse/head';
-import FButton from 'src/components/lib/FButton.vue';
 import { ref } from 'vue';
 
 const { getUser } = useUser();

@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import VueDraggable from 'vuedraggable';
-import Icon from 'src/components/lib/FIcon.vue';
 import type { Card, Comment, Vote } from 'src/utils/types';
 import EditContent from 'src/components/App/EditContent.vue';
-import FButton from 'src/components/lib/FButton.vue';
+import { FIcon as Icon, FButton } from 'furikaeru';
 import NewComment from 'src/components/NewComment.vue';
 import ConfirmModal from 'src/components/App/ConfirmModal.vue';
 

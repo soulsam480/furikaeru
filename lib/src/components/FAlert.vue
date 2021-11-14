@@ -13,32 +13,30 @@ const bgColor = computed(() => {
   switch (props.type) {
     case 'success':
       return 'bg-green-500';
-      break;
+
     case 'warning':
       return 'bg-yellow-500';
-      break;
+
     case 'danger':
       return 'bg-red-500';
-      break;
+
     default:
       return 'bg-blue-500';
-      break;
   }
 });
 const iconName = computed(() => {
   switch (props.type) {
     case 'success':
       return 'ion:checkmark-circle-outline';
-      break;
+
     case 'warning':
       return 'ion:alert-circle-outline';
-      break;
+
     case 'danger':
       return 'ion:ban-outline';
-      break;
+
     default:
       return '';
-      break;
   }
 });
 </script>

@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import Icon from 'src/components/lib/FIcon.vue';
 import { useUser } from 'src/store/user';
-import FButton from 'src/components/lib/FButton.vue';
 import { useRouter } from 'vue-router';
 import KeyboardShortcutsModal from 'src/components/KeyboardShortcutsModal.vue';
 import { useKeyBindings } from 'src/utils/composables';
+import { FButton, FIcon as Icon } from 'furikaeru';
 
 const { isLoggedIn, getUser, setLogin } = useUser();
 const { push } = useRouter();
@@ -122,8 +121,8 @@ function handleDarkMode() {
 
               <f-button sm @click="handleDarkMode" title="Toggle dark mode">
                 <template #icon>
-                  <Icon v-show="isDark === 'light'" icon="ion:contrast-outline" size="17px" />
-                  <Icon v-show="isDark === 'dark'" icon="ion:sunny-outline" size="17px" />
+                  <icon v-show="isDark === 'light'" icon="ion:contrast-outline" size="17px" />
+                  <icon v-show="isDark === 'dark'" icon="ion:sunny-outline" size="17px" />
                 </template>
               </f-button>
 
@@ -136,7 +135,7 @@ function handleDarkMode() {
 
               <f-button sm class="hidden sm:block">
                 <a target="_blank" href="https://github.com/soulsam480/furikaeru">
-                  <Icon icon="ion:logo-github" size="17px" />
+                  <icon icon="ion:logo-github" size="17px" />
                 </a>
               </f-button>
             </div>

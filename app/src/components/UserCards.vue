@@ -3,9 +3,8 @@ import type { BoardModel } from 'src/utils/types';
 import { onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { getDDMMYY, copyLink, shareBoard, generateRoute } from 'src/utils/helpers';
-import FButton from 'src/components/lib/FButton.vue';
+import { FButton, FMenu } from 'furikaeru';
 import { deleteBoard, getAllBoards, getArchivedBoards, updateBoard } from 'src/utils/boardService';
-import FMenu from 'src/components/lib/FMenu.vue';
 import { useAlert, useLoadingBar } from 'src/utils/composables';
 import ConfirmModal from 'src/components/App/ConfirmModal.vue';
 
