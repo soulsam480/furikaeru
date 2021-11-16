@@ -1,3 +1,9 @@
+<script lang="ts">
+export default {
+  name: 'FMenu',
+};
+</script>
+
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import FButton from './FButton.vue';

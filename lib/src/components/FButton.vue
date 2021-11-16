@@ -1,3 +1,9 @@
+<script lang="ts">
+export default {
+  name: 'FButton',
+};
+</script>
+
 <script setup lang="ts">
 import { computed } from 'vue';
 import Icon from './FIcon.vue';
@@ -25,7 +31,6 @@ const props = withDefaults(
     center: false,
     block: false,
     disabled: false,
-    color: 'cyan',
   },
 );
 
@@ -39,13 +44,22 @@ const buttonColors = computed(() => {
     : props.invert
     ? `bg-${props.color || 'cyan'}-200 hover:bg-${props.color || 'cyan'}-300`
     : props.flat
-    ? `hover:bg-${props.color || 'cyan'}-300`
+    ? `hover:bg-${props.color || 'cyan'}-300 bg-transparent`
     : `bg-${props.color || 'cyan'}-300 hover:bg-${props.color || 'cyan'}-400`;
 });
 </script>
 <template>
   <button
-    class="flex items-center text-sm rounded-md space-x-1 focus:outline-none disabled:(cursor-not-allowed)"
+    class="
+      flex
+      items-center
+      text-sm
+      rounded-md
+      space-x-1
+      focus:outline-none
+      cursor-pointer
+      disabled:(!cursor-not-allowed)
+    "
     :class="[
       {
         'px-2 py-[6px]': sm,

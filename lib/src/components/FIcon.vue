@@ -1,3 +1,9 @@
+<script lang="ts">
+export default {
+  name: 'FIcon',
+};
+</script>
+
 <script setup lang="ts">
 defineProps({
   size: String,

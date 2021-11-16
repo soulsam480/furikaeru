@@ -1,3 +1,9 @@
+<script lang="ts">
+export default {
+  name: 'FModal',
+};
+</script>
+
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted } from 'vue';
 import FIcon from './FIcon.vue';

@@ -1,3 +1,9 @@
+<script lang="ts">
+export default {
+  name: 'FLoader',
+};
+</script>
+
 <script setup lang="ts"></script>
 <template>
   <div

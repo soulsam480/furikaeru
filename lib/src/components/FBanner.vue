@@ -1,3 +1,9 @@
+<script lang="ts">
+export default {
+  name: 'FBanner',
+};
+</script>
+
 <script setup lang="ts">
 import Icon from './FIcon.vue';
 import { computed } from 'vue';

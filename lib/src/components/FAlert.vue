@@ -1,3 +1,9 @@
+<script lang="ts">
+export default {
+  name: 'FAlert',
+};
+</script>
+
 <script setup lang="ts">
 import { computed } from 'vue';
 import FIcon from './FIcon.vue';

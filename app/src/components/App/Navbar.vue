@@ -4,7 +4,7 @@ import { useUser } from 'src/store/user';
 import { useRouter } from 'vue-router';
 import KeyboardShortcutsModal from 'src/components/KeyboardShortcutsModal.vue';
 import { useKeyBindings } from 'src/utils/composables';
-import { FButton, FIcon as Icon } from 'furikaeru';
+import { FButton, FIcon as Icon } from '../../../../lib/src';
 
 const { isLoggedIn, getUser, setLogin } = useUser();
 const { push } = useRouter();

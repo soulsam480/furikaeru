@@ -6,6 +6,7 @@ import { furiWindiSafelist } from 'furikaeru';
 export default defineConfig({
   darkMode: 'class',
   safelist: [...furiWindiSafelist],
+  extract: { include: ['./src/**/*.{vue,html,jsx,tsx}', './node_modules/furikaeru/dist/*'] },
   theme: {
     extend: {
       transitionProperty: {
