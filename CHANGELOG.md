@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Commits
 
+- chore: upgrade deps, fix multiple issues in lib [`6a8049d`](https://github.com/soulsam480/furikaeru/commit/6a8049d39f8fcae7d98549b53f48398d6f55fa02)
+- chore: update changelog [`4991c33`](https://github.com/soulsam480/furikaeru/commit/4991c337654b858fdea5c219473ade70d8ba1a05)
 - fix: import furi stylesheet [`12684b1`](https://github.com/soulsam480/furikaeru/commit/12684b18abe1eb5e128a4af9acef13bdc682a77b)
 - chore: update changelog [`dcadfc0`](https://github.com/soulsam480/furikaeru/commit/dcadfc0a3d054c176b46956840b23f39b07ab11f)
 - build: fix furikaeru dep linking and update build script [`582a76d`](https://github.com/soulsam480/furikaeru/commit/582a76dd1b40c3a192048504c7b0091d2f1fd359)
