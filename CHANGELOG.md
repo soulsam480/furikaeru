@@ -5,7 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/soulsam480/furikaeru/compare/0.2.0...HEAD)
+## [Unreleased](https://github.com/soulsam480/furikaeru/compare/0.3.0...HEAD)
+
+### Commits
+
+- chore: skip CI in changelogs [`eed2abb`](https://github.com/soulsam480/furikaeru/commit/eed2abb3f6ab011f2c47102b1ed0f666fed4b9fc)
+
+## [0.3.0](https://github.com/soulsam480/furikaeru/compare/0.2.0...0.3.0) - 2021-11-16
 
 ### Merged
 
@@ -15,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Commits
 
+- chore: update changelog [`9063102`](https://github.com/soulsam480/furikaeru/commit/9063102ab6829447119a8008bbdfe08c52326860)
 - chore: upgrade deps, fix multiple issues in lib [`6a8049d`](https://github.com/soulsam480/furikaeru/commit/6a8049d39f8fcae7d98549b53f48398d6f55fa02)
 - chore: update changelog [`4991c33`](https://github.com/soulsam480/furikaeru/commit/4991c337654b858fdea5c219473ade70d8ba1a05)
 - fix: import furi stylesheet [`12684b1`](https://github.com/soulsam480/furikaeru/commit/12684b18abe1eb5e128a4af9acef13bdc682a77b)
