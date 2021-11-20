@@ -2,3 +2,4 @@ packages:
   - api
   - app
   - lib
+  - app-svelte
