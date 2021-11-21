@@ -13,7 +13,13 @@
      * of JS in `.svelte` files.
      */
     "allowJs": true,
-    "checkJs": true
+    "checkJs": true,
+    "paths": {
+      "src/*": ["src/*"],
+      "main/*": ["../app/src/*"]
+    },
+    "types": ["vite-plugin-pwa/client"],
+    "useUnknownInCatchVariables": false
   },
   "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]
 }
