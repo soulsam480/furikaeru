@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
-import WindiCSS from 'vite-plugin-windicss';
 import PurgeIcons from 'vite-plugin-purge-icons';
 import { VitePWA } from 'vite-plugin-pwa';
 
@@ -10,7 +9,6 @@ import { resolve } from 'path';
 export default defineConfig({
   plugins: [
     svelte(),
-    WindiCSS(),
     PurgeIcons(),
     VitePWA({
       registerType: 'autoUpdate',

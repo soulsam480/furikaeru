@@ -95,8 +95,8 @@ function handleDragToggle() {
       @click="isConfirmModal = true"
       icon="ion:trash-outline"
       size="17px"
-      sm
       class="mt-1"
+      sm
     />
 
     <f-menu

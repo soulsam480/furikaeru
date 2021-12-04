@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Route, Router } from 'svelte-routing';
+  import { Route, Router } from 'svelte-navigator';
   import Navbar from './components/app/navbar.svelte';
   import Landing from './views/Landing.svelte';
 

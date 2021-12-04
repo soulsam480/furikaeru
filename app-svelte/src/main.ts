@@ -1,9 +1,9 @@
 import App from './App.svelte';
 import { createWs } from 'src/utils/ws';
-
-import 'virtual:windi.css';
-import '@purge-icons/generated';
 import { registerSW } from 'virtual:pwa-register';
+
+import './style/index.css';
+import '@purge-icons/generated';
 
 registerSW({
   immediate: true,
