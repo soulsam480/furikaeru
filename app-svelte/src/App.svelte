@@ -1,19 +1,20 @@
 <script lang="ts">
-  import { Route, Router } from 'svelte-navigator';
+  import { Router } from 'svelte-navigator';
   import Navbar from './components/app/navbar.svelte';
-  import Landing from './views/Landing.svelte';
+  import { refreshUser } from './utils/authState';
+  import Wrap from './Wrap.svelte';
 
   export let url = '';
+
+  const { isAuth } = refreshUser();
 </script>
 
 <main>
-  <Navbar />
+  {#if !$isAuth}
+    <Navbar />
+  {/if}
+
   <Router {url}>
-    <div>
-      <Route path="/" component={Landing} />
-    </div>
+    <Wrap />
   </Router>
 </main>
-
-<style>
-</style>

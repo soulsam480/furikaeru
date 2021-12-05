@@ -1,5 +1,65 @@
 <script lang="ts">
   import SvIcon from 'src/components/lib/SVIcon.svelte';
+  import { useUserStore } from 'src/store/user';
+  import { setToken } from 'src/utils/api';
+  import { getUserData, setUUID, tokenWatcher } from 'src/utils/authState';
+  import { onMount } from 'svelte';
+  import { useLocation, useNavigate } from 'svelte-navigator';
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { setLogin } = useUserStore();
+
+  const url = import.meta.env.VITE_API;
+
+  function login(type: 'google' | 'fb') {
+    switch (type) {
+      case 'google':
+        window.location.href = `${url}/auth/google/`;
+        break;
+
+      case 'fb':
+        window.location.href = `${url}/auth/fb/`;
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  function getSuccessToken() {
+    const locationStr = $location.hash || $location.search;
+
+    return locationStr.split('auth_success=')[1] || '';
+  }
+
+  async function catchRedirect() {
+    const auth_success = getSuccessToken();
+
+    if (!auth_success.length) return;
+
+    setToken(auth_success);
+
+    try {
+      const data = await getUserData();
+
+      localStorage.setItem('__token', data.refreshToken);
+      setToken(data.accessToken);
+
+      setLogin(data);
+      setUUID();
+
+      tokenWatcher(navigate);
+
+      navigate('/home');
+      // hideLoader();
+    } catch (error) {
+      console.log(error);
+      // hideLoader();
+    }
+  }
+
+  onMount(async () => await catchRedirect());
 </script>
 
 <div class="hero h-[calc(100vh-48px)]">
@@ -28,11 +88,11 @@
         <div class="text-center text-lg mt-5">Login with</div>
 
         <div class="flex justify-center space-x-2 mt-2  ">
-          <button class="btn btn-secondary btn-md btn-square">
+          <button class="btn btn-secondary btn-md btn-square" on:click={() => login('google')}>
             <SvIcon icon="ion:logo-google" size="25px" />
           </button>
 
-          <button class="btn btn-secondary btn-md btn-square">
+          <button class="btn btn-secondary btn-md btn-square" on:click={() => login('google')}>
             <SvIcon icon="ion:logo-facebook" size="25px" />
           </button>
         </div>

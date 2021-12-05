@@ -1,7 +1,9 @@
 import { io as Io, Socket } from 'socket.io-client';
+import { writable } from 'svelte/store';
 
 let io: Socket;
-let isConnected = false;
+
+const isConnected = writable(false);
 
 export function createWs() {
   io = Io(import.meta.env.VITE_WSS, {
@@ -9,19 +11,19 @@ export function createWs() {
   });
 
   io.on('connect', () => {
-    isConnected = true;
+    isConnected.set(true);
   });
 
   io.on('connect_error', () => {
-    isConnected = false;
+    isConnected.set(false);
   });
 
   io.on('connect_failed', () => {
-    isConnected = false;
+    isConnected.set(false);
   });
 
   io.on('reconnect', () => {
-    isConnected = true;
+    isConnected.set(true);
   });
 
   return io;

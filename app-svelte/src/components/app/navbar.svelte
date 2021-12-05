@@ -14,7 +14,7 @@
 
     <div class="flex-none flex">
       {#if !$isLoggedIn}
-        <a class="btn btn-primary btn-sm" href="/login" use:link>Login</a>
+        <a class="btn btn-primary btn-sm" href="/" use:link>Login</a>
       {:else}
         <button class="btn btn-primary btn-sm">{$getUser.name}</button>
       {/if}
