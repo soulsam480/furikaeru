@@ -13,7 +13,7 @@
 </script>
 
 {#if !$isAuth}
-  <div>
+  <div class="max-w-7xl mx-auto w-full p-2">
     <Route path="/" component={Landing} />
 
     <PrivateRoute path="/home">

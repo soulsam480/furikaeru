@@ -3,7 +3,6 @@ import { furiApi, getToken, setToken } from './api';
 import { v4 } from 'uuid';
 import axios from 'axios';
 import { useUserStore } from 'src/store/user';
-import { useNavigate } from 'svelte-navigator';
 import type { NavigateFn } from 'svelte-navigator';
 import { writable } from 'svelte/store';
 
@@ -78,6 +77,7 @@ export function tokenWatcher(navigateFn: NavigateFn) {
 }
 
 const isAuth = writable(false);
+
 export function refreshUser(navigate?: NavigateFn) {
   const { setLogin } = useUserStore();
 
@@ -102,7 +102,7 @@ export function refreshUser(navigate?: NavigateFn) {
         setUUID();
 
         navigate && tokenWatcher(navigate);
-        navigate('/home');
+        navigate && navigate('/home');
       } catch (error) {
         console.log(error);
 

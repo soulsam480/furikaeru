@@ -1,7 +1,7 @@
 import Axios, { AxiosError } from 'axios';
 import { getTokens } from './authState';
 
-const HEADER_NAME = 'access-token';
+const AUTH_HEADER = 'access-token';
 
 export const furiApi = Axios.create({
   baseURL: import.meta.env.VITE_API,
@@ -14,7 +14,7 @@ export const setToken = (token: string | null) => {
     localStorage.removeItem('__token');
   }
 
-  (furiApi.defaults.headers as Record<string, any>)[HEADER_NAME] = !!token ? `Bearer ${token}` : null;
+  (furiApi.defaults.headers as Record<string, any>)[AUTH_HEADER] = !!token ? `Bearer ${token}` : null;
 };
 
 furiApi.interceptors.response.use(undefined, async (err: AxiosError) => {
@@ -31,7 +31,7 @@ furiApi.interceptors.response.use(undefined, async (err: AxiosError) => {
 
     // recover config
     const config = err.config;
-    delete (config.headers as any)[HEADER_NAME];
+    delete (config.headers as any)[AUTH_HEADER];
 
     // retry the call
     return furiApi.request(config);
