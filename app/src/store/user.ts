@@ -15,7 +15,7 @@ export interface UserResponse extends UserModel {
   accessToken: string;
   refreshToken: string;
 }
-interface userState {
+export interface userState {
   user: Partial<UserModel>;
   isLoggedin: boolean;
   loader: boolean;

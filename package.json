@@ -16,7 +16,9 @@
     "start:app": "cd app && npm run serve",
     "changelog": "npx auto-changelog --output CHANGELOG.md --template keepachangelog --commit-limit false -u --sort-commits date-desc --hide-credit",
     "build:lib": "cd lib && npm run build",
-    "release:lib": "cd lib && npm publish"
+    "release:lib": "cd lib && npm publish",
+    "dev:sva": "cd app-svelte && npm run dev",
+    "build:sva": "cd app-svelte && npm run build"
   },
   "devDependencies": {
     "concurrently": "^6.4.0",
